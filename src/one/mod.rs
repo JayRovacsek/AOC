@@ -2,7 +2,7 @@ pub fn puzzle() {
     let inputs: Vec<f32> = INPUT_VEC.iter().map(|x|**x).collect::<Vec<f32>>();
     let answer_a: f32 = inputs.iter().map(|x| calculate_fuel(*x)).sum();
     println!("The answer for day 1, part a is: {}", answer_a);
-    let answer_b: f32 = inputs.iter().map(|x| calculate_fuel_recusive(*x)).sum();
+    let answer_b: f32 = inputs.iter().map(|x| calculate_fuel_recursive(*x)).sum();
     println!("The answer for day 1, part b is: {}", answer_b);
 }
 
@@ -10,11 +10,11 @@ fn calculate_fuel(input: f32) -> f32 {
     (input / 3 as f32).floor() - 2 as f32
 }
 
-fn calculate_fuel_recusive(input: f32) -> f32 {
+fn calculate_fuel_recursive(input: f32) -> f32 {
     let result = (input / 3 as f32).floor() - 2 as f32;
     match result {
         n if n <= 0 as f32 => 0 as f32,
-        _ => calculate_fuel_recusive(result) + result,
+        _ => calculate_fuel_recursive(result) + result,
     }
 }
 
@@ -27,9 +27,9 @@ fn test_puzzle() {
     assert_eq!(654 as f32, calculate_fuel(1969 as f32));
     assert_eq!(33583 as f32, calculate_fuel(100756 as f32));
 
-    assert_eq!(2 as f32, calculate_fuel_recusive(14 as f32));
-    assert_eq!(966 as f32, calculate_fuel_recusive(1969 as f32));
-    assert_eq!(50346 as f32, calculate_fuel_recusive(100756 as f32));
+    assert_eq!(2 as f32, calculate_fuel_recursive(14 as f32));
+    assert_eq!(966 as f32, calculate_fuel_recursive(1969 as f32));
+    assert_eq!(50346 as f32, calculate_fuel_recursive(100756 as f32));
 }
 
 const INPUT_VEC: [&'static f32; 100] = [
