@@ -1,29 +1,5 @@
 mod input;
-mod one;
-mod two;
-mod three;
-mod four;
-mod five;
-mod six;
-mod seven;
-mod eight;
-mod nine;
-mod ten;
-mod eleven;
-mod twelve;
-mod thirteen;
-mod fourteen;
-mod fifteen;
-mod sixteen;
-mod seventeen;
-mod eighteen;
-mod nineteen;
-mod twenty;
-mod twentyone;
-mod twentytwo;
-mod twentythree;
-mod twentyfour;
-mod twentyfive;
+mod puzzle;
 
 extern crate rand;
 
@@ -36,31 +12,31 @@ fn main() {
 
 fn match_puzzle(option: u8) {
     match option {
-        1 => one::puzzle(),
-        2 => two::puzzle(),
-        3 => three::puzzle(),
-        4 => four::puzzle(),
-        5 => five::puzzle(),
-        6 => six::puzzle(),
-        7 => seven::puzzle(),
-        8 => eight::puzzle(),
-        9 => nine::puzzle(),
-        10 => ten::puzzle(),
-        11 => eleven::puzzle(),
-        12 => twelve::puzzle(),
-        13 => thirteen::puzzle(),
-        14 => fourteen::puzzle(),
-        15 => fifteen::puzzle(),
-        16 => sixteen::puzzle(),
-        17 => seventeen::puzzle(),
-        18 => eighteen::puzzle(),
-        19 => nineteen::puzzle(),
-        20 => twenty::puzzle(),
-        21 => twentyone::puzzle(),
-        22 => twentytwo::puzzle(),
-        23 => twentythree::puzzle(),
-        24 => twentyfour::puzzle(),
-        25 => twentyfive::puzzle(),
+        1 => puzzle::one::solve(),
+        2 => puzzle::two::solve(),
+        3 => puzzle::three::solve(),
+        4 => puzzle::four::solve(),
+        5 => puzzle::five::solve(),
+        6 => puzzle::six::solve(),
+        7 => puzzle::seven::solve(),
+        8 => puzzle::eight::solve(),
+        9 => puzzle::nine::solve(),
+        10 => puzzle::ten::solve(),
+        11 => puzzle::eleven::solve(),
+        12 => puzzle::twelve::solve(),
+        13 => puzzle::thirteen::solve(),
+        14 => puzzle::fourteen::solve(),
+        15 => puzzle::fifteen::solve(),
+        16 => puzzle::sixteen::solve(),
+        17 => puzzle::seventeen::solve(),
+        18 => puzzle::eighteen::solve(),
+        19 => puzzle::nineteen::solve(),
+        20 => puzzle::twenty::solve(),
+        21 => puzzle::twentyone::solve(),
+        22 => puzzle::twentytwo::solve(),
+        23 => puzzle::twentythree::solve(),
+        24 => puzzle::twentyfour::solve(),
+        25 => puzzle::twentyfive::solve(),
         _ => {
             let u: u8 = input::get_rand_u8(25);
             println!("Failed to parse a suitable number from input, let's enjoy some chaos and choose a random one...");
