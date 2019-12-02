@@ -1,13 +1,23 @@
+#[derive(Debug)]
+enum Operation {
+    Addition,
+    Multiplication,
+    End
+}
+
 pub fn solve() {
     // let instructions: Vec<Instruction> = parse_instructions(INPUT_VEC.to_vec());
     // println!("{:?}", instructions);
-    let derp_vec = INPUT_VEC.clone();
-    solve_p1(derp_vec);
-    for x in 0..100 {
-        for y in 0..100 {
-            solve_p2(derp_vec, x, y);
-        }
-    }
+    let numbers = INPUT_VEC.clone();
+    let results = execute_instructions_new(numbers.to_vec());
+    let results2 = execute_instructions(numbers);
+    println!("Results: {:?}", results);
+    println!("Results: {:?}", results2);
+    // for x in 0..100 {
+    //     for y in 0..100 {
+    //         solve_p2(derp_vec, x, y);
+    //     }
+    // }
 
     // let mut collection = instructions.iter_mut();
     // let mut done = false;
@@ -20,12 +30,48 @@ pub fn solve() {
     // }
 }
 
-fn solve_p1(mut derp_vec: [i32; 117]) {
+fn parse_operation(input: Vec<i32>) -> (Operation, usize, usize, usize) {
+    match input[0] {
+        1 => {
+            (Operation::Addition, input[1] as usize,input[2] as usize,input[3] as usize)
+        },
+        2 => {
+            (Operation::Multiplication, input[1] as usize,input[2] as usize,input[3] as usize)
+        },
+        _ => {
+            (Operation::End, 0,0,0)
+        }
+    }
+}
+
+fn execute_instructions_new(mut input_vec: Vec<i32>) -> Vec<i32> {
+    let windows: Vec<usize> = (0..input_vec.len() / 4).collect();
+    windows.iter().for_each(|x|{
+        let y = x * 4;
+        let z = y + 4;
+        let op = parse_operation(input_vec[y..z].to_vec());
+        match op.0 {
+            Operation::Addition => {
+                input_vec[op.3] = input_vec[op.1] + input_vec[op.2]
+            },
+            Operation::Multiplication => {
+                input_vec[op.3] = input_vec[op.1] * input_vec[op.2]
+            },
+            _ => {
+                println!("Looks like we have a winner: {:?}", input_vec[y]);
+            }
+        }
+    });
+    input_vec
+}
+
+fn execute_instructions(mut derp_vec: [i32; 117]) -> i32 {
     let mut i = 0;
     let mut done = false;
+    let mut result = 0;
     while !done {
         let z = i * 4;
-        let part: Vec<i32> = derp_vec[z..z+4].to_vec();
+        let part: Vec<i32> = derp_vec[z..z + 4].to_vec();
         println!("{:?}", part);
         if part[0] == 1 {
             let x = derp_vec[part[1] as usize] + derp_vec[part[2] as usize];
@@ -34,13 +80,13 @@ fn solve_p1(mut derp_vec: [i32; 117]) {
             let x = derp_vec[part[1] as usize] * derp_vec[part[2] as usize];
             derp_vec[part[3] as usize] = x;
         } else {
-            println!("{:?}", derp_vec.iter().collect::<Vec<_>>()[0]);
+            result = *derp_vec.iter().collect::<Vec<_>>()[0];
             done = true;
         }
         i += 1;
     }
+    result
 }
-
 
 fn solve_p2(mut derp_vec: [i32; 117], n: i32, v: i32) {
     derp_vec[1] = n;
@@ -49,7 +95,7 @@ fn solve_p2(mut derp_vec: [i32; 117], n: i32, v: i32) {
     let mut done = false;
     while !done {
         let z = i * 4;
-        let part: Vec<i32> = derp_vec[z..z+4].to_vec();
+        let part: Vec<i32> = derp_vec[z..z + 4].to_vec();
         if part[0] == 1 {
             let x = derp_vec[part[1] as usize] + derp_vec[part[2] as usize];
             derp_vec[part[3] as usize] = x;
@@ -60,7 +106,7 @@ fn solve_p2(mut derp_vec: [i32; 117], n: i32, v: i32) {
             let a = derp_vec.iter().collect::<Vec<_>>()[0];
             println!("{:?}", a);
             if a == &19690720 {
-                println!("Answer: {:?}", (n * 100)+ v);
+                println!("Answer: {:?}", (n * 100) + v);
                 panic!("Found it")
             }
             done = true;
