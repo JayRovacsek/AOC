@@ -7,11 +7,15 @@ enum Operation {
 
 pub fn solve() {
     let registers = INPUT_VEC.clone().to_vec();
-    let answer_a = execute_instructions(registers.clone())[0];
+    let answer_a = *execute_instructions(registers.clone()).first().unwrap();
     println!("The answer for day 2, part a is: {:?}", answer_a);
     for x in 0..100 {
         for y in 0..100 {
-            if execute_instructions_modify_registers(registers.clone(), x, y)[0] == 19_690_720 {
+            if *execute_instructions_modify_registers(registers.clone(), x, y)
+                .first()
+                .unwrap()
+                == 19_690_720
+            {
                 let answer_b = (x, y);
                 println!("The answer for day 2, part b is: {:?}", answer_b);
             }
@@ -82,7 +86,7 @@ fn test_solve() {
         *execute_instructions_modify_registers(INPUT_VEC.to_vec(), 90, 74)
             .first()
             .unwrap()
-    )
+    );
 }
 
 const INPUT_VEC: [i32; 117] = [
