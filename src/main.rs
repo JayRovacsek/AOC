@@ -1,7 +1,10 @@
 mod input;
 mod puzzle;
 
+extern crate humantime;
 extern crate rand;
+
+use std::time::Instant;
 
 fn main() {
     loop {
@@ -11,6 +14,7 @@ fn main() {
 }
 
 fn match_puzzle(option: u8) {
+    let start = Instant::now();
     match option {
         1 => puzzle::one::solve(),
         2 => puzzle::two::solve(),
@@ -43,5 +47,7 @@ fn match_puzzle(option: u8) {
             println!("Looks like we chose {}!", u);
             match_puzzle(u)
         }
-    }
+    };
+    let elapsed = start.elapsed();
+    println!("Time elapsed: {}", humantime::format_duration(elapsed));
 }
