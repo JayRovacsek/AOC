@@ -16,8 +16,7 @@ pub fn solve() {
                 .unwrap()
                 == 19_690_720
             {
-                let answer_b = (x, y);
-                println!("The answer for day 2, part b is: {:?}", answer_b);
+                println!("The answer for day 2, part b is: {:?}", (x, y));
             }
         }
     }
