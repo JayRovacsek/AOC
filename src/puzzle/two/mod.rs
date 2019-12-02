@@ -9,8 +9,8 @@ pub fn solve() {
     let registers = INPUT_VEC.clone().to_vec();
     let answer_a = *execute_instructions(registers.clone()).first().unwrap();
     println!("The answer for day 2, part a is: {:?}", answer_a);
-    for x in 0..100 {
-        for y in 0..100 {
+    for x in 0..117 {
+        for y in 0..117 {
             if *execute_instructions_modify_registers(registers.clone(), x, y)
                 .first()
                 .unwrap()
