@@ -8,17 +8,6 @@ struct Point {
     wire_b: bool,
 }
 
-impl Point {
-    fn new(x: i32, y: i32) -> Point {
-        Point {
-            x,
-            y,
-            wire_a: false,
-            wire_b: false,
-        }
-    }
-}
-
 #[derive(Debug)]
 enum Direction {
     Up,
@@ -61,117 +50,111 @@ pub fn solve() {
         .map(|x| Instruction::from_str(x))
         .collect();
     let answer_a = run_wires(wire_a, wire_b);
+    println!("The answer for day 3, part a is: {:?}", answer_a);
 }
 
 fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
     let mut grid = generate_grid();
-    let mut pos = (5000 as i32, 5000 as i32);
+    let mut pos = (10000 as i32, 10000 as i32);
     wire_a.iter().for_each(|z| {
         let old_pos = pos.clone();
         match z.direction {
             Direction::Up => {
                 pos = (pos.0, pos.1 + z.distance);
-                for x in old_pos.1..pos.1 {
-                    grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_a = true;
-                    println!("{:?}", grid[(x + 5000) as usize][(pos.0 + 5000) as usize]);
+                for x in generate_range(old_pos.1, pos.1) {
+                    grid[pos.0 as usize][x as usize] = 1;
                 }
             }
             Direction::Down => {
                 pos = (pos.0, pos.1 - z.distance);
-                for x in old_pos.1..pos.1 {
-                    grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_a = true;
+                for x in generate_range(old_pos.1, pos.1) {
+                    grid[pos.0 as usize][x as usize] = 1;
+
                 }
             }
             Direction::Left => {
                 pos = (pos.0 - z.distance, pos.1);
-                for x in old_pos.0..pos.0 {
-                    grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_a = true;
+                for x in generate_range(old_pos.0, pos.0) {
+                    grid[(x) as usize][(pos.1) as usize] = 1;
+
                 }
             }
             Direction::Right => {
                 pos = (pos.0 + z.distance, pos.1);
-                for x in old_pos.0..pos.0 {
-                    grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_a = true;
+                for x in generate_range(old_pos.0, pos.0) {
+                    grid[(x) as usize][(pos.1) as usize] = 1;
+
                 }
             }
         }
     });
 
-    pos = (5000 as i32, 5000 as i32);
+    let mut intersections: Vec<(i32,i32)> = Vec::new();
+
+    pos = (10000 as i32, 10000 as i32);
     wire_b.iter().for_each(|z| {
         let old_pos = pos.clone();
         match z.direction {
             Direction::Up => {
                 pos = (pos.0, pos.1 + z.distance);
-                for x in old_pos.1..pos.1 {
-                    grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_b = true;
-                    if grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_a {
-                        panic!("ITS WORKS");
+                for x in generate_range(old_pos.1, pos.1) {
+                    if grid[pos.0 as usize][x as usize] == 1 {
+                        intersections.push((pos.0,x));
                     }
                 }
-            }
+            },
             Direction::Down => {
                 pos = (pos.0, pos.1 - z.distance);
-                for x in old_pos.1..pos.1 {
-                    grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_b = true;
-                    if grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_a {
-                        panic!("ITS WORKS");
+                for x in generate_range(old_pos.1, pos.1) {
+                    if grid[pos.0 as usize][x as usize] == 1 {
+                        intersections.push((pos.0,x));
                     }
                 }
-            }
+            },
             Direction::Left => {
                 pos = (pos.0 - z.distance, pos.1);
-                for x in old_pos.0..pos.0 {
-                    grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_b = true;
-                    if grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_a {
-                        panic!("ITS WORKS");
+                for x in generate_range(old_pos.0, pos.0) {
+                    if grid[(x) as usize][(pos.0) as usize] == 1 {
+                        intersections.push((x,pos.1));
                     }
                 }
-            }
+            },
             Direction::Right => {
                 pos = (pos.0 + z.distance, pos.1);
-                for x in old_pos.0..pos.0 {
-                    grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_b = true;
-                    if grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_a {
-                        panic!("ITS WORKS");
+                for x in generate_range(old_pos.0, pos.0) {
+                    if grid[(x) as usize][(pos.0) as usize] == 1 {
+                        intersections.push((x,pos.1));
                     }
                 }
-            }
+            },
         }
     });
 
-    let intersections = grid
-        .par_iter()
-        .filter_map(|x| {
-            let v = x
-                .par_iter()
-                .filter(|y| y.wire_a && y.wire_b)
-                .collect::<Vec<_>>();
-            if !v.is_empty() {
-                Some(v)
-            } else {
-                None
-            }
-        })
-        .collect::<Vec<Vec<_>>>();
-
     println!("{:?}", intersections);
 
-    0 as usize
+    let distances = intersections.par_iter().map(|x|{
+        manhattan_distance(x)
+    }).collect::<Vec<usize>>();
+
+    *distances.iter().min().unwrap()
 }
 
-fn generate_grid() -> Vec<Vec<Point>> {
-    (0..20000)
-        .collect::<Vec<i32>>()
-        .par_iter()
-        .map(|x| {
-            (0..20000)
-                .collect::<Vec<i32>>()
-                .par_iter()
-                .map(|y| Point::new(*x, *y))
-                .collect::<Vec<Point>>()
-        })
-        .collect::<Vec<Vec<Point>>>()
+fn generate_range(x: i32, y: i32) -> std::ops::Range<i32> {
+    if x > y {
+        y..x
+    } else {
+        x..y
+    }
+}
+
+fn manhattan_distance(input: &(i32,i32)) -> usize {
+    let x = (input.0 - 5000).abs();
+    let y = (input.1 - 5000).abs();
+    (x + y) as usize
+}
+
+fn generate_grid() -> Vec<Vec<u8>> {
+    vec![vec![0 as u8; 20000]; 20000]
 }
 
 #[test]
