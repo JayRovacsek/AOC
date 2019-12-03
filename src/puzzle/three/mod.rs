@@ -1,9 +1,11 @@
+use rayon::prelude::*;
+
 #[derive(Debug, Clone, Copy)]
 struct Point {
     x: i32,
     y: i32,
-    wire: bool,
-    intersection: bool,
+    wire_a: bool,
+    wire_b: bool,
 }
 
 impl Point {
@@ -11,8 +13,8 @@ impl Point {
         Point {
             x,
             y,
-            wire: false,
-            intersection: false,
+            wire_a: false,
+            wire_b: false,
         }
     }
 }
@@ -63,39 +65,95 @@ pub fn solve() {
 
 fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
     let mut grid = generate_grid();
-    let mut pos = (0 as i32, 0 as i32);
-    wire_a.iter().for_each(|z|{
+    let mut pos = (5000 as i32, 5000 as i32);
+    wire_a.iter().for_each(|z| {
         let old_pos = pos.clone();
         match z.direction {
             Direction::Up => {
-                pos = (pos.0 + z.distance, pos.1)
-            },
-            Direction::Down => {
-                pos = (pos.0 - z.distance, pos.1)
-            },
-            Direction::Left => {
-                pos = (pos.0, pos.1 - z.distance)
-            },
-            Direction::Right => {
-                pos = (pos.0, pos.1 + z.distance)
+                pos = (pos.0, pos.1 + z.distance);
+                for x in old_pos.1..pos.1 {
+                    grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_a = true;
+                    println!("{:?}", grid[(x + 5000) as usize][(pos.0 + 5000) as usize]);
+                }
             }
-        }
-        for x in old_pos.0..pos.0 {
-            for y in old_pos.1..pos.1 {
-                if grid[x as usize][y as usize].wire {
-                    grid[x as usize][y as usize].intersection = true;
-                } else {
-                    grid[x as usize][y as usize].wire = true;
+            Direction::Down => {
+                pos = (pos.0, pos.1 - z.distance);
+                for x in old_pos.1..pos.1 {
+                    grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_a = true;
+                }
+            }
+            Direction::Left => {
+                pos = (pos.0 - z.distance, pos.1);
+                for x in old_pos.0..pos.0 {
+                    grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_a = true;
+                }
+            }
+            Direction::Right => {
+                pos = (pos.0 + z.distance, pos.1);
+                for x in old_pos.0..pos.0 {
+                    grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_a = true;
                 }
             }
         }
     });
 
-    let flattened_grid = grid.into_iter().flatten().collect::<Vec<_>>();
+    pos = (5000 as i32, 5000 as i32);
+    wire_b.iter().for_each(|z| {
+        let old_pos = pos.clone();
+        match z.direction {
+            Direction::Up => {
+                pos = (pos.0, pos.1 + z.distance);
+                for x in old_pos.1..pos.1 {
+                    grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_b = true;
+                    if grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_a {
+                        panic!("ITS WORKS");
+                    }
+                }
+            }
+            Direction::Down => {
+                pos = (pos.0, pos.1 - z.distance);
+                for x in old_pos.1..pos.1 {
+                    grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_b = true;
+                    if grid[(x + 5000) as usize][(pos.0 + 5000) as usize].wire_a {
+                        panic!("ITS WORKS");
+                    }
+                }
+            }
+            Direction::Left => {
+                pos = (pos.0 - z.distance, pos.1);
+                for x in old_pos.0..pos.0 {
+                    grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_b = true;
+                    if grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_a {
+                        panic!("ITS WORKS");
+                    }
+                }
+            }
+            Direction::Right => {
+                pos = (pos.0 + z.distance, pos.1);
+                for x in old_pos.0..pos.0 {
+                    grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_b = true;
+                    if grid[(x + 5000) as usize][(pos.1 + 5000) as usize].wire_a {
+                        panic!("ITS WORKS");
+                    }
+                }
+            }
+        }
+    });
 
-    let intersections = flattened_grid.iter().filter(|x|{
-        x.intersection
-    }).collect::<Vec<&Point>>();
+    let intersections = grid
+        .par_iter()
+        .filter_map(|x| {
+            let v = x
+                .par_iter()
+                .filter(|y| y.wire_a && y.wire_b)
+                .collect::<Vec<_>>();
+            if !v.is_empty() {
+                Some(v)
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<Vec<_>>>();
 
     println!("{:?}", intersections);
 
@@ -103,13 +161,13 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
 }
 
 fn generate_grid() -> Vec<Vec<Point>> {
-    (-5000_i32..5000)
+    (0..20000)
         .collect::<Vec<i32>>()
-        .iter()
+        .par_iter()
         .map(|x| {
-            (-5000_i32..5000)
+            (0..20000)
                 .collect::<Vec<i32>>()
-                .iter()
+                .par_iter()
                 .map(|y| Point::new(*x, *y))
                 .collect::<Vec<Point>>()
         })

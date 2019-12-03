@@ -3,6 +3,7 @@ mod puzzle;
 
 extern crate humantime;
 extern crate rand;
+extern crate rayon;
 
 use std::time::Instant;
 
