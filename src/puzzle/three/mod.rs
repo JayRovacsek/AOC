@@ -1,10 +1,76 @@
-enum Point {
-    X(i32),
-    Y(i32),
+#[derive(Debug)]
+struct Point {
+    x: i32,
+    y: i32,
+    wire: bool,
+}
+
+impl Point {
+    fn new(x: i32, y: i32) -> Point {
+        Point { x, y, wire: false }
+    }
+}
+
+#[derive(Debug)]
+enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
+#[derive(Debug)]
+struct Instruction {
+    direction: Direction,
+    distance: usize,
+}
+
+impl Instruction {
+    fn from_str(input: &str) -> Instruction {
+        Instruction {
+            direction: match &input[0..1] {
+                "U" => Direction::Up,
+                "D" => Direction::Down,
+                "L" => Direction::Left,
+                "R" => Direction::Right,
+                _ => unreachable!(
+                    "Woah buddy, you broke the things. You sent in: {:?}",
+                    &input[0..1]
+                ),
+            },
+            distance: input[1..input.len()].parse::<usize>().unwrap(),
+        }
+    }
 }
 
 pub fn solve() {
-    println!("Currently a stub")
+    let wire_a: Vec<Instruction> = INPUT_VEC_A
+        .iter()
+        .map(|x| Instruction::from_str(x))
+        .collect();
+    let wire_b: Vec<Instruction> = INPUT_VEC_B
+        .iter()
+        .map(|x| Instruction::from_str(x))
+        .collect();
+    let answer_a = run_wires(wire_a, wire_b);
+}
+
+fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
+    let mut grid = generate_grid();
+}
+
+fn generate_grid() -> Vec<Vec<Point>> {
+    (-5000_i32..5000)
+        .collect::<Vec<i32>>()
+        .iter()
+        .map(|x| {
+            (-5000_i32..5000)
+                .collect::<Vec<i32>>()
+                .iter()
+                .map(|y| Point::new(*x, *y))
+                .collect::<Vec<Point>>()
+        })
+        .collect::<Vec<Vec<Point>>>()
 }
 
 #[test]
