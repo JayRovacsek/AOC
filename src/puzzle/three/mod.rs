@@ -57,7 +57,7 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
     let mut grid = generate_grid();
     let mut pos = (10000 as i32, 10000 as i32);
     wire_a.iter().for_each(|z| {
-        let old_pos = pos.clone();
+        let old_pos = pos;
         match z.direction {
             Direction::Up => {
                 pos = (pos.0, pos.1 + z.distance);
@@ -88,9 +88,9 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
 
     let mut intersections: Vec<(i32, i32)> = Vec::new();
 
-    pos = (10000 as i32, 10000 as i32);
+    let mut pos = (10000 as i32, 10000 as i32);
     wire_b.iter().for_each(|z| {
-        let old_pos = pos.clone();
+        let old_pos = pos;
         match z.direction {
             Direction::Up => {
                 pos = (pos.0, pos.1 + z.distance);
@@ -127,15 +127,14 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
         }
     });
 
-    println!("{:?}", intersections);
-
-    let distances = intersections
+    let mut distances = intersections
         .par_iter()
-        .map(|x| manhattan_distance(x))
+        .map(|x| manhattan_distance(*x))
         .collect::<Vec<usize>>();
-    println!("{:?}", distances);
 
-    *distances.iter().min().unwrap()
+    distances.sort();
+    println!("{:?}", distances);
+    *distances.get(1).unwrap()
 }
 
 fn generate_range(x: i32, y: i32) -> std::ops::Range<i32> {
@@ -146,11 +145,9 @@ fn generate_range(x: i32, y: i32) -> std::ops::Range<i32> {
     }
 }
 
-fn manhattan_distance(input: &(i32, i32)) -> usize {
-    let x = (input.0 - 5000).abs();
-    let y = (input.1 - 5000).abs();
-    println!("x: {}", x);
-    println!("y: {}", y);
+fn manhattan_distance(input: (i32, i32)) -> usize {
+    let x = (input.0 - 10000).abs();
+    let y = (input.1 - 10000).abs();
     (x + y) as usize
 }
 
@@ -194,10 +191,10 @@ fn test_solve() {
 
 #[test]
 fn test_manhattan_distance() {
-    assert_eq!(1 as usize, manhattan_distance(&(5000, 5001)));
-    assert_eq!(1 as usize, manhattan_distance(&(5001, 5000)));
-    assert_eq!(1 as usize, manhattan_distance(&(4999, 5000)));
-    assert_eq!(1 as usize, manhattan_distance(&(5000, 4999)));
+    assert_eq!(1 as usize, manhattan_distance((10000, 10001)));
+    assert_eq!(1 as usize, manhattan_distance((10001, 10000)));
+    assert_eq!(1 as usize, manhattan_distance((9999, 10000)));
+    assert_eq!(1 as usize, manhattan_distance((10000, 9999)));
     assert_ne!(true, false);
 }
 
