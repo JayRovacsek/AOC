@@ -9,7 +9,7 @@ pub fn solve() {
     let registers = INPUT_VEC.clone().to_vec();
     let answer_a = *execute_instructions(registers.clone()).first().unwrap();
     println!("The answer for day 2, part a is: {:?}", answer_a);
-    for x in 0..99 {
+    'outer: for x in 0..99 {
         for y in 0..99 {
             if *execute_instructions_modify_registers(registers.clone(), x, y)
                 .first()
@@ -17,6 +17,7 @@ pub fn solve() {
                 == 19_690_720
             {
                 println!("The answer for day 2, part b is: {:?}", (x, y));
+                break 'outer;
             }
         }
     }
@@ -49,7 +50,7 @@ fn execute_instructions(mut input_vec: Vec<i32>) -> Vec<i32> {
         match op.0 {
             Operation::Addition => input_vec[op.3] = input_vec[op.1] + input_vec[op.2],
             Operation::Multiplication => input_vec[op.3] = input_vec[op.1] * input_vec[op.2],
-            _ => {}
+            Operation::End => {}
         };
     });
     input_vec
@@ -66,7 +67,7 @@ fn execute_instructions_modify_registers(mut input_vec: Vec<i32>, n: i32, v: i32
         match op.0 {
             Operation::Addition => input_vec[op.3] = input_vec[op.1] + input_vec[op.2],
             Operation::Multiplication => input_vec[op.3] = input_vec[op.1] * input_vec[op.2],
-            _ => {}
+            Operation::End => {}
         };
     });
     input_vec
