@@ -1,13 +1,19 @@
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 struct Point {
     x: i32,
     y: i32,
     wire: bool,
+    intersection: bool,
 }
 
 impl Point {
     fn new(x: i32, y: i32) -> Point {
-        Point { x, y, wire: false }
+        Point {
+            x,
+            y,
+            wire: false,
+            intersection: false,
+        }
     }
 }
 
@@ -22,7 +28,7 @@ enum Direction {
 #[derive(Debug)]
 struct Instruction {
     direction: Direction,
-    distance: usize,
+    distance: i32,
 }
 
 impl Instruction {
@@ -38,7 +44,7 @@ impl Instruction {
                     &input[0..1]
                 ),
             },
-            distance: input[1..input.len()].parse::<usize>().unwrap(),
+            distance: input[1..input.len()].parse::<i32>().unwrap(),
         }
     }
 }
@@ -57,6 +63,43 @@ pub fn solve() {
 
 fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
     let mut grid = generate_grid();
+    let mut pos = (0 as i32, 0 as i32);
+    wire_a.iter().for_each(|z|{
+        let old_pos = pos.clone();
+        match z.direction {
+            Direction::Up => {
+                pos = (pos.0 + z.distance, pos.1)
+            },
+            Direction::Down => {
+                pos = (pos.0 - z.distance, pos.1)
+            },
+            Direction::Left => {
+                pos = (pos.0, pos.1 - z.distance)
+            },
+            Direction::Right => {
+                pos = (pos.0, pos.1 + z.distance)
+            }
+        }
+        for x in old_pos.0..pos.0 {
+            for y in old_pos.1..pos.1 {
+                if grid[x as usize][y as usize].wire {
+                    grid[x as usize][y as usize].intersection = true;
+                } else {
+                    grid[x as usize][y as usize].wire = true;
+                }
+            }
+        }
+    });
+
+    let flattened_grid = grid.into_iter().flatten().collect::<Vec<_>>();
+
+    let intersections = flattened_grid.iter().filter(|x|{
+        x.intersection
+    }).collect::<Vec<&Point>>();
+
+    println!("{:?}", intersections);
+
+    0 as usize
 }
 
 fn generate_grid() -> Vec<Vec<Point>> {
