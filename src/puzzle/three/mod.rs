@@ -1,6 +1,6 @@
 use rayon::prelude::*;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 enum Direction {
     Up,
     Down,
@@ -8,7 +8,7 @@ enum Direction {
     Right,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 struct Instruction {
     direction: Direction,
     distance: i32,
@@ -41,11 +41,12 @@ pub fn solve() {
         .iter()
         .map(|x| Instruction::from_str(x))
         .collect();
-    let answer_a = run_wires(wire_a, wire_b);
+    let answer_a = run_wires(&wire_a, &wire_b);
     println!("The answer for day 3, part a is: {:?}", answer_a);
+    calculate_intersection_lowest_distance(wire_a, wire_b);
 }
 
-fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
+fn run_wires(wire_a: &Vec<Instruction>, wire_b: &Vec<Instruction>) -> usize {
     let mut grid = generate_grid();
     let mut pos = (10000 as i32, 10000 as i32);
     wire_a.iter().for_each(|z| {
@@ -120,11 +121,128 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
     });
 
     let mut distances = intersections
-        .iter()
+        .par_iter()
         .map(|x| manhattan_distance(*x))
         .collect::<Vec<usize>>();
 
     distances.sort();
+    distances[0]
+}
+
+fn calculate_intersection_lowest_distance(
+    wire_a: Vec<Instruction>,
+    wire_b: Vec<Instruction>,
+) -> usize {
+    let mut grid = generate_grid();
+    let mut pos = (10000 as i32, 10000 as i32);
+    wire_a.iter().for_each(|z| {
+        let old_pos = pos;
+        match z.direction {
+            Direction::Up => {
+                pos = (pos.0, pos.1 + z.distance);
+                for x in generate_range(old_pos.1, pos.1) {
+                    grid[pos.0 as usize][x as usize] = 1;
+                }
+            }
+            Direction::Down => {
+                pos = (pos.0, pos.1 - z.distance);
+                for x in generate_range(old_pos.1, pos.1) {
+                    grid[pos.0 as usize][x as usize] = 1;
+                }
+            }
+            Direction::Left => {
+                pos = (pos.0 - z.distance, pos.1);
+                for x in generate_range(old_pos.0, pos.0) {
+                    grid[(x) as usize][(pos.1) as usize] = 1;
+                }
+            }
+            Direction::Right => {
+                pos = (pos.0 + z.distance, pos.1);
+                for x in generate_range(old_pos.0, pos.0) {
+                    grid[(x) as usize][(pos.1) as usize] = 1;
+                }
+            }
+        }
+    });
+
+    let mut intersections: Vec<(i32, i32)> = Vec::new();
+
+    let mut pos = (10000 as i32, 10000 as i32);
+    wire_b.iter().for_each(|z| {
+        let old_pos = pos;
+        match z.direction {
+            Direction::Up => {
+                pos = (pos.0, pos.1 + z.distance);
+                for x in generate_range(old_pos.1, pos.1) {
+                    if grid[pos.0 as usize][x as usize] == 1 {
+                        intersections.push((pos.0, x));
+                    }
+                }
+            }
+            Direction::Down => {
+                pos = (pos.0, pos.1 - z.distance);
+                for x in generate_range(old_pos.1, pos.1) {
+                    if grid[pos.0 as usize][x as usize] == 1 {
+                        intersections.push((pos.0, x));
+                    }
+                }
+            }
+            Direction::Left => {
+                pos = (pos.0 - z.distance, pos.1);
+                for x in generate_range(old_pos.0, pos.0) {
+                    if grid[(x) as usize][(pos.1) as usize] == 1 {
+                        intersections.push((x, pos.1));
+                    }
+                }
+            }
+            Direction::Right => {
+                pos = (pos.0 + z.distance, pos.1);
+                for x in generate_range(old_pos.0, pos.0) {
+                    if grid[(x) as usize][(pos.1) as usize] == 1 {
+                        intersections.push((x, pos.1));
+                    }
+                }
+            }
+        }
+    });
+
+    let distances = intersections
+        .iter()
+        .map(|x| {
+            let mut pos = (10000 as i32, 10000 as i32);
+            let mut distance = 0;
+
+            for z in wire_b.clone() {
+                let old_pos = pos;
+                match z.direction {
+                    Direction::Up => {
+                        pos = (pos.0, pos.1 + z.distance);
+                        distance += z.distance;
+                    }
+                    Direction::Down => {
+                        pos = (pos.0, pos.1 - z.distance);
+                        distance += z.distance;
+                    }
+                    Direction::Left => {
+                        pos = (pos.0 - z.distance, pos.1);
+                        distance += z.distance;
+                    }
+                    Direction::Right => {
+                        pos = (pos.0 + z.distance, pos.1);
+                        distance += z.distance;
+                    }
+                }
+                if &pos == x {
+                    panic!();
+                    break;
+                }
+            }
+            distance as usize
+        })
+        .collect::<Vec<usize>>();
+
+    println!("Distances: {:?}", distances);
+
     distances[0]
 }
 
@@ -147,7 +265,7 @@ fn generate_grid() -> Vec<Vec<u8>> {
 }
 
 #[test]
-fn test_solve() {
+fn test_part_a() {
     assert_eq!(true, true);
     assert_ne!(true, false);
 
@@ -176,8 +294,42 @@ fn test_solve() {
     .map(|x| Instruction::from_str(x))
     .collect();
 
-    // assert_eq!(159, run_wires(test_wire_a, test_wire_b));
-    assert_eq!(135, run_wires(test_wire_c, test_wire_d));
+    assert_eq!(159, run_wires(&test_wire_a, &test_wire_b));
+    assert_eq!(135, run_wires(&test_wire_c, &test_wire_d));
+}
+
+#[test]
+fn test_part_b() {
+    assert_eq!(true, true);
+    assert_ne!(true, false);
+
+    let test_wire_a: Vec<Instruction> =
+        vec!["R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"]
+            .par_iter()
+            .map(|x| Instruction::from_str(x))
+            .collect();
+    let test_wire_b: Vec<Instruction> =
+        vec!["U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"]
+            .par_iter()
+            .map(|x| Instruction::from_str(x))
+            .collect();
+
+    let test_wire_c: Vec<Instruction> = vec![
+        "R98", "U47", "R26", "D63", "R33", "U87", "L62", "D20", "R33", "U53", "R51",
+    ]
+    .par_iter()
+    .map(|x| Instruction::from_str(x))
+    .collect();
+
+    let test_wire_d: Vec<Instruction> = vec![
+        "U98", "R91", "D20", "R16", "D67", "R40", "U7", "R15", "U6", "R7",
+    ]
+    .par_iter()
+    .map(|x| Instruction::from_str(x))
+    .collect();
+
+    assert_eq!(159, run_wires(&test_wire_a, &test_wire_b));
+    assert_eq!(135, run_wires(&test_wire_c, &test_wire_d));
 }
 
 #[test]
