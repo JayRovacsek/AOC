@@ -74,7 +74,7 @@ fn execute_instructions_modify_registers(mut input_vec: Vec<i32>, n: i32, v: i32
 }
 
 #[test]
-fn test_solve() {
+fn test_part_a() {
     assert_eq!(true, true);
     assert_ne!(true, false);
     assert_eq!(
@@ -92,6 +92,12 @@ fn test_solve() {
         30,
         execute_instructions(vec!(1, 1, 1, 4, 99, 5, 6, 0, 99))[0]
     );
+}
+
+#[test]
+fn test_part_b() {
+    assert_eq!(true, true);
+    assert_ne!(true, false);
     assert_eq!(
         2_842_648,
         *execute_instructions(INPUT_VEC.to_vec()).first().unwrap()
