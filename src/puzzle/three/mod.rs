@@ -86,7 +86,6 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
         match z.direction {
             Direction::Up => {
                 pos = (pos.0, pos.1 + z.distance);
-                println!("UP: {}, START: {:?}, END: {:?}", z.distance, old_pos, pos);
                 for x in generate_range(old_pos.1, pos.1) {
                     if grid[pos.0 as usize][x as usize] == 1 {
                         intersections.push((pos.0, x));
@@ -95,8 +94,6 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
             }
             Direction::Down => {
                 pos = (pos.0, pos.1 - z.distance);
-                println!("DOWN: {}, START: {:?}, END: {:?}", z.distance, old_pos, pos);
-
                 for x in generate_range(old_pos.1, pos.1) {
                     if grid[pos.0 as usize][x as usize] == 1 {
                         intersections.push((pos.0, x));
@@ -105,21 +102,16 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
             }
             Direction::Left => {
                 pos = (pos.0 - z.distance, pos.1);
-                println!("LFET: {}, START: {:?}, END: {:?}", z.distance, old_pos, pos);
                 for x in generate_range(old_pos.0, pos.0) {
-                    if grid[(x) as usize][(pos.0) as usize] == 1 {
+                    if grid[(x) as usize][(pos.1) as usize] == 1 {
                         intersections.push((x, pos.1));
                     }
                 }
             }
             Direction::Right => {
                 pos = (pos.0 + z.distance, pos.1);
-                println!(
-                    "RIGHT: {}, START: {:?}, END: {:?}",
-                    z.distance, old_pos, pos
-                );
                 for x in generate_range(old_pos.0, pos.0) {
-                    if grid[(x) as usize][(pos.0) as usize] == 1 {
+                    if grid[(x) as usize][(pos.1) as usize] == 1 {
                         intersections.push((x, pos.1));
                     }
                 }
@@ -127,16 +119,13 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
         }
     });
 
-    println!("{:?}", intersections);
-
     let mut distances = intersections
         .iter()
         .map(|x| manhattan_distance(*x))
         .collect::<Vec<usize>>();
 
     distances.sort();
-    println!("{:?}", distances);
-    *distances.get(1).unwrap()
+    distances[0]
 }
 
 fn generate_range(x: i32, y: i32) -> std::ops::Range<i32> {
