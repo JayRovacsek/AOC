@@ -1,14 +1,6 @@
 use rayon::prelude::*;
 
-#[derive(Debug, Clone, Copy)]
-struct Point {
-    x: i32,
-    y: i32,
-    wire_a: bool,
-    wire_b: bool,
-}
-
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum Direction {
     Up,
     Down,
@@ -16,7 +8,7 @@ enum Direction {
     Right,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 struct Instruction {
     direction: Direction,
     distance: i32,
@@ -94,6 +86,7 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
         match z.direction {
             Direction::Up => {
                 pos = (pos.0, pos.1 + z.distance);
+                println!("UP: {}, START: {:?}, END: {:?}", z.distance, old_pos, pos);
                 for x in generate_range(old_pos.1, pos.1) {
                     if grid[pos.0 as usize][x as usize] == 1 {
                         intersections.push((pos.0, x));
@@ -102,6 +95,8 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
             }
             Direction::Down => {
                 pos = (pos.0, pos.1 - z.distance);
+                println!("DOWN: {}, START: {:?}, END: {:?}", z.distance, old_pos, pos);
+
                 for x in generate_range(old_pos.1, pos.1) {
                     if grid[pos.0 as usize][x as usize] == 1 {
                         intersections.push((pos.0, x));
@@ -110,6 +105,7 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
             }
             Direction::Left => {
                 pos = (pos.0 - z.distance, pos.1);
+                println!("LFET: {}, START: {:?}, END: {:?}", z.distance, old_pos, pos);
                 for x in generate_range(old_pos.0, pos.0) {
                     if grid[(x) as usize][(pos.0) as usize] == 1 {
                         intersections.push((x, pos.1));
@@ -118,6 +114,10 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
             }
             Direction::Right => {
                 pos = (pos.0 + z.distance, pos.1);
+                println!(
+                    "RIGHT: {}, START: {:?}, END: {:?}",
+                    z.distance, old_pos, pos
+                );
                 for x in generate_range(old_pos.0, pos.0) {
                     if grid[(x) as usize][(pos.0) as usize] == 1 {
                         intersections.push((x, pos.1));
@@ -127,8 +127,10 @@ fn run_wires(wire_a: Vec<Instruction>, wire_b: Vec<Instruction>) -> usize {
         }
     });
 
+    println!("{:?}", intersections);
+
     let mut distances = intersections
-        .par_iter()
+        .iter()
         .map(|x| manhattan_distance(*x))
         .collect::<Vec<usize>>();
 
@@ -162,40 +164,60 @@ fn test_solve() {
 
     let test_wire_a: Vec<Instruction> =
         vec!["R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"]
-            .iter()
+            .par_iter()
             .map(|x| Instruction::from_str(x))
             .collect();
     let test_wire_b: Vec<Instruction> =
         vec!["U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"]
-            .iter()
+            .par_iter()
             .map(|x| Instruction::from_str(x))
             .collect();
 
     let test_wire_c: Vec<Instruction> = vec![
         "R98", "U47", "R26", "D63", "R33", "U87", "L62", "D20", "R33", "U53", "R51",
     ]
-    .iter()
+    .par_iter()
     .map(|x| Instruction::from_str(x))
     .collect();
 
     let test_wire_d: Vec<Instruction> = vec![
         "U98", "R91", "D20", "R16", "D67", "R40", "U7", "R15", "U6", "R7",
     ]
-    .iter()
+    .par_iter()
     .map(|x| Instruction::from_str(x))
     .collect();
 
-    assert_eq!(159, run_wires(test_wire_a, test_wire_b));
+    // assert_eq!(159, run_wires(test_wire_a, test_wire_b));
     assert_eq!(135, run_wires(test_wire_c, test_wire_d));
 }
 
 #[test]
 fn test_manhattan_distance() {
+    assert_eq!(true, true);
+    assert_ne!(true, false);
     assert_eq!(1 as usize, manhattan_distance((10000, 10001)));
     assert_eq!(1 as usize, manhattan_distance((10001, 10000)));
     assert_eq!(1 as usize, manhattan_distance((9999, 10000)));
     assert_eq!(1 as usize, manhattan_distance((10000, 9999)));
+    assert_eq!(100 as usize, manhattan_distance((10000, 10100)));
+    assert_eq!(100 as usize, manhattan_distance((10100, 10000)));
+    assert_eq!(100 as usize, manhattan_distance((9900, 10000)));
+    assert_eq!(100 as usize, manhattan_distance((10000, 9900)));
+}
+
+#[test]
+fn test_instruction_init() {
+    assert_eq!(true, true);
     assert_ne!(true, false);
+    assert_eq!(100, Instruction::from_str("U100").distance);
+    assert_eq!(100, Instruction::from_str("D100").distance);
+    assert_eq!(100, Instruction::from_str("L100").distance);
+    assert_eq!(100, Instruction::from_str("R100").distance);
+
+    assert_eq!(Direction::Up, Instruction::from_str("U100").direction);
+    assert_eq!(Direction::Down, Instruction::from_str("D100").direction);
+    assert_eq!(Direction::Left, Instruction::from_str("L100").direction);
+    assert_eq!(Direction::Right, Instruction::from_str("R100").direction);
 }
 
 const INPUT_VEC_A: [&str; 301] = [
