@@ -41,12 +41,12 @@ pub fn solve() {
         .iter()
         .map(|x| Instruction::from_str(x))
         .collect();
-    let answer_a = run_wires(&wire_a, &wire_b);
+    let answer_a = run_wires(&wire_a, &wire_b)[0];
     println!("The answer for day 3, part a is: {:?}", answer_a);
     calculate_intersection_lowest_distance(wire_a, wire_b);
 }
 
-fn run_wires(wire_a: &Vec<Instruction>, wire_b: &Vec<Instruction>) -> usize {
+fn run_wires(wire_a: &Vec<Instruction>, wire_b: &Vec<Instruction>) -> Vec<usize> {
     let mut grid = generate_grid();
     let mut pos = (10000 as i32, 10000 as i32);
     wire_a.iter().for_each(|z| {
@@ -126,7 +126,7 @@ fn run_wires(wire_a: &Vec<Instruction>, wire_b: &Vec<Instruction>) -> usize {
         .collect::<Vec<usize>>();
 
     distances.sort();
-    distances[0]
+    distances
 }
 
 fn calculate_intersection_lowest_distance(
@@ -206,31 +206,55 @@ fn calculate_intersection_lowest_distance(
         }
     });
 
-    let distances = intersections
+    let mut distances = intersections
         .iter()
         .map(|x| {
             let mut pos = (10000 as i32, 10000 as i32);
             let mut distance = 0;
-            let mut instructions = wire_a.iter();
+            let mut instructions_a = wire_a.iter();
+            let mut instructions_b = wire_b.iter();
 
             while x.0 != pos.0 && x.1 != pos.1 {
-                let z = instructions.next().unwrap();
+                let z = instructions_a.next().unwrap();
                 match z.direction {
                     Direction::Up => {
-                        pos = (pos.0, pos.1 + z.distance);
                         distance += z.distance;
+                        pos = (pos.0, pos.1 + z.distance);
                     }
                     Direction::Down => {
-                        pos = (pos.0, pos.1 - z.distance);
                         distance += z.distance;
+                        pos = (pos.0, pos.1 - z.distance);
                     }
                     Direction::Left => {
-                        pos = (pos.0 - z.distance, pos.1);
                         distance += z.distance;
+                        pos = (pos.0 - z.distance, pos.1);
                     }
                     Direction::Right => {
-                        pos = (pos.0 + z.distance, pos.1);
                         distance += z.distance;
+                        pos = (pos.0 + z.distance, pos.1);
+                    }
+                };
+            }
+
+            pos = (10000 as i32, 10000 as i32);
+            while x.0 != pos.0 && x.1 != pos.1 {
+                let z = instructions_b.next().unwrap();
+                match z.direction {
+                    Direction::Up => {
+                        distance += z.distance;
+                        pos = (pos.0, pos.1 + z.distance);
+                    }
+                    Direction::Down => {
+                        distance += z.distance;
+                        pos = (pos.0, pos.1 - z.distance);
+                    }
+                    Direction::Left => {
+                        distance += z.distance;
+                        pos = (pos.0 - z.distance, pos.1);
+                    }
+                    Direction::Right => {
+                        distance += z.distance;
+                        pos = (pos.0 + z.distance, pos.1);
                     }
                 };
             }
@@ -238,9 +262,11 @@ fn calculate_intersection_lowest_distance(
         })
         .collect::<Vec<usize>>();
 
+    distances.sort();
+
     println!("Distances: {:?}", distances);
 
-    distances[0]
+    distances[1]
 }
 
 fn generate_range(x: i32, y: i32) -> std::ops::Range<i32> {
@@ -291,42 +317,14 @@ fn test_part_a() {
     .map(|x| Instruction::from_str(x))
     .collect();
 
-    assert_eq!(159, run_wires(&test_wire_a, &test_wire_b));
-    assert_eq!(135, run_wires(&test_wire_c, &test_wire_d));
+    assert_eq!(159, run_wires(&test_wire_a, &test_wire_b)[1]);
+    assert_eq!(135, run_wires(&test_wire_c, &test_wire_d)[1]);
 }
 
 #[test]
 fn test_part_b() {
     assert_eq!(true, true);
     assert_ne!(true, false);
-
-    let test_wire_a: Vec<Instruction> =
-        vec!["R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"]
-            .par_iter()
-            .map(|x| Instruction::from_str(x))
-            .collect();
-    let test_wire_b: Vec<Instruction> =
-        vec!["U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"]
-            .par_iter()
-            .map(|x| Instruction::from_str(x))
-            .collect();
-
-    let test_wire_c: Vec<Instruction> = vec![
-        "R98", "U47", "R26", "D63", "R33", "U87", "L62", "D20", "R33", "U53", "R51",
-    ]
-    .par_iter()
-    .map(|x| Instruction::from_str(x))
-    .collect();
-
-    let test_wire_d: Vec<Instruction> = vec![
-        "U98", "R91", "D20", "R16", "D67", "R40", "U7", "R15", "U6", "R7",
-    ]
-    .par_iter()
-    .map(|x| Instruction::from_str(x))
-    .collect();
-
-    assert_eq!(159, run_wires(&test_wire_a, &test_wire_b));
-    assert_eq!(135, run_wires(&test_wire_c, &test_wire_d));
 }
 
 #[test]
@@ -356,6 +354,46 @@ fn test_instruction_init() {
     assert_eq!(Direction::Down, Instruction::from_str("D100").direction);
     assert_eq!(Direction::Left, Instruction::from_str("L100").direction);
     assert_eq!(Direction::Right, Instruction::from_str("R100").direction);
+}
+
+#[test]
+fn test_calculate_intersection_lowest_distance() {
+    assert_eq!(true, true);
+    assert_ne!(true, false);
+
+    let test_wire_a: Vec<Instruction> =
+        vec!["R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"]
+            .par_iter()
+            .map(|x| Instruction::from_str(x))
+            .collect();
+    let test_wire_b: Vec<Instruction> =
+        vec!["U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"]
+            .par_iter()
+            .map(|x| Instruction::from_str(x))
+            .collect();
+
+    let test_wire_c: Vec<Instruction> = vec![
+        "R98", "U47", "R26", "D63", "R33", "U87", "L62", "D20", "R33", "U53", "R51",
+    ]
+    .par_iter()
+    .map(|x| Instruction::from_str(x))
+    .collect();
+
+    let test_wire_d: Vec<Instruction> = vec![
+        "U98", "R91", "D20", "R16", "D67", "R40", "U7", "R15", "U6", "R7",
+    ]
+    .par_iter()
+    .map(|x| Instruction::from_str(x))
+    .collect();
+
+    assert_eq!(
+        610,
+        calculate_intersection_lowest_distance(test_wire_a, test_wire_b)
+    );
+    assert_eq!(
+        410,
+        calculate_intersection_lowest_distance(test_wire_c, test_wire_d)
+    );
 }
 
 const INPUT_VEC_A: [&str; 301] = [
