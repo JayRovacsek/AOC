@@ -211,9 +211,10 @@ fn calculate_intersection_lowest_distance(
         .map(|x| {
             let mut pos = (10000 as i32, 10000 as i32);
             let mut distance = 0;
+            let mut instructions = wire_a.iter();
 
-            for z in wire_b.clone() {
-                let old_pos = pos;
+            while x.0 != pos.0 && x.1 != pos.1 {
+                let z = instructions.next().unwrap();
                 match z.direction {
                     Direction::Up => {
                         pos = (pos.0, pos.1 + z.distance);
@@ -231,11 +232,7 @@ fn calculate_intersection_lowest_distance(
                         pos = (pos.0 + z.distance, pos.1);
                         distance += z.distance;
                     }
-                }
-                if &pos == x {
-                    panic!();
-                    break;
-                }
+                };
             }
             distance as usize
         })
