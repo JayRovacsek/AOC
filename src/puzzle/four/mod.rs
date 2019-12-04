@@ -1,25 +1,24 @@
+use rayon::prelude::*;
+
 pub fn solve() {
-    let answer_a = calculate_keyspace_part_a(INPUT[0], INPUT[1]);
+    let potential_keys: Vec<usize> = (INPUT[0]..=INPUT[1]).collect::<Vec<usize>>();
+    let answer_a = calculate_keyspace_part_a(&potential_keys);
     println!("The answer for day 4, part a is: {:?}", answer_a);
-    let answer_b = calculate_keyspace_part_b(INPUT[0], INPUT[1]);
+    let answer_b = calculate_keyspace_part_b(&potential_keys);
     println!("The answer for day 4, part b is: {:?}", answer_b);
 }
 
-fn calculate_keyspace_part_a(start: usize, end: usize) -> usize {
-    (start..=end)
-        .collect::<Vec<usize>>()
-        .iter()
+fn calculate_keyspace_part_a(potential_keys: &Vec<usize>) -> usize {
+    potential_keys
+        .par_iter()
         .filter(|x| has_double(*x) && !has_decrease(*x))
         .count()
 }
 
-fn calculate_keyspace_part_b(start: usize, end: usize) -> usize {
-    (start..=end)
-        .collect::<Vec<usize>>()
-        .iter()
-        .filter(|x| {
-            has_exact_double(*x) && !has_decrease(*x)
-        })
+fn calculate_keyspace_part_b(potential_keys: &Vec<usize>) -> usize {
+    potential_keys
+        .par_iter()
+        .filter(|x| has_exact_double(*x) && !has_decrease(*x))
         .count()
 }
 
@@ -28,9 +27,14 @@ fn has_double(input: &usize) -> bool {
     let digits: Vec<_> = input.to_string().chars().collect();
     let mut iter = digits.windows(2);
 
-    while !result {
+    loop {
         match iter.next() {
-            Some(v) => result = v[0] == v[1],
+            Some(v) => {
+                result = v[0] == v[1];
+                if result {
+                    break;
+                };
+            }
             _ => break,
         }
     }
@@ -38,7 +42,7 @@ fn has_double(input: &usize) -> bool {
 }
 
 fn has_exact_double(input: &usize) -> bool {
-    let mut result: Vec<usize> = Vec::new();
+    let mut result: bool = false;
     let digits: Vec<_> = input.to_string().chars().collect();
     let mut iter = digits.windows(2);
     let mut current_count: usize = 1;
@@ -49,22 +53,22 @@ fn has_exact_double(input: &usize) -> bool {
                 if v[0] == v[1] {
                     current_count += 1;
                 } else {
-                    if current_count > 1 {
-                        result.push(current_count);
+                    if current_count == 2 {
+                        result = true;
+                        break;
                     }
                     current_count = 1;
                 }
             }
             _ => {
-                if current_count > 1 {
-                    result.push(current_count);
+                if current_count == 2 {
+                    result = true;
                 };
-                break
+                break;
             }
         }
     }
-
-    !result.iter().filter(|x|*x == &2).collect::<Vec<_>>().is_empty()
+    result
 }
 
 #[allow(dead_code)]
@@ -93,7 +97,7 @@ fn digit_sequential_count_max(input: &usize) -> usize {
 
     match result.iter().max() {
         Some(v) => *v,
-        None => 0
+        None => 0,
     }
 }
 
