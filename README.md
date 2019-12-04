@@ -6,3 +6,6 @@ https://adventofcode.com/
 
 ## Why?
 Writing code is fun!
+
+## TODO
+Complete implementation and auto-deploy of code as wasm (following: https://rustwasm.github.io/docs/book/game-of-life/introduction.html)
