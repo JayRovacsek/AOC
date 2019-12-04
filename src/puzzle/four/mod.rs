@@ -67,6 +67,7 @@ fn has_exact_double(input: &usize) -> bool {
     !result.iter().filter(|x|*x == &2).collect::<Vec<_>>().is_empty()
 }
 
+#[allow(dead_code)]
 fn digit_sequential_count_max(input: &usize) -> usize {
     let mut result: Vec<usize> = Vec::new();
     let digits: Vec<_> = input.to_string().chars().collect();
