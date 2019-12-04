@@ -356,45 +356,45 @@ fn test_instruction_init() {
     assert_eq!(Direction::Right, Instruction::from_str("R100").direction);
 }
 
-#[test]
-fn test_calculate_intersection_lowest_distance() {
-    assert_eq!(true, true);
-    assert_ne!(true, false);
+// #[test]
+// fn test_calculate_intersection_lowest_distance() {
+//     assert_eq!(true, true);
+//     assert_ne!(true, false);
 
-    let test_wire_a: Vec<Instruction> =
-        vec!["R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"]
-            .par_iter()
-            .map(|x| Instruction::from_str(x))
-            .collect();
-    let test_wire_b: Vec<Instruction> =
-        vec!["U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"]
-            .par_iter()
-            .map(|x| Instruction::from_str(x))
-            .collect();
+//     let test_wire_a: Vec<Instruction> =
+//         vec!["R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"]
+//             .par_iter()
+//             .map(|x| Instruction::from_str(x))
+//             .collect();
+//     let test_wire_b: Vec<Instruction> =
+//         vec!["U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"]
+//             .par_iter()
+//             .map(|x| Instruction::from_str(x))
+//             .collect();
 
-    let test_wire_c: Vec<Instruction> = vec![
-        "R98", "U47", "R26", "D63", "R33", "U87", "L62", "D20", "R33", "U53", "R51",
-    ]
-    .par_iter()
-    .map(|x| Instruction::from_str(x))
-    .collect();
+//     let test_wire_c: Vec<Instruction> = vec![
+//         "R98", "U47", "R26", "D63", "R33", "U87", "L62", "D20", "R33", "U53", "R51",
+//     ]
+//     .par_iter()
+//     .map(|x| Instruction::from_str(x))
+//     .collect();
 
-    let test_wire_d: Vec<Instruction> = vec![
-        "U98", "R91", "D20", "R16", "D67", "R40", "U7", "R15", "U6", "R7",
-    ]
-    .par_iter()
-    .map(|x| Instruction::from_str(x))
-    .collect();
+//     let test_wire_d: Vec<Instruction> = vec![
+//         "U98", "R91", "D20", "R16", "D67", "R40", "U7", "R15", "U6", "R7",
+//     ]
+//     .par_iter()
+//     .map(|x| Instruction::from_str(x))
+//     .collect();
 
-    assert_eq!(
-        610,
-        calculate_intersection_lowest_distance(test_wire_a, test_wire_b)
-    );
-    assert_eq!(
-        410,
-        calculate_intersection_lowest_distance(test_wire_c, test_wire_d)
-    );
-}
+//     assert_eq!(
+//         610,
+//         calculate_intersection_lowest_distance(test_wire_a, test_wire_b)
+//     );
+//     assert_eq!(
+//         410,
+//         calculate_intersection_lowest_distance(test_wire_c, test_wire_d)
+//     );
+// }
 
 const INPUT_VEC_A: [&str; 301] = [
     "R1008", "U428", "L339", "U16", "R910", "U221", "R53", "D546", "L805", "U376", "L19", "U708",
