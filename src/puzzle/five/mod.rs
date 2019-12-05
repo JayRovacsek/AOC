@@ -5,8 +5,9 @@ struct Operation {
 }
 
 impl Operation {
-    fn parse(input: i32) -> Operation {
+    fn parse(input_vec: Vec<i32>, head: usize) -> Operation {
         use OpCode::*;
+        let input = input_vec[head];
         let opcode = match input % 10 {
             1 => Addition,
             2 => Multiplication,
@@ -14,22 +15,46 @@ impl Operation {
             4 => Output,
             _ => End,
         };
+        let number_of_params = match &opcode {
+            Input | Output => 2,
+            _ => 4
+        };
+        let parameters = Operation::parse_parameters(opcode.clone(), input_vec[head..head+number_of_params].to_vec());
         Operation {
             opcode: opcode.clone(),
-            registers: Operation::parse_registers(opcode, input),
+            registers: Operation::parse_registers(opcode, input_vec),
         }
     }
-    fn parse_registers(opcode: OpCode, input: i32) -> Vec<usize> {
+    fn parse_registers(opcode: OpCode, input_vec: Vec<i32>) -> Vec<usize> {
+        vec!(0 as usize)
+    }
+    fn parse_parameters(opcode: OpCode, input_vec: Vec<i32>) -> Vec<ParameterMode> {
+        use ParameterMode::*;
         use OpCode::*;
-        println!("Parsing {} as registers", input);
+        println!("Parsing {:?} as parameters", input_vec);
         match opcode {
-            Input | Output => [((input / 10) % 10) as usize].to_vec(),
-            _ => [
-                ((input / 1000) % 10) as usize,
-                ((input / 100) % 10) as usize,
-                ((input / 10) % 10) as usize,
-            ]
-            .to_vec(),
+            Input | Output => match ((input_vec[0] / 10) % 10) % 2 {
+                0 => vec!(PositionMode),
+                _ => vec!(ImmediateMode),
+            },
+            _ => {
+                let mut iter = input_vec.iter().enumerate();
+                let mut parameters: Vec<ParameterMode> = Vec::new();
+                loop {
+                    match iter.next() {
+                        Some((x,y)) => {
+                            parameters.push(
+                                match ((input_vec[x] / 10) % 10 * (y + 1)) % 2 {
+                                    0 => PositionMode,
+                                    _ => ImmediateMode,
+                                }
+                            )
+                        },
+                        _ => break
+                    }
+                }
+                parameters
+            }
         }
     }
     fn execute(&self, mut input_vec: Vec<i32>) -> Vec<i32> {
@@ -79,7 +104,7 @@ fn execute_instructions(mut input_vec: Vec<i32>) -> Vec<i32> {
     use OpCode::*;
     let mut head = 0;
     loop {
-        let op = Operation::parse(input_vec[head]);
+        let op = Operation::parse(input_vec.clone(), head);
         input_vec = op.execute(input_vec);
         head += match op.opcode {
             Input | Output => 2,
