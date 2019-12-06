@@ -134,6 +134,7 @@ fn test_has_exact_double() {
     assert_eq!(true, has_exact_double(&112_233));
     assert_eq!(false, has_exact_double(&123_444));
     assert_eq!(true, has_exact_double(&111_122));
+    assert_eq!(true, has_exact_double(&111_233));
 }
 
 #[test]
