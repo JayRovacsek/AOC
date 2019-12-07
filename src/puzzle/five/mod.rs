@@ -47,30 +47,15 @@ impl Operation {
                         _ => break,
                     }
                 }
-                let mut iter = instruction.iter().enumerate();
-                let mut parameters: Vec<ParameterMode> = Vec::new();
-                let mut c = 0;
-                'three: loop {
-                    loop {
-                        c += 1;
-                        match iter.next() {
-                            Some((x, y)) => match y {
-                                0 => parameters.push(PositionMode),
-                                1 => parameters.push(ImmediateMode),
-                                _ => panic!(""),
-                            },
-                            _ => match parameters.len() {
-                                0..=2 => parameters.push(PositionMode),
-                                _ => break 'three,
-                            },
-                        }
-                        if c == 3 {
-                            break 'three;
-                        };
-                    }
-                }
-                parameters.reverse();
-                parameters
+                instruction
+                    .iter()
+                    .rev()
+                    .map(|x| match x {
+                        0 => PositionMode,
+                        1 => ImmediateMode,
+                        _ => panic!(""),
+                    })
+                    .collect()
             }
         }
     }
