@@ -69,32 +69,45 @@ impl Operation {
         }
     }
 
-    fn execute(&self, mut input_vec: Vec<i32>) -> Vec<i32> {
+    fn execute(&self, mut input_vec: Vec<i32>, head: usize) -> Vec<i32> {
         use OpCode::*;
+        use ParameterMode::*;
+        let mut iter = self.parameters.iter().enumerate();
+        let mut params: Vec<usize> = Vec::new();
+        loop {
+            match iter.next() {
+                Some((x, y)) => match y {
+                    ImmediateMode => params.push(head + x),
+                    PositionMode => params.push(input_vec[head + x] as usize)
+                },
+                _ => break
+            }
+        }
+
         match self.opcode {
             Addition => {
-                input_vec[self.registers[2]] =
-                    input_vec[self.registers[0]] + input_vec[self.registers[1]]
+                input_vec[params[2]] =
+                    input_vec[params[0]] + input_vec[params[1]]
             }
             Multiplication => {
-                input_vec[self.registers[2]] =
-                    input_vec[self.registers[0]] * input_vec[self.registers[1]]
+                input_vec[params[2]] =
+                    input_vec[params[0]] * input_vec[params[1]]
             }
             Input => {
                 println!(
-                    "Set value {} as 1, previously was: {}",
-                    self.registers[0], input_vec[self.registers[0]]
+                    "Set value {} as 1",
+                    input_vec[params[0]]
                 );
-                input_vec[self.registers[0]] = 1
+                input_vec[params[0]] = 1
             }
-            Output => println!("Output OpCode, Value: {}", input_vec[self.registers[0]]),
+            Output => println!("Output OpCode, Value: {}", input_vec[params[0]]),
             End => panic!("Operation ending"),
         }
         input_vec
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 enum OpCode {
     Addition,
     Multiplication,
@@ -120,7 +133,10 @@ fn execute_instructions(mut input_vec: Vec<i32>) -> Vec<i32> {
     let mut head = 0;
     loop {
         let op = Operation::parse(input_vec.clone(), head);
-        input_vec = op.execute(input_vec);
+        if op.opcode == End {
+            break
+        };
+        input_vec = op.execute(input_vec, head);
         head += match op.opcode {
             Input | Output => 2,
             _ => 4,
