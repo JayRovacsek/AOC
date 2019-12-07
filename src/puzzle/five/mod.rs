@@ -49,7 +49,8 @@ impl Operation {
                         c += 1;
                         match iter.next() {
                             Some((x, y)) => match y {
-                                0 => parameters.push(PositionMode),
+                                0 => 
+                                    parameters.push(PositionMode),
                                 1 => parameters.push(ImmediateMode),
                                 _ => panic!(""),
                             },
@@ -58,8 +59,12 @@ impl Operation {
                                 _ => break 'three,
                             },
                         }
+                        if c == 3 {
+                            break 'three;
+                        };
                     }
                 }
+                parameters.reverse();
                 println!(
                     "Parsed: {} as params, came out with: {:?}",
                     input, parameters
@@ -124,11 +129,11 @@ enum ParameterMode {
 
 pub fn solve() {
     let registers = INPUT_VEC.clone().to_vec();
-    let answer_a = *execute_instructions(registers.clone()).first().unwrap();
-    println!("The answer for day 5, part a is: {:?}", answer_a);
+    execute_instructions(registers.clone());
+    // println!("The answer for day 5, part a is: {:?}", answer_a);
 }
 
-fn execute_instructions(mut input_vec: Vec<i32>) -> Vec<i32> {
+fn execute_instructions(mut input_vec: Vec<i32>) {
     use OpCode::*;
     let mut head = 0;
     loop {
@@ -142,7 +147,7 @@ fn execute_instructions(mut input_vec: Vec<i32>) -> Vec<i32> {
             _ => 4,
         };
     }
-    input_vec
+    // input_vec
 }
 
 #[test]
