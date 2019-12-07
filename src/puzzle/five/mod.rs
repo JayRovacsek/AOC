@@ -53,7 +53,7 @@ impl Operation {
                     .map(|x| match x {
                         0 => PositionMode,
                         1 => ImmediateMode,
-                        _ => panic!(""),
+                        _ => panic!("Attempted to parse an instruction that we otherwise don't yet know about: {}", x),
                     })
                     .collect()
             }
@@ -63,19 +63,18 @@ impl Operation {
     fn execute(&self, mut input_vec: Vec<i32>, head: usize) -> Vec<i32> {
         use OpCode::*;
         use ParameterMode::*;
-        let mut iter = self.parameters.iter().enumerate();
         println!("Parsing {:?} as instructions", input_vec[head]);
         println!("Parsing {:?} as params", self.parameters);
-        let mut params: Vec<i32> = Vec::new();
-        loop {
-            match iter.next() {
-                Some((x, y)) => match y {
-                    ImmediateMode => params.push((head + 1 + x) as i32),
-                    PositionMode => params.push(input_vec[head + 1 + x]),
-                },
-                _ => break,
-            }
-        }
+        let params: Vec<i32> = self
+            .parameters
+            .iter()
+            .enumerate()
+            .map(|x| match x.1 {
+                ImmediateMode => (head + 1 + x.0) as i32,
+                PositionMode => input_vec[head + 1 + x.0],
+            })
+            .collect();
+
         println!(
             "Instructions suggest these registers are to be used {:?}",
             params
