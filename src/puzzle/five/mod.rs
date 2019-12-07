@@ -13,11 +13,11 @@ impl Operation {
             2 => Multiplication,
             3 => Input,
             4 => Output,
+            5 => JumpIfTrue,
+            6 => JumpIfFalse,
+            7 => LessThan,
+            8 => Equals,
             _ => End,
-        };
-        let number_of_params = match &opcode {
-            Input | Output => 1,
-            _ => 3,
         };
         Operation {
             opcode: opcode.clone(),
@@ -28,19 +28,25 @@ impl Operation {
     fn parse_parameters(input: i32, opcode: OpCode) -> Vec<ParameterMode> {
         use OpCode::*;
         use ParameterMode::*;
-        println!("Parsing {:?} as parameters", input);
         match opcode {
             Input | Output => match ((input / 10) % 10) % 2 {
                 0 => vec![PositionMode],
                 _ => vec![ImmediateMode],
             },
             _ => {
-                let instruction: Vec<_> = input
+                let mut instruction: Vec<_> = input
                     .to_string()
                     .chars()
                     .map(|d| d.to_digit(10).unwrap())
                     .collect();
-                println!("Looking at digits: {:?}", instruction);
+                instruction.pop();
+                instruction.pop();
+                while let x = instruction.len() {
+                    match instruction.len() {
+                        n if n < 3 => instruction.insert(0, 0),
+                        _ => break,
+                    }
+                }
                 let mut iter = instruction.iter().enumerate();
                 let mut parameters: Vec<ParameterMode> = Vec::new();
                 let mut c = 0;
@@ -49,8 +55,7 @@ impl Operation {
                         c += 1;
                         match iter.next() {
                             Some((x, y)) => match y {
-                                0 => 
-                                    parameters.push(PositionMode),
+                                0 => parameters.push(PositionMode),
                                 1 => parameters.push(ImmediateMode),
                                 _ => panic!(""),
                             },
@@ -65,10 +70,6 @@ impl Operation {
                     }
                 }
                 parameters.reverse();
-                println!(
-                    "Parsed: {} as params, came out with: {:?}",
-                    input, parameters
-                );
                 parameters
             }
         }
@@ -78,34 +79,41 @@ impl Operation {
         use OpCode::*;
         use ParameterMode::*;
         let mut iter = self.parameters.iter().enumerate();
-        let mut params: Vec<usize> = Vec::new();
+        println!("Parsing {:?} as instructions", input_vec[head]);
+        println!("Parsing {:?} as params", self.parameters);
+        let mut params: Vec<i32> = Vec::new();
         loop {
             match iter.next() {
                 Some((x, y)) => match y {
-                    ImmediateMode => params.push(head + x),
-                    PositionMode => params.push(input_vec[head + x] as usize)
+                    ImmediateMode => params.push((head + 1 + x) as i32),
+                    PositionMode => params.push(input_vec[head + 1 + x]),
                 },
-                _ => break
+                _ => break,
             }
         }
+        println!(
+            "Instructions suggest these registers are to be used {:?}",
+            params
+        );
 
         match self.opcode {
             Addition => {
-                input_vec[params[2]] =
-                    input_vec[params[0]] + input_vec[params[1]]
+                input_vec[params[2] as usize] =
+                    input_vec[params[0] as usize] + input_vec[params[1] as usize]
             }
             Multiplication => {
-                input_vec[params[2]] =
-                    input_vec[params[0]] * input_vec[params[1]]
+                input_vec[params[2] as usize] =
+                    input_vec[params[0] as usize] * input_vec[params[1] as usize]
             }
             Input => {
-                println!(
-                    "Set value {} as 1",
-                    input_vec[params[0]]
-                );
-                input_vec[params[0]] = 1
+                println!("Set value {} as 1", input_vec[params[0] as usize]);
+                input_vec[params[0] as usize] = 1
             }
-            Output => println!("Output OpCode, Value: {}", input_vec[params[0]]),
+            JumpIfTrue => {}
+            JumpIfFalse => {}
+            LessThan => {}
+            Equals => {}
+            Output => println!("Output OpCode, Value: {}", input_vec[params[0] as usize]),
             End => panic!("Operation ending"),
         }
         input_vec
@@ -118,6 +126,10 @@ enum OpCode {
     Multiplication,
     Input,
     Output,
+    JumpIfTrue,
+    JumpIfFalse,
+    LessThan,
+    Equals,
     End,
 }
 
@@ -139,7 +151,7 @@ fn execute_instructions(mut input_vec: Vec<i32>) {
     loop {
         let op = Operation::parse(input_vec.clone(), head);
         if op.opcode == End {
-            break
+            break;
         };
         input_vec = op.execute(input_vec, head);
         head += match op.opcode {
