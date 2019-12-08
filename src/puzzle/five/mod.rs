@@ -21,7 +21,10 @@ impl Operation {
         };
         Operation {
             opcode: opcode.clone(),
-            parameters: Operation::parse_parameters(input_vec[head], opcode),
+            parameters: match opcode {
+                End => vec![],
+                _ => Operation::parse_parameters(input_vec[head], opcode),
+            },
         }
     }
 
@@ -29,10 +32,36 @@ impl Operation {
         use OpCode::*;
         use ParameterMode::*;
         match opcode {
-            Input | Output => match ((input / 10) % 10) % 2 {
-                0 => vec![PositionMode],
-                _ => vec![ImmediateMode],
-            },
+            Input | Output => {
+                match ((input / 10) % 10) % 2 {
+                    0 => vec![PositionMode],
+                    _ => vec![ImmediateMode],
+                }
+            }
+            JumpIfTrue | JumpIfFalse => {
+                let mut instruction: Vec<_> = input
+                .to_string()
+                .chars()
+                .map(|d| d.to_digit(10).unwrap())
+                .collect();
+            instruction.pop();
+            instruction.pop();
+            while let x = instruction.len() {
+                match x {
+                    n if n < 2 => instruction.insert(0, 0),
+                    _ => break,
+                }
+            }
+            instruction
+                .iter()
+                .rev()
+                .map(|x| match x {
+                    0 => PositionMode,
+                    1 => ImmediateMode,
+                    _ => panic!("Attempted to parse an instruction that we otherwise don't yet know about: {}", x),
+                })
+                .collect()
+            }
             _ => {
                 let mut instruction: Vec<_> = input
                     .to_string()
@@ -60,11 +89,15 @@ impl Operation {
         }
     }
 
-    fn execute(&self, mut input_vec: Vec<i32>, head: usize) -> (Vec<i32>, Option<i32>) {
+    fn execute(
+        &self,
+        mut input_vec: Vec<i32>,
+        mut head: usize,
+        input_code: i32,
+    ) -> (Vec<i32>, usize, Option<i32>) {
         use OpCode::*;
         use ParameterMode::*;
         println!("Parsing {:?} as instructions", input_vec[head]);
-        println!("Parsing {:?} as params", self.parameters);
         let mut output: Option<i32> = None;
         let params: Vec<i32> = self
             .parameters
@@ -84,27 +117,59 @@ impl Operation {
         match self.opcode {
             Addition => {
                 input_vec[params[2] as usize] =
-                    input_vec[params[0] as usize] + input_vec[params[1] as usize]
+                    input_vec[params[0] as usize] + input_vec[params[1] as usize];
+                head += 4;
             }
             Multiplication => {
                 input_vec[params[2] as usize] =
-                    input_vec[params[0] as usize] * input_vec[params[1] as usize]
+                    input_vec[params[0] as usize] * input_vec[params[1] as usize];
+                head += 4;
             }
             Input => {
                 println!("Set value {} as 1", input_vec[params[0] as usize]);
-                input_vec[params[0] as usize] = 1
+                input_vec[params[0] as usize] = input_code;
+                head += 2;
             }
-            JumpIfTrue => {}
-            JumpIfFalse => {}
-            LessThan => {}
-            Equals => {}
+            JumpIfTrue => {
+                if input_vec[params[0] as usize] != 0 {
+                    head = input_vec[params[1] as usize] as usize;
+                } else {
+                    head += 3;
+                }
+            }
+            JumpIfFalse => {
+                if input_vec[params[0] as usize] == 0 {
+                    head = input_vec[params[1] as usize] as usize;
+                } else {
+                    head += 3;
+                }
+            }
+            LessThan => {
+                input_vec[params[2] as usize] =
+                    if input_vec[params[0] as usize] < input_vec[params[1] as usize] {
+                        1
+                    } else {
+                        0
+                    };
+                head += 4
+            }
+            Equals => {
+                input_vec[params[2] as usize] =
+                    if input_vec[params[0] as usize] == input_vec[params[1] as usize] {
+                        1
+                    } else {
+                        0
+                    };
+                head += 4
+            }
             Output => {
                 output = Some(input_vec[params[0] as usize]);
                 println!("Output OpCode, Value: {}", input_vec[params[0] as usize]);
-            },
+                head += 2;
+            }
             End => panic!("Operation ending"),
         }
-        (input_vec, output)
+        (input_vec, head, output)
     }
 }
 
@@ -129,11 +194,13 @@ enum ParameterMode {
 
 pub fn solve() {
     let registers = INPUT_VEC.clone().to_vec();
-    let answer_a = execute_instructions_part_a(registers);
-    // println!("The answer for day 5, part a is: {:?}", answer_a);
+    let answer_a = execute_instructions(registers.clone(), 1);
+    println!("The answer for day 5, part a is: {:?}", answer_a);
+    let answer_b = execute_instructions(registers, 5);
+    println!("The answer for day 5, part b is: {:?}", answer_b);
 }
 
-fn execute_instructions_part_a(mut input_vec: Vec<i32>) -> i32 {
+fn execute_instructions(mut input_vec: Vec<i32>, input_code: i32) -> i32 {
     use OpCode::*;
     let mut head = 0;
     let mut outputs: Vec<i32> = Vec::new();
@@ -142,14 +209,11 @@ fn execute_instructions_part_a(mut input_vec: Vec<i32>) -> i32 {
         if op.opcode == End {
             break;
         };
-        let result = op.execute(input_vec, head);
+        let result = op.execute(input_vec, head, input_code);
         input_vec = result.0;
-        if result.1.is_some() {
-            outputs.push(result.1.unwrap());
-        };
-        head += match op.opcode {
-            Input | Output => 2,
-            _ => 4,
+        head = result.1;
+        if result.2.is_some() {
+            outputs.push(result.2.unwrap());
         };
     }
     *outputs.last().unwrap_or(&0_i32)
@@ -159,9 +223,126 @@ fn execute_instructions_part_a(mut input_vec: Vec<i32>) -> i32 {
 fn test_part_a() {
     assert_eq!(true, true);
     assert_ne!(true, false);
+    assert_eq!(7_265_618, execute_instructions(INPUT_VEC.to_vec(), 1));
+}
+
+// Tests to ensure input is equal to 8: on true return 1,
+// else return 0
+#[test]
+fn test_part_b_example_1() {
+    assert_eq!(true, true);
+    assert_ne!(true, false);
     assert_eq!(
-        7_265_618,
-        execute_instructions_part_a(INPUT_VEC.to_vec())
+        1,
+        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 8)
+    );
+    assert_eq!(
+        0,
+        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 9)
+    );
+    assert_ne!(
+        0,
+        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 8)
+    );
+    assert_ne!(
+        1,
+        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 999)
+    );
+}
+
+// Tests to ensure input is less than 8: on true return 1,
+// else return 0
+#[test]
+fn test_part_b_example_2() {
+    assert_eq!(true, true);
+    assert_ne!(true, false);
+    assert_eq!(
+        1,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 7)
+    );
+    assert_eq!(
+        1,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 0)
+    );
+    assert_eq!(
+        0,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 9)
+    );
+    assert_eq!(
+        0,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 10)
+    );
+    assert_ne!(
+        0,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 6)
+    );
+    assert_ne!(
+        0,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 2)
+    );
+    assert_ne!(
+        1,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 99)
+    );
+}
+
+// Tests to ensure input is equal to 8: on true return 1,
+// else return 0
+#[test]
+fn test_part_b_example_3() {
+    assert_eq!(true, true);
+    assert_ne!(true, false);
+    assert_eq!(
+        1,
+        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 8)
+    );
+    assert_eq!(
+        0,
+        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 9)
+    );
+    assert_ne!(
+        0,
+        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 8)
+    );
+    assert_ne!(
+        1,
+        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 999)
+    );
+}
+
+// Tests to ensure input is less than 8: on true return 1,
+// else return 0
+#[test]
+fn test_part_b_example_4() {
+    assert_eq!(true, true);
+    assert_ne!(true, false);
+    assert_eq!(
+        1,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 7)
+    );
+    assert_eq!(
+        1,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 0)
+    );
+    assert_eq!(
+        0,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 9)
+    );
+    assert_eq!(
+        0,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 10)
+    );
+    assert_ne!(
+        0,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 6)
+    );
+    assert_ne!(
+        0,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 2)
+    );
+    assert_ne!(
+        1,
+        execute_instructions([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 99)
     );
 }
 
