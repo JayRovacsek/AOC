@@ -188,13 +188,13 @@ enum ParameterMode {
 
 pub fn solve() {
     let registers = INPUT_VEC.clone().to_vec();
-    let answer_a = execute_instructions(registers.clone(), 1);
+    let answer_a = run_interpreter(registers.clone(), 1);
     println!("The answer for day 5, part a is: {:?}", answer_a);
-    let answer_b = execute_instructions(registers, 5);
+    let answer_b = run_interpreter(registers, 5);
     println!("The answer for day 5, part b is: {:?}", answer_b);
 }
 
-fn execute_instructions(mut input_vec: Vec<i32>, input_code: i32) -> i32 {
+fn run_interpreter(mut input_vec: Vec<i32>, input_code: i32) -> i32 {
     use OpCode::*;
     let mut head = 0;
     let mut outputs: Vec<i32> = Vec::new();
@@ -211,37 +211,6 @@ fn execute_instructions(mut input_vec: Vec<i32>, input_code: i32) -> i32 {
         };
     }
     *outputs.last().unwrap_or(&0_i32)
-}
-
-#[test]
-fn test_part_a() {
-    assert_eq!(true, true);
-    assert_ne!(true, false);
-    assert_eq!(7_265_618, execute_instructions(INPUT_VEC.to_vec(), 1));
-}
-
-// Tests to ensure input is equal to 8: on true return 1,
-// else return 0
-#[test]
-fn test_part_b_example_1() {
-    assert_eq!(true, true);
-    assert_ne!(true, false);
-    assert_eq!(
-        1,
-        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 8)
-    );
-    assert_eq!(
-        0,
-        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 9)
-    );
-    assert_ne!(
-        0,
-        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 8)
-    );
-    assert_ne!(
-        1,
-        execute_instructions([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8].to_vec(), 999)
-    );
 }
 
 const INPUT_VEC: [i32; 678] = [
