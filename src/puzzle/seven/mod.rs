@@ -12,13 +12,24 @@ pub fn solve() {
     }).max();
     println!("The answer for day 7, part a is: {:?}", answer_a);
     let answer_b = generate_combinations(5,9).par_iter().map(|x|{
-        x.iter().fold(0,|y,z|{
+        let mut interpreter = Interpreter::new(None);
+        let mut count = interpreter.run_one_output(INPUT_VEC.to_vec(), 0).unwrap();
+        let mut cycle = x.iter().cycle();
+        cycle.next();
+        loop {
+            println!("Count: {}", count);
+            let z = cycle.next().unwrap();
             let mut interpreter = Interpreter::new(Some(*z));
-            interpreter.run(INPUT_VEC.to_vec(), y)
-        })
+            let result = interpreter.run_one_output(INPUT_VEC.to_vec(), count);
+            if result.is_some() {
+                count += result.unwrap();
+            } else {
+                break;
+            }
+        }
+        count
     }).max();
     println!("The answer for day 7, part b is: {:?}", answer_b);
-
 }
 
 // This is horrible and I wish to rewrite it when I can think about it more.

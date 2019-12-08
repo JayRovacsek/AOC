@@ -25,24 +25,48 @@ impl Interpreter {
         use OpCode::*;
         let mut head = 0;
         let mut outputs: Vec<i32> = Vec::new();
-        loop {
-            let op = Operation::parse(input_vec.clone(), head);
-            if op.opcode == End {
+        while let x = Operation::parse(input_vec.clone(), head) {
+            if x.opcode == End {
                 break;
             };
             let result = if self.phase_setting_consumed {
-                op.execute(input_vec, head, input_code)
+                x.execute(input_vec, head, input_code)
             } else {
                 self.phase_setting_consumed = true;
-                op.execute(input_vec, head, self.phase_setting.unwrap_or(0))
+                x.execute(input_vec, head, self.phase_setting.unwrap_or(0))
             };
             input_vec = result.0;
             head = result.1;
             if result.2.is_some() {
                 outputs.push(result.2.unwrap());
-            };
+            };        
         }
         *outputs.last().unwrap_or(&0_i32)
+    }
+
+    pub fn run_one_output(&mut self, mut input_vec: Vec<i32>, input_code: i32) -> Option<i32> {
+        use OpCode::*;
+        let mut head = 0;
+        let mut output: Option<i32> = None;
+        while let x = Operation::parse(input_vec.clone(), head) {
+            if x.opcode == End {
+                break;
+            };
+            let result = if self.phase_setting_consumed {
+                x.execute(input_vec, head, input_code)
+            } else {
+                self.phase_setting_consumed = true;
+                x.execute(input_vec, head, self.phase_setting.unwrap_or(0))
+            };
+            input_vec = result.0;
+            head = result.1;
+            if result.2.is_some() {
+                output = Some(result.2.unwrap());
+                break;
+            }
+
+        }
+        output
     }
 }
 
@@ -207,7 +231,7 @@ impl Operation {
                 output = Some(input_vec[params[0] as usize]);
                 head += 2;
             }
-            End => panic!("Operation ending"),
+            End => output = None,
         }
         (input_vec, head, output)
     }
