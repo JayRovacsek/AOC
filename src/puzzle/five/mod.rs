@@ -42,7 +42,7 @@ impl Operation {
                 instruction.pop();
                 instruction.pop();
                 while let x = instruction.len() {
-                    match instruction.len() {
+                    match x {
                         n if n < 3 => instruction.insert(0, 0),
                         _ => break,
                     }
@@ -60,11 +60,12 @@ impl Operation {
         }
     }
 
-    fn execute(&self, mut input_vec: Vec<i32>, head: usize) -> Vec<i32> {
+    fn execute(&self, mut input_vec: Vec<i32>, head: usize) -> (Vec<i32>, Option<i32>) {
         use OpCode::*;
         use ParameterMode::*;
         println!("Parsing {:?} as instructions", input_vec[head]);
         println!("Parsing {:?} as params", self.parameters);
+        let mut output: Option<i32> = None;
         let params: Vec<i32> = self
             .parameters
             .iter()
@@ -97,10 +98,13 @@ impl Operation {
             JumpIfFalse => {}
             LessThan => {}
             Equals => {}
-            Output => println!("Output OpCode, Value: {}", input_vec[params[0] as usize]),
+            Output => {
+                output = Some(input_vec[params[0] as usize]);
+                println!("Output OpCode, Value: {}", input_vec[params[0] as usize]);
+            },
             End => panic!("Operation ending"),
         }
-        input_vec
+        (input_vec, output)
     }
 }
 
@@ -125,25 +129,30 @@ enum ParameterMode {
 
 pub fn solve() {
     let registers = INPUT_VEC.clone().to_vec();
-    execute_instructions(registers.clone());
+    let answer_a = execute_instructions_part_a(registers);
     // println!("The answer for day 5, part a is: {:?}", answer_a);
 }
 
-fn execute_instructions(mut input_vec: Vec<i32>) {
+fn execute_instructions_part_a(mut input_vec: Vec<i32>) -> i32 {
     use OpCode::*;
     let mut head = 0;
+    let mut outputs: Vec<i32> = Vec::new();
     loop {
         let op = Operation::parse(input_vec.clone(), head);
         if op.opcode == End {
             break;
         };
-        input_vec = op.execute(input_vec, head);
+        let result = op.execute(input_vec, head);
+        input_vec = result.0;
+        if result.1.is_some() {
+            outputs.push(result.1.unwrap());
+        };
         head += match op.opcode {
             Input | Output => 2,
             _ => 4,
         };
     }
-    // input_vec
+    *outputs.last().unwrap_or(&0_i32)
 }
 
 #[test]
@@ -151,19 +160,8 @@ fn test_part_a() {
     assert_eq!(true, true);
     assert_ne!(true, false);
     assert_eq!(
-        70,
-        execute_instructions(vec!(1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50))[3]
-    );
-    assert_eq!(
-        3500,
-        execute_instructions(vec!(1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50))[0]
-    );
-    assert_eq!(2, execute_instructions(vec!(1, 0, 0, 0, 99))[0]);
-    assert_eq!(6, execute_instructions(vec!(2, 3, 0, 3, 99))[3]);
-    assert_eq!(9801, execute_instructions(vec!(2, 4, 4, 5, 99, 0))[5]);
-    assert_eq!(
-        30,
-        execute_instructions(vec!(1, 1, 1, 4, 99, 5, 6, 0, 99))[0]
+        7_265_618,
+        execute_instructions_part_a(INPUT_VEC.to_vec())
     );
 }
 
