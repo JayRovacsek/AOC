@@ -1,5 +1,51 @@
 mod test;
 
+pub struct Interpreter {
+    phase_setting_consumed: bool,
+    phase_setting: Option<i32>
+}
+
+impl Interpreter {
+    pub fn new(phase_setting: Option<i32>) -> Interpreter {
+        match phase_setting {
+            Some(i) => {
+                Interpreter {
+                    phase_setting_consumed: false,
+                    phase_setting: Some(i)
+                }
+            },
+            _ => Interpreter {
+                phase_setting_consumed: true,
+                phase_setting: None
+            }
+        }
+    }
+
+    pub fn run(&mut self, mut input_vec: Vec<i32>, input_code: i32) -> i32 {
+        use OpCode::*;
+        let mut head = 0;
+        let mut outputs: Vec<i32> = Vec::new();
+        loop {
+            let op = Operation::parse(input_vec.clone(), head);
+            if op.opcode == End {
+                break;
+            };
+            let result = if self.phase_setting_consumed {
+                op.execute(input_vec, head, input_code)
+            } else {
+                self.phase_setting_consumed = true;
+                op.execute(input_vec, head, self.phase_setting.unwrap_or(0))
+            };
+            input_vec = result.0;
+            head = result.1;
+            if result.2.is_some() {
+                outputs.push(result.2.unwrap());
+            };
+        }
+        *outputs.last().unwrap_or(&0_i32)
+    }
+}
+
 #[derive(Debug)]
 struct Operation {
     opcode: OpCode,
@@ -188,29 +234,11 @@ enum ParameterMode {
 
 pub fn solve() {
     let registers = INPUT_VEC.clone().to_vec();
-    let answer_a = run_interpreter(registers.clone(), 1);
+    let mut interpreter = Interpreter::new(None);
+    let answer_a = interpreter.run(registers.clone(), 1);
     println!("The answer for day 5, part a is: {:?}", answer_a);
-    let answer_b = run_interpreter(registers, 5);
+    let answer_b = interpreter.run(registers, 5);
     println!("The answer for day 5, part b is: {:?}", answer_b);
-}
-
-pub fn run_interpreter(mut input_vec: Vec<i32>, input_code: i32) -> i32 {
-    use OpCode::*;
-    let mut head = 0;
-    let mut outputs: Vec<i32> = Vec::new();
-    loop {
-        let op = Operation::parse(input_vec.clone(), head);
-        if op.opcode == End {
-            break;
-        };
-        let result = op.execute(input_vec, head, input_code);
-        input_vec = result.0;
-        head = result.1;
-        if result.2.is_some() {
-            outputs.push(result.2.unwrap());
-        };
-    }
-    *outputs.last().unwrap_or(&0_i32)
 }
 
 const INPUT_VEC: [i32; 678] = [

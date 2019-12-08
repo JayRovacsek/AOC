@@ -1,23 +1,43 @@
+mod test;
+
 use super::five::*;
 use rayon::prelude::*;
 
 pub fn solve() {
-    println!("Currently a stub");
-    let a = run_interpreter(INPUT_VEC.to_vec(), 0);
-    let combinations = generate_options();
-    println!("A: {}", a);
-    println!("Combinations: {:?}", combinations);
+    let combinations = generate_combinations();
+    let answer_a = combinations.par_iter().map(|x|{
+        x.iter().fold(0,|y,z|{
+            let mut interpreter = Interpreter::new(Some(*z));
+            interpreter.run(INPUT_VEC.to_vec(), y)
+        })
+    }).max();
+    println!("The answer for day 7, part a is: {:?}", answer_a);
+
 }
 
-fn generate_options() -> Vec<Vec<i32>> {
-    let it: Vec<Vec<i32>> = (1..5).combinations(5).collect_vec();
-    it
-}
-
-#[test]
-fn test_solve() {
-    assert_eq!(true, true);
-    assert_ne!(true, false);
+// This is horrible and I wish to rewrite it when I can think about it more.
+fn generate_combinations() -> Vec<Vec<i32>> {
+    let mut combinations: Vec<Vec<i32>> = Vec::new();
+    for a in 0..=4 {
+        for b in 0..=4 {
+            for c in 0..=4 {
+                for d in 0..=4 {
+                    for e in 0..=4 {
+                        if a != b && b != c && c != d && d != e {
+                            let v = vec![a,b,c,d,e];
+                            let mut v2 = v.clone();
+                            v2.sort();
+                            v2.dedup();
+                            if v.len() == v2.len() {
+                                combinations.push(vec!(a,b,c,d,e))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+    combinations
 }
 
 const INPUT_VEC: [i32; 511] = [
