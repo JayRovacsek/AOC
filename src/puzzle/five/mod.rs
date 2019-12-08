@@ -194,7 +194,7 @@ pub fn solve() {
     println!("The answer for day 5, part b is: {:?}", answer_b);
 }
 
-fn run_interpreter(mut input_vec: Vec<i32>, input_code: i32) -> i32 {
+pub fn run_interpreter(mut input_vec: Vec<i32>, input_code: i32) -> i32 {
     use OpCode::*;
     let mut head = 0;
     let mut outputs: Vec<i32> = Vec::new();
