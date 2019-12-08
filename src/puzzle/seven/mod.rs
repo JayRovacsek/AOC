@@ -4,25 +4,31 @@ use super::five::*;
 use rayon::prelude::*;
 
 pub fn solve() {
-    let combinations = generate_combinations();
-    let answer_a = combinations.par_iter().map(|x|{
+    let answer_a = generate_combinations(0,4).par_iter().map(|x|{
         x.iter().fold(0,|y,z|{
             let mut interpreter = Interpreter::new(Some(*z));
             interpreter.run(INPUT_VEC.to_vec(), y)
         })
     }).max();
     println!("The answer for day 7, part a is: {:?}", answer_a);
+    let answer_b = generate_combinations(5,9).par_iter().map(|x|{
+        x.iter().fold(0,|y,z|{
+            let mut interpreter = Interpreter::new(Some(*z));
+            interpreter.run(INPUT_VEC.to_vec(), y)
+        })
+    }).max();
+    println!("The answer for day 7, part b is: {:?}", answer_b);
 
 }
 
 // This is horrible and I wish to rewrite it when I can think about it more.
-fn generate_combinations() -> Vec<Vec<i32>> {
+fn generate_combinations(lower: i32, upper: i32) -> Vec<Vec<i32>> {
     let mut combinations: Vec<Vec<i32>> = Vec::new();
-    for a in 0..=4 {
-        for b in 0..=4 {
-            for c in 0..=4 {
-                for d in 0..=4 {
-                    for e in 0..=4 {
+    for a in lower..=upper {
+        for b in lower..=upper {
+            for c in lower..=upper {
+                for d in lower..=upper {
+                    for e in lower..=upper {
                         if a != b && b != c && c != d && d != e {
                             let v = vec![a,b,c,d,e];
                             let mut v2 = v.clone();
