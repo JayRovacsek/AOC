@@ -20,7 +20,7 @@ pub fn solve() {
         let mut interpreter_e = Interpreter::new(Some(x[4]),INPUT_VEC.to_vec(), 0);
         let interpreters = vec![interpreter_a,interpreter_b,interpreter_c,interpreter_d,interpreter_e];
         let mut cycle = interpreters.into_iter().cycle();
-        while let mut done = false {
+        loop {
             let new_input = cycle.next().unwrap().run_one_output(input);
             if new_input.is_none() {
                 break;
