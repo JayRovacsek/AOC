@@ -42,7 +42,7 @@ pub fn solve() {
 }
 
 fn flatten_layers(layers: Vec<Vec<u32>>) -> Vec<u32> {
-    let mut img = Image::new(25, 6);
+    // let mut img = Image::new(25, 6);
     let mut result: Vec<u32> = [2; 150].to_vec();
     layers.iter().for_each(|x| {
         x.iter().enumerate().for_each(|y| {
