@@ -4,32 +4,69 @@ use super::five::*;
 use rayon::prelude::*;
 
 pub fn solve() {
-    let answer_a = generate_combinations(0,4).par_iter().map(|x|{
-        x.iter().fold(0,|y,z|{
-            let mut interpreter = Interpreter::new(Some(*z),INPUT_VEC.to_vec(), 0);
-            interpreter.run(y)
+    let answer_a = generate_combinations(0, 4)
+        .par_iter()
+        .map(|x| {
+            x.iter().fold(0, |y, z| {
+                let mut interpreter = Interpreter::new(Some(*z), INPUT_VEC.to_vec(), 0);
+                interpreter.run(y)
+            })
         })
-    }).max();
+        .max();
     println!("The answer for day 7, part a is: {:?}", answer_a);
-    let answer_b = generate_combinations(5,9).par_iter().map(|x|{
-        let mut input: Option<i32> = Some(0);
-        let mut interpreter_a = Interpreter::new(Some(x[0]),INPUT_VEC.to_vec(), 0);
-        let mut interpreter_b = Interpreter::new(Some(x[1]),INPUT_VEC.to_vec(), 0);
-        let mut interpreter_c = Interpreter::new(Some(x[2]),INPUT_VEC.to_vec(), 0);
-        let mut interpreter_d = Interpreter::new(Some(x[3]),INPUT_VEC.to_vec(), 0);
-        let mut interpreter_e = Interpreter::new(Some(x[4]),INPUT_VEC.to_vec(), 0);
-        let interpreters = vec![interpreter_a,interpreter_b,interpreter_c,interpreter_d,interpreter_e];
-        let mut cycle = interpreters.into_iter().cycle();
-        loop {
-            let new_input = cycle.next().unwrap().run_one_output(input);
-            if new_input.is_none() {
-                break;
-            } else {
-                input = new_input
+    let answer_b = generate_combinations(5, 9)
+        .par_iter()
+        .map(|x| {
+            let mut input: Option<i32> = Some(0);
+            let mut interpreter_a = Interpreter::new(Some(x[0]), INPUT_VEC.to_vec(), 0);
+            let mut interpreter_b = Interpreter::new(Some(x[1]), INPUT_VEC.to_vec(), 0);
+            let mut interpreter_c = Interpreter::new(Some(x[2]), INPUT_VEC.to_vec(), 0);
+            let mut interpreter_d = Interpreter::new(Some(x[3]), INPUT_VEC.to_vec(), 0);
+            let mut interpreter_e = Interpreter::new(Some(x[4]), INPUT_VEC.to_vec(), 0);
+            let mut done = false;
+            loop {
+                let mut new_input = interpreter_a.run_one_output(input);
+                if new_input.is_some() {
+                    input = new_input
+                } else {
+                    done = true
+                }
+
+                let mut new_input = interpreter_b.run_one_output(input);
+                if new_input.is_some() {
+                    input = new_input
+                } else {
+                    done = true
+                }
+
+                let mut new_input = interpreter_c.run_one_output(input);
+                if new_input.is_some() {
+                    input = new_input
+                } else {
+                    done = true
+                }
+
+                let mut new_input = interpreter_d.run_one_output(input);
+                if new_input.is_some() {
+                    input = new_input
+                } else {
+                    done = true
+                }
+
+                let mut new_input = interpreter_e.run_one_output(input);
+                if new_input.is_some() {
+                    input = new_input
+                } else {
+                    done = true
+                }
+
+                if done {
+                    break;
+                }
             }
-        }
-        input.unwrap_or(0_i32)
-    }).max();
+            input.unwrap_or(0_i32)
+        })
+        .max();
     println!("The answer for day 7, part b is: {:?}", answer_b);
 }
 
@@ -42,19 +79,19 @@ fn generate_combinations(lower: i32, upper: i32) -> Vec<Vec<i32>> {
                 for d in lower..=upper {
                     for e in lower..=upper {
                         if a != b && b != c && c != d && d != e {
-                            let v = vec![a,b,c,d,e];
+                            let v = vec![a, b, c, d, e];
                             let mut v2 = v.clone();
                             v2.sort();
                             v2.dedup();
                             if v.len() == v2.len() {
-                                combinations.push(vec!(a,b,c,d,e))
+                                combinations.push(vec![a, b, c, d, e])
                             }
                         }
                     }
                 }
             }
         }
-    };
+    }
     combinations
 }
 
