@@ -1,6 +1,7 @@
 mod input;
 mod puzzle;
 
+extern crate bmp;
 extern crate humantime;
 extern crate rand;
 extern crate rayon;
@@ -9,7 +10,7 @@ use std::time::Instant;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-extern {
+extern "C" {
     fn alert(s: &str);
 }
 

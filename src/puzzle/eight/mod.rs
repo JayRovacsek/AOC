@@ -1,24 +1,70 @@
+use bmp::Image;
+use bmp::Pixel;
+
 pub fn solve() {
     let layers = build_layers(
         INPUT.chars().map(|d| d.to_digit(10).unwrap()).collect(),
         25,
         6,
     );
-    let min = layers
+    let min_zeros = layers
         .iter()
         .map(|x| x.iter().filter(|y| y == &&0_u32).count())
         .min()
         .unwrap();
 
-    let a: Vec<Vec<u32>> = layers
-        .into_iter()
-        .filter(|x| x.iter().filter(|y| y == &&0_u32).count() == min)
+    let layer_with_min_zeros: Vec<Vec<u32>> = layers
+        .iter()
+        .cloned()
+        .filter(|x| x.iter().filter(|y| y == &&0_u32).count() == min_zeros)
         .collect();
 
-    let number_of_one = a.first().unwrap().iter().filter(|x| x == &&1_u32).count();
-    let number_of_two = a.first().unwrap().iter().filter(|x| x == &&2_u32).count();
-    let answer_a = number_of_one * number_of_two;
-    println!("The answer for day 8, part a is: {:?}", answer_a);
+    println!(
+        "The answer for day 8, part a is: {:?}",
+        layer_with_min_zeros
+            .first()
+            .unwrap()
+            .iter()
+            .filter(|x| x == &&1_u32)
+            .count()
+            * layer_with_min_zeros
+                .first()
+                .unwrap()
+                .iter()
+                .filter(|x| x == &&2_u32)
+                .count()
+    );
+
+    println!(
+        "The answer for day 8, part b is: {:?}",
+        flatten_layers(layers)
+    );
+}
+
+fn flatten_layers(layers: Vec<Vec<u32>>) -> Vec<u32> {
+    let mut img = Image::new(25, 6);
+    let mut result: Vec<u32> = [2; 150].to_vec();
+    layers.iter().for_each(|x| {
+        x.iter().enumerate().for_each(|y| {
+            if result[y.0] == 2 {
+                if *y.1 != 2 {
+                    let pixel = img.get_pixel((y.0 as u32) / 25, (y.0 as u32) % 25);
+                    if *y.1 == 0 {
+                        img.set_pixel((y.0 as u32) / 25, (y.0 as u32) % 25, Pixel::new(0, 0, 0));
+                    } else {
+                        img.set_pixel(
+                            (y.0 as u32) / 25,
+                            (y.0 as u32) % 25,
+                            Pixel::new(255, 255, 255),
+                        );
+                    };
+                    result[y.0] = *y.1
+                }
+            }
+        })
+    });
+    let _ = img.save("result.bmp");
+    result
 }
 
 fn build_layers(input_vec: Vec<u32>, width: u32, height: u32) -> Vec<Vec<u32>> {
