@@ -4,15 +4,21 @@ pub fn solve() {
         25,
         6,
     );
-    let a = layers
+    let min = layers
         .iter()
         .map(|x| x.iter().filter(|y| y == &&0_u32).count())
-        .min();
-    let b = layers
-        .iter()
-        .map(|x| x.iter().filter(|y| y == &&0_u32).count())
-        .max();
-    println!("a: {:?} b: {:?}", a, b);
+        .min()
+        .unwrap();
+
+    let a: Vec<Vec<u32>> = layers
+        .into_iter()
+        .filter(|x| x.iter().filter(|y| y == &&0_u32).count() == min)
+        .collect();
+
+    let number_of_one = a.first().unwrap().iter().filter(|x| x == &&1_u32).count();
+    let number_of_two = a.first().unwrap().iter().filter(|x| x == &&2_u32).count();
+    let answer_a = number_of_one * number_of_two;
+    println!("The answer for day 8, part a is: {:?}", answer_a);
 }
 
 fn build_layers(input_vec: Vec<u32>, width: u32, height: u32) -> Vec<Vec<u32>> {
