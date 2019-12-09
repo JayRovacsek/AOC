@@ -48,16 +48,14 @@ fn flatten_layers(layers: Vec<Vec<u32>>) -> Vec<u32> {
         x.iter().enumerate().for_each(|y| {
             // let a = y.0 % 25;
             // let b = y.0 / 25;
-            if result[y.0] == 2 {
-                if *y.1 != 2 {
-                    // let pixel = img.get_pixel(a as u32, b as u32);
-                    // if *y.1 == 0 {
-                    //     img.set_pixel(a as u32, b as u32, Pixel::new(0, 0, 0));
-                    // } else {
-                    //     img.set_pixel(a as u32, b as u32, Pixel::new(255, 255, 255));
-                    // };
-                    result[y.0] = *y.1;
-                }
+            if result[y.0] == 2 && *y.1 != 2 {
+                // let pixel = img.get_pixel(a as u32, b as u32);
+                // if *y.1 == 0 {
+                //     img.set_pixel(a as u32, b as u32, Pixel::new(0, 0, 0));
+                // } else {
+                //     img.set_pixel(a as u32, b as u32, Pixel::new(255, 255, 255));
+                // };
+                result[y.0] = *y.1;
             }
         })
     });

@@ -3,33 +3,32 @@ pub struct Interpreter {
     phase_setting_consumed: bool,
     phase_setting: Option<i32>,
     input_vec: Vec<i32>,
-    head: usize
+    head: usize,
 }
 
 impl Interpreter {
     pub fn new(phase_setting: Option<i32>, input_vec: Vec<i32>, head: usize) -> Interpreter {
         match phase_setting {
-            Some(i) => {
-                Interpreter {
-                    phase_setting_consumed: false,
-                    phase_setting: Some(i),
-                    input_vec,
-                    head
-                }
+            Some(i) => Interpreter {
+                phase_setting_consumed: false,
+                phase_setting: Some(i),
+                input_vec,
+                head,
             },
             _ => Interpreter {
                 phase_setting_consumed: true,
                 phase_setting: None,
                 input_vec,
-                head
-            }
+                head,
+            },
         }
     }
 
     pub fn run(&mut self, input_code: i32) -> i32 {
         use OpCode::*;
         let mut outputs: Vec<i32> = Vec::new();
-        while let x = Operation::parse(self.input_vec.clone(), self.head) {
+        loop {
+            let x = Operation::parse(self.input_vec.clone(), self.head);
             if x.opcode == End {
                 break;
             };
@@ -37,43 +36,79 @@ impl Interpreter {
                 x.execute(self.input_vec.clone(), self.head, input_code)
             } else {
                 self.phase_setting_consumed = true;
-                x.execute(self.input_vec.clone(), self.head, self.phase_setting.unwrap_or(0))
+                x.execute(
+                    self.input_vec.clone(),
+                    self.head,
+                    self.phase_setting.unwrap_or(0),
+                )
             };
             self.input_vec = result.0;
             self.head = result.1;
             if result.2.is_some() {
                 outputs.push(result.2.unwrap());
-            };        
+            };
         }
         *outputs.last().unwrap_or(&0_i32)
     }
 
-    pub fn run_with_modified_registers(&mut self, input_code: i32, n: i32, v: i32) -> i32 {
+    pub fn run_all_outputs(&mut self, input_code: i32) -> Vec<i32> {
+        use OpCode::*;
+        let mut outputs: Vec<i32> = Vec::new();
+        loop {
+            let x = Operation::parse(self.input_vec.clone(), self.head);
+            if x.opcode == End {
+                break;
+            };
+            let result = if self.phase_setting_consumed {
+                x.execute(self.input_vec.clone(), self.head, input_code)
+            } else {
+                self.phase_setting_consumed = true;
+                x.execute(
+                    self.input_vec.clone(),
+                    self.head,
+                    self.phase_setting.unwrap_or(0),
+                )
+            };
+            self.input_vec = result.0;
+            self.head = result.1;
+            if result.2.is_some() {
+                outputs.push(result.2.unwrap());
+            };
+        }
+        outputs
+    }
+
+    pub fn run_with_modified_registers(&mut self, input_code: i32, n: i32, v: i32) -> Vec<i32> {
         let mut outputs: Vec<i32> = Vec::new();
         self.input_vec[1] = n;
         self.input_vec[2] = v;
         let windows: Vec<usize> = (0..self.input_vec.len() / 4).collect();
         windows.iter().for_each(|x| {
             let z = Operation::parse(self.input_vec.clone(), x * 4);
-                let result = if self.phase_setting_consumed {
-                    z.execute(self.input_vec.clone(), self.head, input_code)
-                } else {
-                    self.phase_setting_consumed = true;
-                    z.execute(self.input_vec.clone(), self.head, self.phase_setting.unwrap_or(0))
-                };
-                self.input_vec = result.0;
-                self.head = result.1;
-                if result.2.is_some() {
-                    outputs.push(result.2.unwrap());
-                }
+            let result = if self.phase_setting_consumed {
+                z.execute(self.input_vec.clone(), self.head, input_code)
+            } else {
+                self.phase_setting_consumed = true;
+                z.execute(
+                    self.input_vec.clone(),
+                    self.head,
+                    self.phase_setting.unwrap_or(0),
+                )
+            };
+            self.input_vec = result.0;
+            self.head = result.1;
+            if result.2.is_some() {
+                outputs.push(result.2.unwrap());
+            }
         });
-        *outputs.last().unwrap_or(&0_i32)
+        outputs
     }
 
     pub fn run_one_output(&mut self, input_code: Option<i32>) -> Option<i32> {
         use OpCode::*;
         let mut output: Option<i32> = None;
-        while let x = Operation::parse(self.input_vec.clone(), self.head) {
+        loop {
+            let x = Operation::parse(self.input_vec.clone(), self.head);
             if x.opcode == End {
                 break;
             };
@@ -81,7 +116,11 @@ impl Interpreter {
                 x.execute(self.input_vec.clone(), self.head, input_code.unwrap())
             } else {
                 self.phase_setting_consumed = true;
-                x.execute(self.input_vec.clone(), self.head, self.phase_setting.unwrap_or(0))
+                x.execute(
+                    self.input_vec.clone(),
+                    self.head,
+                    self.phase_setting.unwrap_or(0),
+                )
             };
             self.input_vec = result.0;
             self.head = result.1;
@@ -89,7 +128,6 @@ impl Interpreter {
                 output = Some(result.2.unwrap());
                 break;
             }
-
         }
         output
     }
@@ -129,27 +167,25 @@ impl Operation {
         use OpCode::*;
         use ParameterMode::*;
         match opcode {
-            Input | Output => {
-                match ((input / 10) % 10) % 2 {
-                    0 => vec![PositionMode],
-                    _ => vec![ImmediateMode],
-                }
-            }
+            Input | Output => match ((input / 10) % 10) % 2 {
+                0 => vec![PositionMode],
+                _ => vec![ImmediateMode],
+            },
             JumpIfTrue | JumpIfFalse => {
                 let mut instruction: Vec<_> = input
-                .to_string()
-                .chars()
-                .map(|d| d.to_digit(10).unwrap())
-                .collect();
-            instruction.pop();
-            instruction.pop();
-            while let x = instruction.len() {
-                match x {
-                    n if n < 2 => instruction.insert(0, 0),
-                    _ => break,
+                    .to_string()
+                    .chars()
+                    .map(|d| d.to_digit(10).unwrap())
+                    .collect();
+                instruction.pop();
+                instruction.pop();
+                while let x = instruction.len() {
+                    match x {
+                        n if n < 2 => instruction.insert(0, 0),
+                        _ => break,
+                    }
                 }
-            }
-            instruction
+                instruction
                 .iter()
                 .rev()
                 .map(|x| match x {

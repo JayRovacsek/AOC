@@ -16,7 +16,12 @@ pub fn solve() {
     'outer: for x in 0..99 {
         let mut interpreter = Interpreter::new(None, INPUT_VEC.to_vec(), 0);
         for y in 0..99 {
-            if interpreter.run_with_modified_registers(0, x, y) == 19_690_720 {
+            if interpreter
+                .run_with_modified_registers(0, x, y)
+                .last()
+                .unwrap_or(&0_i32)
+                == &19_690_720_i32
+            {
                 println!("The answer for day 2, part b is: {:?}", (x, y));
                 break 'outer;
             }
