@@ -1,6 +1,3 @@
-// use bmp::Image;
-// use bmp::Pixel;
-
 pub fn solve() {
     let layers = build_layers(
         INPUT.chars().map(|d| d.to_digit(10).unwrap()).collect(),
@@ -35,32 +32,34 @@ pub fn solve() {
                 .count()
     );
 
-    println!(
-        "The answer for day 8, part b is: {:?}",
-        flatten_layers(layers)
-    );
+    println!("The answer for day 8, part b is:");
+    generate_image_output(flatten_layers(layers))
+        .iter()
+        .for_each(|x| println!("{}", x));
 }
 
 fn flatten_layers(layers: Vec<Vec<u32>>) -> Vec<u32> {
-    // let mut img = Image::new(25, 6);
     let mut result: Vec<u32> = [2; 150].to_vec();
     layers.iter().for_each(|x| {
         x.iter().enumerate().for_each(|y| {
-            // let a = y.0 % 25;
-            // let b = y.0 / 25;
             if result[y.0] == 2 && *y.1 != 2 {
-                // let pixel = img.get_pixel(a as u32, b as u32);
-                // if *y.1 == 0 {
-                //     img.set_pixel(a as u32, b as u32, Pixel::new(0, 0, 0));
-                // } else {
-                //     img.set_pixel(a as u32, b as u32, Pixel::new(255, 255, 255));
-                // };
                 result[y.0] = *y.1;
             }
         })
     });
-    // let _ = img.save("result.bmp");
     result
+}
+
+fn generate_image_output(input: Vec<u32>) -> Vec<String> {
+    input
+        .to_owned()
+        .chunks(25 as usize)
+        .map(|x| {
+            x.iter()
+                .map(|y| if y == &0_u32 { "*" } else { "█" })
+                .collect::<String>()
+        })
+        .collect::<Vec<String>>()
 }
 
 fn build_layers(input_vec: Vec<u32>, width: u32, height: u32) -> Vec<Vec<u32>> {

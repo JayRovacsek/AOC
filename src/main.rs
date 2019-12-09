@@ -2,7 +2,6 @@ mod input;
 mod intcode;
 mod puzzle;
 
-// extern crate bmp;
 extern crate humantime;
 extern crate rand;
 extern crate rayon;
