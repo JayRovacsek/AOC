@@ -1,5 +1,5 @@
-use bmp::Image;
-use bmp::Pixel;
+// use bmp::Image;
+// use bmp::Pixel;
 
 pub fn solve() {
     let layers = build_layers(
@@ -46,24 +46,22 @@ fn flatten_layers(layers: Vec<Vec<u32>>) -> Vec<u32> {
     let mut result: Vec<u32> = [2; 150].to_vec();
     layers.iter().for_each(|x| {
         x.iter().enumerate().for_each(|y| {
+            // let a = y.0 % 25;
+            // let b = y.0 / 25;
             if result[y.0] == 2 {
                 if *y.1 != 2 {
-                    let pixel = img.get_pixel((y.0 as u32) / 25, (y.0 as u32) % 25);
-                    if *y.1 == 0 {
-                        img.set_pixel((y.0 as u32) / 25, (y.0 as u32) % 25, Pixel::new(0, 0, 0));
-                    } else {
-                        img.set_pixel(
-                            (y.0 as u32) / 25,
-                            (y.0 as u32) % 25,
-                            Pixel::new(255, 255, 255),
-                        );
-                    };
-                    result[y.0] = *y.1
+                    // let pixel = img.get_pixel(a as u32, b as u32);
+                    // if *y.1 == 0 {
+                    //     img.set_pixel(a as u32, b as u32, Pixel::new(0, 0, 0));
+                    // } else {
+                    //     img.set_pixel(a as u32, b as u32, Pixel::new(255, 255, 255));
+                    // };
+                    result[y.0] = *y.1;
                 }
             }
         })
     });
-    let _ = img.save("result.bmp");
+    // let _ = img.save("result.bmp");
     result
 }
 
