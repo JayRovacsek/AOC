@@ -1,4 +1,5 @@
-use super::*;
+use crate::intcode::Interpreter;
+use super::INPUT_VEC;
 
 #[test]
 fn test_solve() {
@@ -56,23 +57,23 @@ fn test_interpreter_phase_settings() {
     );
 }
 
-// #[test]
-// fn test_part_b_phase_settings() {
-//     assert_eq!(true, true);
-//     assert_ne!(true, false);
-//     assert_eq!(
-//         139629729,
-//         vec![9, 8, 7, 6, 5].iter().fold(0, |y, z| {
-//             let mut interpreter = Interpreter::new(
-//                 Some(*z),
-//                 [
-//                     3, 26, 1001, 26, -4, 26, 3, 27, 1002, 27, 2, 27, 1, 27, 26, 27, 4, 27, 1001,
-//                     28, -1, 28, 1005, 28, 6, 99, 0, 0, 5,
-//                 ]
-//                 .to_vec(),
-//                 0,
-//             );
-//             interpreter.run(y)
-//         })
-//     );
-// }
+#[test]
+fn test_part_b_phase_settings() {
+    assert_eq!(true, true);
+    assert_ne!(true, false);
+    assert_eq!(
+        139629729,
+        vec![9, 8, 7, 6, 5].iter().fold(0, |y, z| {
+            let mut interpreter = Interpreter::new(
+                Some(*z),
+                [
+                    3, 26, 1001, 26, -4, 26, 3, 27, 1002, 27, 2, 27, 1, 27, 26, 27, 4, 27, 1001,
+                    28, -1, 28, 1005, 28, 6, 99, 0, 0, 5,
+                ]
+                .to_vec(),
+                0,
+            );
+            interpreter.run(y)
+        })
+    );
+}

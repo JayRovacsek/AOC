@@ -1,5 +1,7 @@
 mod test;
 
+use crate::intcode::Interpreter;
+
 #[derive(Debug)]
 enum Operation {
     Addition,
@@ -8,16 +10,13 @@ enum Operation {
 }
 
 pub fn solve() {
-    let registers = INPUT_VEC.clone().to_vec();
-    let answer_a = *execute_instructions(registers.clone()).first().unwrap();
+    let mut interpreter = Interpreter::new(None, INPUT_VEC.to_vec(), 0);
+    let answer_a = interpreter.run(0);
     println!("The answer for day 2, part a is: {:?}", answer_a);
     'outer: for x in 0..99 {
+        let mut interpreter = Interpreter::new(None, INPUT_VEC.to_vec(), 0);
         for y in 0..99 {
-            if *execute_instructions_modify_registers(registers.clone(), x, y)
-                .first()
-                .unwrap()
-                == 19_690_720
-            {
+            if interpreter.run_with_modified_registers(0, x, y) == 19_690_720 {
                 println!("The answer for day 2, part b is: {:?}", (x, y));
                 break 'outer;
             }

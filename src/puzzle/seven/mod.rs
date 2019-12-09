@@ -1,6 +1,6 @@
 mod test;
 
-use super::five::*;
+use crate::intcode::Interpreter;
 use rayon::prelude::*;
 
 pub fn solve() {

@@ -1,4 +1,5 @@
-use super::*;
+use crate::intcode::Interpreter;
+use super::INPUT_VEC;
 
 #[test]
 fn test_part_a() {

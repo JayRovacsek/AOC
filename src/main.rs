@@ -1,4 +1,5 @@
 mod input;
+mod intcode;
 mod puzzle;
 
 // extern crate bmp;
