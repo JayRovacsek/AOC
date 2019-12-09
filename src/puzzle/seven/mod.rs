@@ -6,28 +6,29 @@ use rayon::prelude::*;
 pub fn solve() {
     let answer_a = generate_combinations(0,4).par_iter().map(|x|{
         x.iter().fold(0,|y,z|{
-            let mut interpreter = Interpreter::new(Some(*z));
-            interpreter.run(INPUT_VEC.to_vec(), y)
+            let mut interpreter = Interpreter::new(Some(*z),INPUT_VEC.to_vec(), 0);
+            interpreter.run(y)
         })
     }).max();
     println!("The answer for day 7, part a is: {:?}", answer_a);
     let answer_b = generate_combinations(5,9).par_iter().map(|x|{
-        let mut interpreter = Interpreter::new(None);
-        let mut count = interpreter.run_one_output(INPUT_VEC.to_vec(), 0).unwrap();
-        let mut cycle = x.iter().cycle();
-        cycle.next();
-        loop {
-            println!("Count: {}", count);
-            let z = cycle.next().unwrap();
-            let mut interpreter = Interpreter::new(Some(*z));
-            let result = interpreter.run_one_output(INPUT_VEC.to_vec(), count);
-            if result.is_some() {
-                count += result.unwrap();
-            } else {
+        let mut input: Option<i32> = Some(0);
+        let mut interpreter_a = Interpreter::new(Some(x[0]),INPUT_VEC.to_vec(), 0);
+        let mut interpreter_b = Interpreter::new(Some(x[1]),INPUT_VEC.to_vec(), 0);
+        let mut interpreter_c = Interpreter::new(Some(x[2]),INPUT_VEC.to_vec(), 0);
+        let mut interpreter_d = Interpreter::new(Some(x[3]),INPUT_VEC.to_vec(), 0);
+        let mut interpreter_e = Interpreter::new(Some(x[4]),INPUT_VEC.to_vec(), 0);
+        let interpreters = vec![interpreter_a,interpreter_b,interpreter_c,interpreter_d,interpreter_e];
+        let mut cycle = interpreters.into_iter().cycle();
+        while let mut done = false {
+            let new_input = cycle.next().unwrap().run_one_output(input);
+            if new_input.is_none() {
                 break;
+            } else {
+                input = new_input
             }
         }
-        count
+        input.unwrap_or(0_i32)
     }).max();
     println!("The answer for day 7, part b is: {:?}", answer_b);
 }

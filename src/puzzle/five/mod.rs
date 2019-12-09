@@ -1,42 +1,48 @@
 mod test;
 
+#[derive(Clone)]
 pub struct Interpreter {
     phase_setting_consumed: bool,
-    phase_setting: Option<i32>
+    phase_setting: Option<i32>,
+    input_vec: Vec<i32>,
+    head: usize
 }
 
 impl Interpreter {
-    pub fn new(phase_setting: Option<i32>) -> Interpreter {
+    pub fn new(phase_setting: Option<i32>, input_vec: Vec<i32>, head: usize) -> Interpreter {
         match phase_setting {
             Some(i) => {
                 Interpreter {
                     phase_setting_consumed: false,
-                    phase_setting: Some(i)
+                    phase_setting: Some(i),
+                    input_vec,
+                    head
                 }
             },
             _ => Interpreter {
                 phase_setting_consumed: true,
-                phase_setting: None
+                phase_setting: None,
+                input_vec,
+                head
             }
         }
     }
 
-    pub fn run(&mut self, mut input_vec: Vec<i32>, input_code: i32) -> i32 {
+    pub fn run(&mut self, input_code: i32) -> i32 {
         use OpCode::*;
-        let mut head = 0;
         let mut outputs: Vec<i32> = Vec::new();
-        while let x = Operation::parse(input_vec.clone(), head) {
+        while let x = Operation::parse(self.input_vec.clone(), self.head) {
             if x.opcode == End {
                 break;
             };
             let result = if self.phase_setting_consumed {
-                x.execute(input_vec, head, input_code)
+                x.execute(self.input_vec.clone(), self.head, input_code)
             } else {
                 self.phase_setting_consumed = true;
-                x.execute(input_vec, head, self.phase_setting.unwrap_or(0))
+                x.execute(self.input_vec.clone(), self.head, self.phase_setting.unwrap_or(0))
             };
-            input_vec = result.0;
-            head = result.1;
+            self.input_vec = result.0;
+            self.head = result.1;
             if result.2.is_some() {
                 outputs.push(result.2.unwrap());
             };        
@@ -44,22 +50,21 @@ impl Interpreter {
         *outputs.last().unwrap_or(&0_i32)
     }
 
-    pub fn run_one_output(&mut self, mut input_vec: Vec<i32>, input_code: i32) -> Option<i32> {
+    pub fn run_one_output(&mut self, input_code: Option<i32>) -> Option<i32> {
         use OpCode::*;
-        let mut head = 0;
         let mut output: Option<i32> = None;
-        while let x = Operation::parse(input_vec.clone(), head) {
+        while let x = Operation::parse(self.input_vec.clone(), self.head) {
             if x.opcode == End {
                 break;
             };
             let result = if self.phase_setting_consumed {
-                x.execute(input_vec, head, input_code)
+                x.execute(self.input_vec.clone(), self.head, input_code.unwrap())
             } else {
                 self.phase_setting_consumed = true;
-                x.execute(input_vec, head, self.phase_setting.unwrap_or(0))
+                x.execute(self.input_vec.clone(), self.head, self.phase_setting.unwrap_or(0))
             };
-            input_vec = result.0;
-            head = result.1;
+            self.input_vec = result.0;
+            self.head = result.1;
             if result.2.is_some() {
                 output = Some(result.2.unwrap());
                 break;
@@ -257,11 +262,11 @@ enum ParameterMode {
 }
 
 pub fn solve() {
-    let registers = INPUT_VEC.clone().to_vec();
-    let mut interpreter = Interpreter::new(None);
-    let answer_a = interpreter.run(registers.clone(), 1);
+    let mut interpreter_a = Interpreter::new(None, INPUT_VEC.to_vec(), 0);
+    let answer_a = interpreter_a.run(1);
     println!("The answer for day 5, part a is: {:?}", answer_a);
-    let answer_b = interpreter.run(registers, 5);
+    let mut interpreter_b = Interpreter::new(None, INPUT_VEC.to_vec(), 0);
+    let answer_b = interpreter_b.run(5);
     println!("The answer for day 5, part b is: {:?}", answer_b);
 }
 
