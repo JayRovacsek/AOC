@@ -3,45 +3,67 @@ mod test;
 use rayon::prelude::*;
 
 pub fn solve() {
-    let asteroids = generate_asteroid_map(INPUT)
-        .par_iter()
-        .enumerate()
-        .map(|x| {
-            x.1.par_iter()
-                .enumerate()
-                .map(|y| if *y.1 { Some((x.0, y.0)) } else { None })
-                .collect::<Vec<Option<(usize, usize)>>>()
-        })
-        .collect::<Vec<Vec<Option<(usize, usize)>>>>();
+    let asteroids = generate_asteroid_map(INPUT, 34);
 
-    println!("Asteroids: {:?}", asteroids);
+    let answer_a = asteroids.len()
+        - asteroids
+            .par_iter()
+            .map(|x| {
+                asteroids
+                    .iter()
+                    .map(|y| {
+                        asteroids
+                            .iter()
+                            .map(|z| {
+                                if x != y && x != z && y != z {
+                                    is_visible(*x, *y, *z)
+                                } else {
+                                    false
+                                }
+                            })
+                            .filter(|a| *a)
+                            .count()
+                    })
+                    .max()
+                    .unwrap_or(0)
+            })
+            .max()
+            .unwrap_or(0);
 
-    let a = generate_asteroid_map(INPUT)
-        .par_iter()
-        .enumerate()
-        .map(|x| {
-            x.1.par_iter()
-                .enumerate()
-                .map(|y| 0 as u32)
-                .max()
-                .unwrap_or(0_u32)
-        })
-        .max()
-        .unwrap_or(0_u32);
+    println!("The answer for day 10, part a is: {:?}", answer_a);
 }
 
-fn visible(x0: i32, y0: i32, x1: i32, y1: i32) -> bool {
-    false
+fn is_visible(x: (f32, f32), y: (f32, f32), z: (f32, f32)) -> bool {
+    let dxc = x.0 - y.0;
+    let dyc = x.1 - y.1;
+
+    let dxl = z.0 - y.0;
+    let dyl = z.1 - y.1;
+
+    let cross = dxc * dyl - dyc * dxl;
+    cross == 0_f32
 }
 
-fn generate_asteroid_map(input: &str) -> Vec<Vec<bool>> {
+fn generate_asteroid_map(input: &str, width: usize) -> Vec<(f32, f32)> {
+    if input.chars().count() % width != 0 {
+        panic!("Odd number of inputs to process!");
+    };
+
     input
         .chars()
         .map(|x| x == '#')
         .collect::<Vec<bool>>()
         .chunks(34 as usize)
-        .map(|x| x.to_owned().to_vec())
-        .collect::<Vec<Vec<bool>>>()
+        .enumerate()
+        .map(|x| {
+            x.1.iter()
+                .enumerate()
+                .filter(|y| *y.1)
+                .map(|y| (x.0 as f32, y.0 as f32))
+                .collect::<Vec<(f32, f32)>>()
+        })
+        .flatten()
+        .collect::<Vec<(f32, f32)>>()
 }
 
 const INPUT: &'static str = "#.#....#.#......#.....#......####.#....#....##...#..#..##....#.##..##.#..#....#..#....##...###......##...........##..##..##.####.#.........##..##....##.#.....#.##....#..#..##.....#..#.......#.#.........##...###..##.###.#...................##...###.#.#.......#.#...##..#.#....#...##....#....##.#.....#...#.#..##........#.#...#..#...##...##....#.##.......#..#......#.....##..#....###..#..#...###...#.###...#.##..#........#....#.....##.....#.#.#...#....#.....#..#...###........#..##...#........#.#...#...##........#....#.#.#.#.....#...........#..........###.##...#..#.#....#..##..##..#..###.#.......##....##.#..#.....##...#.#.#........##..#..#.#..#..#.##..#.......#.#.#.........##.##...#.#.....#.#....###.#.........#..#..#.##...#......#......#..##.....##....#.#......##...#....#.##..#.#..#..#..#...........#......##...##....##...#......#.###.#..#.#...#.#......#.#.#.#....###..##.##...##.......#.......#.#.#.#...#...##........##..#.....#.......#....#...#...#........#....#...#.#..#....#.....#.##.##..##.#.#####..........##....####...##.#.....##.............#....##......#.#..#....###....##.........#..#.#####.#.................#....#.#..#.###....##.......##.#.";
