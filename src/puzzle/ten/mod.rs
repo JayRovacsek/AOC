@@ -3,34 +3,37 @@ mod test;
 use rayon::prelude::*;
 
 pub fn solve() {
-    let asteroids = generate_asteroid_map(INPUT, 34);
+    let point_map = generate_point_map(INPUT, 34);
 
-    let answer_a = asteroids.len()
-        - asteroids
-            .par_iter()
-            .map(|x| {
-                asteroids
-                    .iter()
-                    .map(|y| {
-                        asteroids
-                            .iter()
-                            .map(|z| {
-                                if x != y && x != z && y != z {
-                                    is_visible(*x, *y, *z)
-                                } else {
-                                    false
-                                }
-                            })
-                            .filter(|a| *a)
-                            .count()
-                    })
-                    .max()
-                    .unwrap_or(0)
-            })
-            .max()
-            .unwrap_or(0);
+    let answer_a = most_visible_point(point_map);
 
     println!("The answer for day 10, part a is: {:?}", answer_a);
+}
+
+fn most_visible_point(point_map: Vec<(f32, f32)>) -> usize {
+    point_map
+        .par_iter()
+        .map(|x| {
+            point_map
+                .iter()
+                .map(|y| {
+                    point_map
+                        .iter()
+                        .map(|z| {
+                            if x != y && x != z && y != z {
+                                is_visible(*x, *y, *z)
+                            } else {
+                                false
+                            }
+                        })
+                        .filter(|a| *a)
+                        .count()
+                })
+                .max()
+                .unwrap_or(0)
+        })
+        .max()
+        .unwrap_or(0)
 }
 
 fn is_visible(x: (f32, f32), y: (f32, f32), z: (f32, f32)) -> bool {
@@ -41,10 +44,10 @@ fn is_visible(x: (f32, f32), y: (f32, f32), z: (f32, f32)) -> bool {
     let dyl = z.1 - y.1;
 
     let cross = dxc * dyl - dyc * dxl;
-    cross == 0_f32
+    cross != 0_f32
 }
 
-fn generate_asteroid_map(input: &str, width: usize) -> Vec<(f32, f32)> {
+fn generate_point_map(input: &str, width: usize) -> Vec<(f32, f32)> {
     if input.chars().count() % width != 0 {
         panic!("Odd number of inputs to process!");
     };
