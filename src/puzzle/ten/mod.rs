@@ -4,6 +4,7 @@ use rayon::prelude::*;
 
 pub fn solve() {
     let point_map = generate_point_map(INPUT, 34);
+    println!("{:?} points", point_map.len());
 
     let answer_a = most_visible_point(point_map);
 
@@ -30,21 +31,73 @@ fn most_visible_point(point_map: Vec<(f32, f32)>) -> usize {
                         .count()
                 })
                 .max()
-                .unwrap_or(0)
+                .unwrap()
         })
         .max()
-        .unwrap_or(0)
+        .unwrap()
 }
 
 fn is_visible(x: (f32, f32), y: (f32, f32), z: (f32, f32)) -> bool {
-    let dxc = x.0 - y.0;
-    let dyc = x.1 - y.1;
+    let cross = (z.1 - x.1) * (y.0 - x.0) - (z.0 - x.0) * (y.1 - x.1);
+    let dot_product = (z.0 - x.0) * (y.0 - x.0) + (z.1 - x.1) * (y.1 - x.1);
+    let squaredlengthba = (y.0 - x.0) * (y.0 - x.0) + (y.1 - x.1) * (y.1 - x.1);
 
-    let dxl = z.0 - y.0;
-    let dyl = z.1 - y.1;
+    if cross.abs() > std::f32::EPSILON {
+        false
+    } else {
+        if dot_product > 0_f32 {
+            false
+        } else {
+            if dot_product > squaredlengthba {
+                false
+            } else {
+                true
+            }
+        }
+    }
+}
 
-    let cross = dxc * dyl - dyc * dxl;
-    cross != 0_f32
+// fn is_visible(x: (f32, f32), y: (f32, f32), z: (f32, f32)) -> bool {
+//     let dxc = z.0 - x.0;
+//     let dyc = z.1 - x.1;
+
+//     let dxl = y.0 - x.0;
+//     let dyl = y.1 - x.1;
+
+//     let cross = dxc * dyl - dyc * dxl;
+//     // cross != 0_f32
+
+//     let result = if cross == 0_f32 {
+//         if dxl.abs() >= dyl.abs() {
+//             if dxl > 0_f32 {
+//                 true
+//             } else {
+//                 if x.0 <= z.0 && z.0 <= y.0 {
+//                     true
+//                 } else {
+//                     y.0 <= z.0 && z.0 <= x.0
+//                 }
+//             }
+//         } else {
+//             if dyl > 0_f32 {
+//                 true
+//             } else {
+//                 if x.1 <= z.1 && z.1 <= y.1 {
+//                     true
+//                 } else {
+//                     y.1 <= z.1 && z.1 <= x.1
+//                 }
+//             }
+//         }
+//     } else {
+//         true
+//     };
+
+//     result
+// }
+
+fn distance(x: (f32, f32), y: (f32, f32)) -> f32 {
+    (((x.0 - y.0).powf(2.0)) + ((x.1 - y.1).powf(2.0))).sqrt()
 }
 
 fn generate_point_map(input: &str, width: usize) -> Vec<(f32, f32)> {
