@@ -109,7 +109,7 @@ fn generate_point_map(input: &str, width: usize) -> Vec<(f32, f32)> {
         .chars()
         .map(|x| x == '#')
         .collect::<Vec<bool>>()
-        .chunks(34 as usize)
+        .chunks(width)
         .enumerate()
         .map(|x| {
             x.1.iter()
