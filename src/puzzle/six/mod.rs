@@ -15,54 +15,16 @@ struct Node<T> {
 }
 
 impl Node<String> {
-    fn is_a_child(&self, node: &Node<String>) -> bool {
-        node.children
-            .iter()
-            .map(|x| {
-                if self.value == x.value {
-                    true
-                } else {
-                    self.is_a_child(x)
-                }
-            })
-            .collect::<Vec<bool>>()
-            .iter()
-            .any(|x| *x)
-    }
-
     fn is_a_parent(&self, node: &Node<String>) -> bool {
         self.children
             .iter()
-            .map(|x| {
-                if node.value == x.value {
-                    true
-                } else {
-                    x.is_a_child(node)
-                }
-            })
-            .collect::<Vec<bool>>()
-            .iter()
-            .any(|x| *x)
+            .map(|x| x.value == node.value)
+            .filter(|x| *x)
+            .any(|x| x)
     }
 
     fn append(mut self, node: Node<String>) {
-        match self.children.len() {
-            n if n > 0 => {
-                // for child in self.children {
-                //     if &node.value == &child.value {
-                //         self.children.push(Box::new(node));
-                //     }
-                // }
-                // self.children.iter().for_each(|x|{
-                //     if node.value == x.value {
-                //         self.children.push(Box::new(node.clone()));
-                //     } else {
-                //         x.append(node);
-                //     }
-                // });
-            }
-            _ => println!("failed to append {:?}", node),
-        }
+        self.children.push(Box::new(node));
     }
 
     fn new(input: &str) -> Node<String> {
@@ -84,32 +46,21 @@ impl Node<String> {
 }
 
 fn build_tree(mut master_node: Node<String>, nodes: Vec<Node<String>>) -> Node<String> {
-    let mut remaining_nodes = nodes.clone();
-    'outer: loop {
-        let inner_clone = remaining_nodes.clone();
-        let mut iter = inner_clone.iter().enumerate();
-        loop {
-            match iter.next() {
-                Some((x, y)) => {
-                    println!("Now looking at: {:?}", y);
-                    println!("Remaining nodes length: {}", remaining_nodes.len());
-                    // if y.is_a_child(&master_node) {
-                    //     master_node.append(y.clone());
-                    //     remaining_nodes.remove(x);
-                    // }
-                    // if y.is_a_parent(&master_node) {
-                    //     let mut y_clone = y.clone();
-                    //     y_clone.append(master_node);
-                    //     master_node = y_clone;
-                    //     remaining_nodes.remove(x);
-                    // }
-                }
-                _ => break,
+    let mut nodes = nodes.clone();
+    while !nodes.is_empty() {
+        let mut n_remove: Vec<usize> = Vec::new();
+        let mut c = 0;
+        for n in &nodes {
+            if master_node.is_a_parent(&n) {
+                master_node.append(n.clone());
+                n_remove.push(c);
+                c += 1;
             }
         }
-        if remaining_nodes.is_empty() {
-            break;
-        };
+
+        for x in n_remove {
+            nodes.remove(x);
+        }
     }
     println!("NO INFINITE LOOP :)");
     master_node
