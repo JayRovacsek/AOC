@@ -44,14 +44,38 @@ fn test_part_b() {
 fn test_manhattan_distance() {
     assert_eq!(true, true);
     assert_ne!(true, false);
-    assert_eq!(1 as usize, manhattan_distance((10000, 10001)));
-    assert_eq!(1 as usize, manhattan_distance((10001, 10000)));
-    assert_eq!(1 as usize, manhattan_distance((9999, 10000)));
-    assert_eq!(1 as usize, manhattan_distance((10000, 9999)));
-    assert_eq!(100 as usize, manhattan_distance((10000, 10100)));
-    assert_eq!(100 as usize, manhattan_distance((10100, 10000)));
-    assert_eq!(100 as usize, manhattan_distance((9900, 10000)));
-    assert_eq!(100 as usize, manhattan_distance((10000, 9900)));
+    assert_eq!(
+        1 as usize,
+        manhattan_distance((10000, 10001), (10000, 10000))
+    );
+    assert_eq!(
+        1 as usize,
+        manhattan_distance((10001, 10000), (10000, 10000))
+    );
+    assert_eq!(
+        1 as usize,
+        manhattan_distance((9999, 10000), (10000, 10000))
+    );
+    assert_eq!(
+        1 as usize,
+        manhattan_distance((10000, 9999), (10000, 10000))
+    );
+    assert_eq!(
+        100 as usize,
+        manhattan_distance((10000, 10100), (10000, 10000))
+    );
+    assert_eq!(
+        100 as usize,
+        manhattan_distance((10100, 10000), (10000, 10000))
+    );
+    assert_eq!(
+        100 as usize,
+        manhattan_distance((9900, 10000), (10000, 10000))
+    );
+    assert_eq!(
+        100 as usize,
+        manhattan_distance((10000, 9900), (10000, 10000))
+    );
 }
 
 #[test]
@@ -99,12 +123,12 @@ fn test_calculate_intersection_lowest_distance() {
     .map(|x| Instruction::from_str(x))
     .collect();
 
-    // assert_eq!(
-    //     610,
-    //     calculate_intersection_lowest_distance(test_wire_a, test_wire_b)
-    // );
-    // assert_eq!(
-    //     410,
-    //     calculate_intersection_lowest_distance(test_wire_c, test_wire_d)
-    // );
+    assert_eq!(
+        610,
+        calculate_intersection_lowest_distance(test_wire_a, test_wire_b)
+    );
+    assert_eq!(
+        410,
+        calculate_intersection_lowest_distance(test_wire_c, test_wire_d)
+    );
 }
