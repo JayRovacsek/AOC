@@ -1,4 +1,3 @@
-use super::INPUT_VEC;
 use crate::intcode::Interpreter;
 
 #[test]
@@ -61,48 +60,54 @@ fn test_interpreter_phase_settings() {
 fn test_part_b_phase_settings() {
     assert_eq!(true, true);
     assert_ne!(true, false);
+
+    let input_vec: Vec<i64> = vec![
+        3, 26, 1001, 26, -4, 26, 3, 27, 1002, 27, 2, 27, 1, 27, 26, 27, 4, 27, 1001, 28, -1, 28,
+        1005, 28, 6, 99, 0, 0, 5,
+    ];
+
     assert_eq!(
         139_629_729,
         vec!(vec![9, 8, 7, 6, 5])
             .iter()
             .map(|x| {
                 let mut input: Option<i64> = Some(0);
-                let mut interpreter_a = Interpreter::new(Some(x[0]), INPUT_VEC.to_vec(), 0);
-                let mut interpreter_b = Interpreter::new(Some(x[1]), INPUT_VEC.to_vec(), 0);
-                let mut interpreter_c = Interpreter::new(Some(x[2]), INPUT_VEC.to_vec(), 0);
-                let mut interpreter_d = Interpreter::new(Some(x[3]), INPUT_VEC.to_vec(), 0);
-                let mut interpreter_e = Interpreter::new(Some(x[4]), INPUT_VEC.to_vec(), 0);
+                let mut interpreter_a = Interpreter::new(Some(x[0] as i64), input_vec.clone(), 0);
+                let mut interpreter_b = Interpreter::new(Some(x[1] as i64), input_vec.clone(), 0);
+                let mut interpreter_c = Interpreter::new(Some(x[2] as i64), input_vec.clone(), 0);
+                let mut interpreter_d = Interpreter::new(Some(x[3] as i64), input_vec.clone(), 0);
+                let mut interpreter_e = Interpreter::new(Some(x[4] as i64), input_vec.clone(), 0);
                 let mut done = false;
                 loop {
-                    let mut new_input = interpreter_a.run_one_output(input);
+                    let new_input = interpreter_a.run_one_output(input);
                     if new_input.is_some() {
                         input = new_input
                     } else {
                         done = true
                     }
 
-                    let mut new_input = interpreter_b.run_one_output(input);
+                    let new_input = interpreter_b.run_one_output(input);
                     if new_input.is_some() {
                         input = new_input
                     } else {
                         done = true
                     }
 
-                    let mut new_input = interpreter_c.run_one_output(input);
+                    let new_input = interpreter_c.run_one_output(input);
                     if new_input.is_some() {
                         input = new_input
                     } else {
                         done = true
                     }
 
-                    let mut new_input = interpreter_d.run_one_output(input);
+                    let new_input = interpreter_d.run_one_output(input);
                     if new_input.is_some() {
                         input = new_input
                     } else {
                         done = true
                     }
 
-                    let mut new_input = interpreter_e.run_one_output(input);
+                    let new_input = interpreter_e.run_one_output(input);
                     if new_input.is_some() {
                         input = new_input
                     } else {

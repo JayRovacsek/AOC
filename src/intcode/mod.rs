@@ -170,7 +170,7 @@ impl Operation {
         use OpCode::*;
         use ParameterMode::*;
         match opcode {
-            Input | Output | RelativeAdjust => match ((input / 10) % 10) % 3 {
+            Input | Output | RelativeAdjust => match input / 100 {
                 0 => vec![Position],
                 1 => vec![Immediate],
                 2 => vec![Relative],
@@ -245,9 +245,29 @@ impl Operation {
             .map(|x| match x.1 {
                 Immediate => (head + 1 + x.0) as i64,
                 Position => input_vec[head + 1 + x.0],
-                Relative => (head + relative_base as usize) as i64,
+                Relative => (input_vec[head + 1 + relative_base as usize]) as i64,
             })
             .collect();
+
+        let expand_memory = params
+            .iter()
+            .map(|x| *x as usize > input_vec.len())
+            .filter(|x| *x)
+            .any(|x| x);
+
+        // println!(
+        //     "Expand memory: {:?}\nParams: {:?}\nLength: {:?}",
+        //     expand_memory,
+        //     params,
+        //     input_vec.len()
+        // );
+
+        input_vec = if expand_memory {
+            input_vec.resize((*params.iter().max().unwrap_or(&0_i64) + 1) as usize, 0);
+            input_vec
+        } else {
+            input_vec
+        };
 
         match self.opcode {
             Addition => {
@@ -301,7 +321,10 @@ impl Operation {
                                                               // output = Some(params[0]);
                 head += 2;
             }
-            RelativeAdjust => relative_base += input_vec[params[0] as usize],
+            RelativeAdjust => {
+                relative_base += params[0];
+                head += 2
+            }
             End => output = None,
         }
         (input_vec, head, output, relative_base)
@@ -322,7 +345,7 @@ enum OpCode {
     RelativeAdjust,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum ParameterMode {
     Position,
     Immediate,

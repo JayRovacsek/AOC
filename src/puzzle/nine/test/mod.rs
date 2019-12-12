@@ -29,4 +29,17 @@ fn test_day_9_examples() {
         1_125_899_906_842_624_i64,
         *interpreter_b.run(0).last().unwrap_or(&0_i64)
     );
+
+    let mut interpreter_c = Interpreter::new(
+        None,
+        vec![
+            109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99,
+        ],
+        0,
+    );
+
+    assert_eq!(
+        vec!(109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99),
+        interpreter_c.run(0)
+    );
 }

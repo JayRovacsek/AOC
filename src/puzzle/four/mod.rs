@@ -54,38 +54,14 @@ fn has_exact_double(input: usize) -> bool {
         .any(|x| x)
 }
 
-#[allow(dead_code)]
-fn digit_sequential_count_max(input: usize) -> usize {
-    "0123456789"
+fn has_decrease(input: usize) -> bool {
+    input
+        .to_string()
         .chars()
         .collect::<Vec<char>>()
-        .iter()
-        .map(|x| {
-            input
-                .to_string()
-                .chars()
-                .collect::<Vec<char>>()
-                .windows(2)
-                .map(|y| y[0] == y[1] && y[0] == *x)
-                .filter(|y| *y)
-                .count()
-        })
-        .max()
-        .unwrap_or(0)
-}
-
-fn has_decrease(input: usize) -> bool {
-    let mut result = false;
-    let digits: Vec<_> = input.to_string().chars().collect();
-    let mut iter = digits.windows(2);
-
-    while !result {
-        match iter.next() {
-            Some(v) => result = v[0] > v[1],
-            _ => break,
-        }
-    }
-    result
+        .windows(2)
+        .map(|v| v[0] > v[1])
+        .any(|v| v)
 }
 
 const INPUT: [usize; 2] = [193_651, 649_729];
