@@ -8,8 +8,8 @@ pub fn solve() {
         .par_iter()
         .map(|x| {
             x.iter().fold(0, |y, z| {
-                let mut interpreter = Interpreter::new(Some(*z), INPUT_VEC.to_vec(), 0);
-                interpreter.run(y)
+                let mut interpreter = Interpreter::new(Some(*z as i64), INPUT_VEC.to_vec(), 0);
+                interpreter.run_one_output(Some(y)).unwrap_or(0)
             })
         })
         .max();
@@ -17,43 +17,43 @@ pub fn solve() {
     let answer_b = generate_combinations(5, 9)
         .par_iter()
         .map(|x| {
-            let mut input: Option<i32> = Some(0);
-            let mut interpreter_a = Interpreter::new(Some(x[0]), INPUT_VEC.to_vec(), 0);
-            let mut interpreter_b = Interpreter::new(Some(x[1]), INPUT_VEC.to_vec(), 0);
-            let mut interpreter_c = Interpreter::new(Some(x[2]), INPUT_VEC.to_vec(), 0);
-            let mut interpreter_d = Interpreter::new(Some(x[3]), INPUT_VEC.to_vec(), 0);
-            let mut interpreter_e = Interpreter::new(Some(x[4]), INPUT_VEC.to_vec(), 0);
+            let mut input: Option<i64> = Some(0);
+            let mut interpreter_a = Interpreter::new(Some(x[0] as i64), INPUT_VEC.to_vec(), 0);
+            let mut interpreter_b = Interpreter::new(Some(x[1] as i64), INPUT_VEC.to_vec(), 0);
+            let mut interpreter_c = Interpreter::new(Some(x[2] as i64), INPUT_VEC.to_vec(), 0);
+            let mut interpreter_d = Interpreter::new(Some(x[3] as i64), INPUT_VEC.to_vec(), 0);
+            let mut interpreter_e = Interpreter::new(Some(x[4] as i64), INPUT_VEC.to_vec(), 0);
             let mut done = false;
             loop {
-                let mut new_input = interpreter_a.run_one_output(input);
+                let new_input = interpreter_a.run_one_output(input);
                 if new_input.is_some() {
                     input = new_input
                 } else {
                     done = true
                 }
 
-                let mut new_input = interpreter_b.run_one_output(input);
+                let new_input = interpreter_b.run_one_output(input);
                 if new_input.is_some() {
                     input = new_input
                 } else {
                     done = true
                 }
 
-                let mut new_input = interpreter_c.run_one_output(input);
+                let new_input = interpreter_c.run_one_output(input);
                 if new_input.is_some() {
                     input = new_input
                 } else {
                     done = true
                 }
 
-                let mut new_input = interpreter_d.run_one_output(input);
+                let new_input = interpreter_d.run_one_output(input);
                 if new_input.is_some() {
                     input = new_input
                 } else {
                     done = true
                 }
 
-                let mut new_input = interpreter_e.run_one_output(input);
+                let new_input = interpreter_e.run_one_output(input);
                 if new_input.is_some() {
                     input = new_input
                 } else {
@@ -64,7 +64,7 @@ pub fn solve() {
                     break;
                 }
             }
-            input.unwrap_or(0_i32)
+            input.unwrap_or(0_i64)
         })
         .max();
     println!("The answer for day 7, part b is: {:?}", answer_b);
@@ -95,7 +95,7 @@ fn generate_combinations(lower: i32, upper: i32) -> Vec<Vec<i32>> {
     combinations
 }
 
-const INPUT_VEC: [i32; 511] = [
+const INPUT_VEC: [i64; 511] = [
     3, 8, 1001, 8, 10, 8, 105, 1, 0, 0, 21, 42, 59, 76, 85, 106, 187, 268, 349, 430, 99999, 3, 9,
     102, 3, 9, 9, 1001, 9, 2, 9, 1002, 9, 3, 9, 1001, 9, 3, 9, 4, 9, 99, 3, 9, 102, 3, 9, 9, 101,
     3, 9, 9, 1002, 9, 2, 9, 4, 9, 99, 3, 9, 102, 3, 9, 9, 1001, 9, 4, 9, 1002, 9, 5, 9, 4, 9, 99,

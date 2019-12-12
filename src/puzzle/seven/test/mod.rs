@@ -22,7 +22,7 @@ fn test_interpreter_phase_settings() {
                 .to_vec(),
                 0,
             );
-            interpreter.run(y)
+            *interpreter.run(y).last().unwrap_or(&0)
         })
     );
     assert_eq!(
@@ -37,7 +37,7 @@ fn test_interpreter_phase_settings() {
                 .to_vec(),
                 0,
             );
-            interpreter.run(y)
+            *interpreter.run(y).last().unwrap_or(&0)
         })
     );
     assert_eq!(
@@ -52,7 +52,7 @@ fn test_interpreter_phase_settings() {
                 .to_vec(),
                 0,
             );
-            interpreter.run(y)
+            *interpreter.run(y).last().unwrap_or(&0)
         })
     );
 }
@@ -62,11 +62,11 @@ fn test_part_b_phase_settings() {
     assert_eq!(true, true);
     assert_ne!(true, false);
     assert_eq!(
-        139629729,
+        139_629_729,
         vec!(vec![9, 8, 7, 6, 5])
             .iter()
             .map(|x| {
-                let mut input: Option<i32> = Some(0);
+                let mut input: Option<i64> = Some(0);
                 let mut interpreter_a = Interpreter::new(Some(x[0]), INPUT_VEC.to_vec(), 0);
                 let mut interpreter_b = Interpreter::new(Some(x[1]), INPUT_VEC.to_vec(), 0);
                 let mut interpreter_c = Interpreter::new(Some(x[2]), INPUT_VEC.to_vec(), 0);
@@ -113,7 +113,7 @@ fn test_part_b_phase_settings() {
                         break;
                     }
                 }
-                input.unwrap_or(0_i32)
+                input.unwrap_or(0_i64)
             })
             .max()
             .unwrap_or(0)

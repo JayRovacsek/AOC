@@ -47,21 +47,21 @@ impl Node<String> {
 
 fn build_tree(mut master_node: Node<String>, nodes: Vec<Node<String>>) -> Node<String> {
     let mut nodes = nodes.clone();
-    while !nodes.is_empty() {
-        let mut n_remove: Vec<usize> = Vec::new();
-        let mut c = 0;
-        for n in &nodes {
-            if master_node.is_a_parent(&n) {
-                master_node.append(n.clone());
-                n_remove.push(c);
-                c += 1;
-            }
-        }
+    // while !nodes.is_empty() {
+    //     let mut n_remove: Vec<usize> = Vec::new();
+    //     let mut c = 0;
+    //     for n in &nodes {
+    //         if master_node.is_a_parent(&n) {
+    //             master_node.append(n.clone());
+    //             n_remove.push(c);
+    //             c += 1;
+    //         }
+    //     }
 
-        for x in n_remove {
-            nodes.remove(x);
-        }
-    }
+    //     for x in n_remove {
+    //         nodes.remove(x);
+    //     }
+    // }
     println!("NO INFINITE LOOP :)");
     master_node
 }

@@ -19,8 +19,8 @@ pub fn solve() {
             if interpreter
                 .run_with_modified_registers(0, x, y)
                 .last()
-                .unwrap_or(&0_i32)
-                == &19_690_720_i32
+                .unwrap_or(&0_i64)
+                == &19_690_720_i64
             {
                 println!("The answer for day 2, part b is: {:?}", (x, y));
                 break 'outer;
@@ -79,7 +79,7 @@ fn execute_instructions_modify_registers(mut input_vec: Vec<i32>, n: i32, v: i32
     input_vec
 }
 
-const INPUT_VEC: [i32; 117] = [
+const INPUT_VEC: [i64; 117] = [
     1, 12, 2, 3, 1, 1, 2, 3, 1, 3, 4, 3, 1, 5, 0, 3, 2, 10, 1, 19, 1, 19, 6, 23, 2, 13, 23, 27, 1,
     27, 13, 31, 1, 9, 31, 35, 1, 35, 9, 39, 1, 39, 5, 43, 2, 6, 43, 47, 1, 47, 6, 51, 2, 51, 9, 55,
     2, 55, 13, 59, 1, 59, 6, 63, 1, 10, 63, 67, 2, 67, 9, 71, 2, 6, 71, 75, 1, 75, 5, 79, 2, 79,
