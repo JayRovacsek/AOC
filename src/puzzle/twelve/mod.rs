@@ -1,6 +1,9 @@
 mod test;
 
-#[derive(Default, Debug, Clone, Copy, PartialEq)]
+use rayon::prelude::*;
+use std::collections::HashMap;
+
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 struct Body {
     x: i64,
     y: i64,
@@ -8,7 +11,7 @@ struct Body {
     velocity: Velocity,
 }
 
-#[derive(Default, Debug, Clone, Copy, PartialEq)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 struct Velocity {
     x: i64,
     y: i64,
@@ -39,7 +42,7 @@ impl Body {
         }
     }
 
-    fn update_velocity(self, bodies: Vec<&Body>) -> Body {
+    fn update_velocity(self, bodies: Vec<Body>) -> Body {
         let x: i64 = bodies.iter().map(|x|{
             match x.x {
                 n if n > self.x => 1,
@@ -68,7 +71,11 @@ impl Body {
             x: self.x,
             y: self.y,
             z: self.z,
-            velocity: Velocity { x, y, z },
+            velocity: Velocity {
+                x: x + self.velocity.x,
+                y: y + self.velocity.y,
+                z: z + self.velocity.z,
+            },
         }
     }
 
@@ -100,44 +107,50 @@ fn run_steps(bodies: Vec<Body>, steps: usize) -> Vec<Body> {
         .iter()
         .fold(bodies, |bodies_vec, _| {
             bodies_vec
-                .iter()
+                .par_iter()
                 .map(|x| {
-                    let alternate_bodies: Vec<&Body> =
-                    bodies_vec.iter().filter(|y| *y != x).collect();
+                    let alternate_bodies: Vec<Body> = bodies_vec
+                        .clone()
+                        .into_iter()
+                        .filter(|y| *y != *x)
+                        .collect();
                     x.update_velocity(alternate_bodies)
                 })
-                .map(|x| {
-                    x.apply_velocity()
-                })
+                .map(|x| x.apply_velocity())
                 .collect()
         })
 }
+
+fn find_repeated_state(bodies: Vec<Body>) -> usize {
+    let mut c: usize = 0;
+    let state: HashMap<Vec<Body>, usize> = HashMap::new();
+}
+
+fn hash_current_bodies(
+    state: HashMap<Vec<Body>, usize>,
+    bodies: Vec<Body>,
+    key: usize,
+) -> Option<(HashMap<Vec<Body>, usize>, Vec<Body>, usize)> {
+    let new_state = state.clone().insert(bodies.clone(), key);
+    let new_body_state = run_steps(bodies.clone(), 1);
+    match new_state {
+        Some(v) => Some((state, new_body_state, key + 1)),
+        None => Some((state, bodies, key)),
+    }
+}
+
 pub fn solve() {
-    // let bodies = INPUT_VEC
-    //     .iter()
-    //     .map(|x| Body::from_str(x))
-    //     .collect::<Vec<Body>>();
+    let bodies = INPUT_VEC
+        .iter()
+        .map(|x| Body::from_str(x))
+        .collect::<Vec<Body>>();
 
-    // let answer_a: usize = run_steps(bodies, 1000)
-    //     .iter()
-    //     .map(|x| x.total_energy())
-    //     .sum();
+    let answer_a: usize = run_steps(bodies, 1000)
+        .iter()
+        .map(|x| x.total_energy())
+        .sum();
 
-    // println!("Answer a: {:?}", answer_a);
-
-    let b2: Vec<Body> = vec![
-        "<x=-1, y=0, z=2>",
-        "<x=2, y=-10, z=-7>",
-        "<x=4, y=-8, z=8>",
-        "<x=3, y=5, z=-1>",
-    ]
-    .iter()
-    .map(|x| Body::from_str(x))
-    .collect();
-
-    let b: Vec<Body> = run_steps(b2, 10);
-
-    println!("Bodies after 10: {:?}", b);
+    println!("Answer a: {:?}", answer_a);
 
     // let b2: Vec<Body> = bodies
     //     .iter()
