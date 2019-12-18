@@ -1,7 +1,7 @@
 mod test;
 
 use rayon::prelude::*;
-use std::collections::HashMap;
+use std::collections::HashSet;
 
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 struct Body {
@@ -121,21 +121,21 @@ fn run_steps(bodies: Vec<Body>, steps: usize) -> Vec<Body> {
         })
 }
 
-fn find_repeated_state(bodies: Vec<Body>) -> usize {
-    let mut c: usize = 0;
-    let state: HashMap<Vec<Body>, usize> = HashMap::new();
-}
-
-fn hash_current_bodies(
-    state: HashMap<Vec<Body>, usize>,
-    bodies: Vec<Body>,
-    key: usize,
-) -> Option<(HashMap<Vec<Body>, usize>, Vec<Body>, usize)> {
-    let new_state = state.clone().insert(bodies.clone(), key);
-    let new_body_state = run_steps(bodies.clone(), 1);
-    match new_state {
-        Some(v) => Some((state, new_body_state, key + 1)),
-        None => Some((state, bodies, key)),
+fn find_repeated_state(bodies: Vec<Body>, seen: HashSet<Vec<Body>>, c: usize) -> usize {
+    let duplicate_found: bool = bodies
+        .iter()
+        .map(|x| seen.iter().map(|y| *y == bodies).any(|y| y))
+        .filter(|x| *x)
+        .any(|x| x);
+    if duplicate_found {
+        c
+    } else {
+        let s: HashSet<Vec<Body>> = seen
+            .into_iter()
+            .chain(vec![bodies.clone()].into_iter())
+            .collect();
+        let b = run_steps(bodies, 1);
+        find_repeated_state(b, s, c + 1)
     }
 }
 
@@ -145,26 +145,15 @@ pub fn solve() {
         .map(|x| Body::from_str(x))
         .collect::<Vec<Body>>();
 
-    let answer_a: usize = run_steps(bodies, 1000)
+    let answer_a: usize = run_steps(bodies.clone(), 1000)
         .iter()
         .map(|x| x.total_energy())
         .sum();
 
     println!("Answer a: {:?}", answer_a);
 
-    // let b2: Vec<Body> = bodies
-    //     .iter()
-    //     .map(|x| {
-    //         let alternate_bodies: Vec<&Body> = bodies.iter().filter(|y| *y != x).collect();
-    //         x.update_velocity(alternate_bodies)
-    //     })
-    //     .map(|x| x.apply_velocity())
-    //     .collect()
-
-    // println!("Bodies: {:?}", bodies);
-    // println!("Bodies: {:?}", b2);
-
-    // bodies.iter().map(|x|x.update_velocity());
+    let answer_b = find_repeated_state(bodies, HashSet::new(), 0);
+    println!("Answer b: {:?}", answer_b);
 }
 
 const INPUT_VEC: [&str; 4] = [

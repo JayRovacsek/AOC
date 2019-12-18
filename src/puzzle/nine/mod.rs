@@ -3,10 +3,11 @@ mod test;
 use crate::intcode::Interpreter;
 
 pub fn solve() {
-    println!("Currently a stub");
     let mut interpreter = Interpreter::new(None, INPUT_VEC.to_vec(), 0);
     let answer_a = interpreter.run(1);
     println!("The answer for day 9, part a is: {:?}", answer_a);
+    let answer_b = interpreter.run(1);
+    println!("The answer for day 9, part b is: {:?}", answer_b);
 }
 
 const INPUT_VEC: [i64; 973] = [

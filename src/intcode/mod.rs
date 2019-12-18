@@ -244,8 +244,18 @@ impl Operation {
             .enumerate()
             .map(|x| match x.1 {
                 Immediate => (head + 1 + x.0) as i64,
-                Position => input_vec[head + 1 + x.0],
-                Relative => (input_vec[head + 1 + relative_base as usize]) as i64,
+                Position => {
+                    if head + 1 + x.0 > input_vec.len() {
+                        input_vec.resize((head + 1 + x.0) as usize, 0);
+                    }
+                    input_vec[head + 1 + x.0]
+                },
+                Relative => {
+                    if head + 1 + relative_base as usize > input_vec.len() {
+                        input_vec.resize((head + 2 + relative_base as usize) as usize, 0);
+                    }
+                    (input_vec[head + 1 + relative_base as usize]) as i64
+                }
             })
             .collect();
 
