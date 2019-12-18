@@ -84,14 +84,12 @@ impl Recipe {
                                     _ => break
                                 }
                             }
-                            // println!("We think ore required for {:?} is {:?}", self.result, total);
                             total
                         })
                         .min()
                         .unwrap_or(0) as usize
                 }
-            })
-            .sum::<usize>()
+            }).sum()
     }
 }
 
