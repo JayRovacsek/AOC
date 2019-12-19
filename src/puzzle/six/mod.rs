@@ -1,6 +1,6 @@
 pub fn solve() {
     let mut nodes: Vec<Node<String>> = INPUT_VEC
-        .into_iter()
+        .iter()
         .map(|x| Node::new(x))
         .collect::<Vec<Node<String>>>();
     let master_node: Node<String> = nodes.remove(63);
@@ -11,7 +11,7 @@ pub fn solve() {
 #[derive(Debug, Clone)]
 struct Node<T> {
     value: T,
-    children: Vec<Box<Node<T>>>,
+    children: Vec<Node<T>>,
 }
 
 impl Node<String> {
@@ -24,7 +24,7 @@ impl Node<String> {
     }
 
     fn append(mut self, node: Node<String>) {
-        self.children.push(Box::new(node));
+        self.children.push(node);
     }
 
     fn new(input: &str) -> Node<String> {
@@ -37,7 +37,7 @@ impl Node<String> {
                 };
                 Node {
                     value: String::from(nodes[0]),
-                    children: vec![Box::new(child)],
+                    children: vec![child],
                 }
             }
             _ => panic!("Something ain't right."),

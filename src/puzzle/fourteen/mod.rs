@@ -1,7 +1,7 @@
 mod test;
 
-use std::collections::HashMap;
 use rayon::prelude::*;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 struct Recipe {
@@ -15,14 +15,14 @@ impl Recipe {
             .split("=>")
             .last()
             .unwrap_or(&"FAILED")
-            .split(" ")
+            .split(' ')
             .last()
             .unwrap_or(&"FAILED");
         let result_quantity = input
             .split("=>")
             .last()
             .unwrap_or(&"FAILED")
-            .split(" ")
+            .split(' ')
             .nth(1)
             .unwrap_or(&"FAILED")
             .parse::<i32>()
@@ -39,7 +39,7 @@ impl Recipe {
             .collect::<Vec<&str>>()
             .iter()
             .for_each(|x| {
-                let parts = x.split(" ").collect::<Vec<&str>>();
+                let parts = x.split(' ').collect::<Vec<&str>>();
                 requirements_hm.insert(
                     parts.last().unwrap_or(&"FAILED").to_string(),
                     parts
@@ -55,7 +55,7 @@ impl Recipe {
         }
     }
 
-    fn calculate_ore(&self, recipies: &Vec<Recipe>) -> usize {
+    fn calculate_ore(&self, recipies: &[Recipe]) -> usize {
         self.requirements
             .par_iter()
             .map(|x| {
@@ -78,10 +78,15 @@ impl Recipe {
                             loop {
                                 match quantity {
                                     n if n >= 0 => {
-                                        quantity -= *y.result.values().collect::<Vec<_>>().first().unwrap_or(&&0_i32);
+                                        quantity -= *y
+                                            .result
+                                            .values()
+                                            .collect::<Vec<_>>()
+                                            .first()
+                                            .unwrap_or(&&0_i32);
                                         total += y.calculate_ore(recipies);
                                     }
-                                    _ => break
+                                    _ => break,
                                 }
                             }
                             total
@@ -89,11 +94,12 @@ impl Recipe {
                         .min()
                         .unwrap_or(0) as usize
                 }
-            }).sum()
+            })
+            .sum()
     }
 }
 
-fn calculate_required_ore(recipes: &Vec<Recipe>) -> usize {
+fn calculate_required_ore(recipes: &[Recipe]) -> usize {
     recipes
         .iter()
         .filter(|x| {

@@ -49,7 +49,7 @@ pub fn solve() {
     println!("The answer for day 3, part b is: {:?}", answer_b);
 }
 
-fn run_wires(wire_a: &Vec<Instruction>, wire_b: &Vec<Instruction>) -> Vec<usize> {
+fn run_wires(wire_a: &[Instruction], wire_b: &[Instruction]) -> Vec<usize> {
     let mut grid = generate_grid();
     let mut pos = (10000, 10000);
     wire_a.iter().for_each(|z| {
@@ -136,9 +136,6 @@ fn calculate_intersection_lowest_distance(
     wire_a: Vec<Instruction>,
     wire_b: Vec<Instruction>,
 ) -> usize {
-    let grid = generate_grid();
-    let pos = (10000, 10000);
-
     let intersections = calculate_intersections(&wire_a, &wire_b);
 
     intersections
@@ -152,10 +149,7 @@ fn calculate_intersection_lowest_distance(
         .unwrap()
 }
 
-fn calculate_intersections(
-    wire_a: &Vec<Instruction>,
-    wire_b: &Vec<Instruction>,
-) -> Vec<(usize, usize)> {
+fn calculate_intersections(wire_a: &[Instruction], wire_b: &[Instruction]) -> Vec<(usize, usize)> {
     let mut grid = generate_grid();
     let mut pos = (10000, 10000);
     wire_a.iter().for_each(|z| {
@@ -232,7 +226,7 @@ fn calculate_intersections(
 }
 
 fn run_wires_on_grid_until_point_get_distance(
-    wire: &Vec<Instruction>,
+    wire: &[Instruction],
     target_point: (usize, usize),
 ) -> usize {
     let mut current_point = (10000, 10000);
@@ -289,7 +283,6 @@ fn run_wires_on_grid_until_point_get_distance(
 }
 
 fn generate_range(x: usize, y: usize) -> std::ops::RangeInclusive<usize> {
-    use std::ops::Range;
     if x > y {
         y..=x
     } else {

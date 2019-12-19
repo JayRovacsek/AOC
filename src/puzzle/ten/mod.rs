@@ -67,22 +67,12 @@ fn is_visible(x: (f32, f32), y: (f32, f32), z: (f32, f32)) -> bool {
             if dxl > 0_f32 {
                 true
             } else {
-                if x.0 <= z.0 && z.0 <= y.0 {
-                    true
-                } else {
-                    y.0 <= z.0 && z.0 <= x.0
-                }
+                x.0 <= z.0 && z.0 <= y.0
             }
+        } else if dyl > 0_f32 {
+            true
         } else {
-            if dyl > 0_f32 {
-                true
-            } else {
-                if x.1 <= z.1 && z.1 <= y.1 {
-                    true
-                } else {
-                    y.1 <= z.1 && z.1 <= x.1
-                }
-            }
+            x.1 <= z.1 && z.1 <= y.1
         }
     } else {
         true
@@ -116,7 +106,7 @@ fn generate_point_map(input: &str, width: usize) -> Vec<(f32, f32)> {
         .collect::<Vec<(f32, f32)>>()
 }
 
-const INPUT: &'static str = "#.#....#.#......#.....#......####.
+const INPUT: &str = "#.#....#.#......#.....#......####.
 #....#....##...#..#..##....#.##..#
 #.#..#....#..#....##...###......##
 ...........##..##..##.####.#......

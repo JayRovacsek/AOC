@@ -40,13 +40,12 @@ fn test_calculate_ore_example_2() {
         "145 ORE => 6 MNCFX",
         "1 NVRVD => 8 CXFTF",
         "1 VJHF, 6 MNCFX => 4 RFSQX",
-        "176 ORE => 6 VJHF"
+        "176 ORE => 6 VJHF",
     ]
     .iter()
     .map(|x| Recipe::from_str(x))
     .collect::<Vec<Recipe>>();
-    
-    assert_eq!(180697, calculate_required_ore(&recipes));
+    assert_eq!(180_697, calculate_required_ore(&recipes));
 }
 
 #[test]
@@ -71,11 +70,10 @@ fn test_calculate_ore_example_3() {
         "3 BHXH, 2 VRPVC => 7 MZWV",
         "121 ORE => 7 VRPVC",
         "7 XCVML => 6 RJRHP",
-        "5 BHXH, 4 VRPVC => 5 LTCX"
+        "5 BHXH, 4 VRPVC => 5 LTCX",
     ]
     .iter()
     .map(|x| Recipe::from_str(x))
     .collect::<Vec<Recipe>>();
-    
-    assert_eq!(2210736, calculate_required_ore(&recipes));
+    assert_eq!(2_210_736, calculate_required_ore(&recipes));
 }

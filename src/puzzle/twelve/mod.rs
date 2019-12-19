@@ -24,19 +24,19 @@ impl Body {
             .split("=")
             .collect::<Vec<&str>>()
             .iter()
-            .map(|x| x.split(",").collect::<Vec<&str>>())
+            .map(|x| x.split(',').collect::<Vec<&str>>())
             .collect::<Vec<Vec<&str>>>()
             .iter()
             .flatten()
             .collect::<Vec<&&str>>()
             .iter()
             .map(|x| x.replace("<", "").replace(">", ""))
-            .filter(|x| !x.parse::<i64>().is_err())
+            .filter(|x| x.parse::<i64>().is_ok())
             .map(|x| x.parse::<i64>().unwrap())
             .collect::<Vec<i64>>();
         Body {
             x: *point.first().unwrap_or(&0),
-            y: *point.iter().nth(1).unwrap_or(&0),
+            y: *point.get(1).unwrap_or(&0),
             z: *point.last().unwrap_or(&0),
             velocity: Default::default(),
         }
