@@ -1,13 +1,12 @@
 mod test;
 
 pub fn solve() {
-    println!("Currently a stub");
     let input_vec = build_vec_from_str(INPUT);
     let answer_a = execute_phase_x_times(&input_vec, 100);
     println!("The answer for day 16, part a is: {:?}", &answer_a[0..8]);
 
-    let answer_a = execute_phase_x_times(&input_vec, 10000);
-    println!("The answer for day 16, part a is: {:?}", &answer_a[0..8]);
+    let answer_a = execute_phase_x_times_with_offset(&input_vec, 10000);
+    println!("The answer for day 16, part b is: {:?}", &answer_a[0..8]);
 }
 
 fn build_vec_from_str(input: &str) -> Vec<i32> {
@@ -18,25 +17,23 @@ fn build_vec_from_str(input: &str) -> Vec<i32> {
 }
 
 fn flatten_int_vec(input: Vec<i32>) -> usize {
-    println!("Taking in the value: {:?}", input);
-    let r = input
+    input
         .iter()
         .rev()
         .enumerate()
-        .fold(0, |a, b| a + (*b.1 as usize * (10 ^ (b.0 + 1))));
-    println!("Output: {}", r);
-    r
+        .fold(0, |a, b| a + (*b.1 * (10_i32.pow(b.0 as u32))) as usize)
 }
 
 fn generate_pattern(input: usize, size: usize) -> Vec<i32> {
     let mut r: Vec<i32> = Vec::new();
     while r.len() <= size {
-        let mut t = PATTERN
-            .iter()
-            .map(|i| vec![*i; input + 1])
-            .flatten()
-            .collect::<Vec<i32>>();
-        r.append(&mut t);
+        r.append(
+            &mut PATTERN
+                .iter()
+                .map(|i| vec![*i; input + 1])
+                .flatten()
+                .collect::<Vec<i32>>(),
+        );
     }
     r.rotate_left(1);
     let d = r.drain(0..size);
@@ -51,13 +48,18 @@ fn execute_phase_x_times(input: &Vec<i32>, times: u32) -> Vec<i32> {
 }
 
 fn execute_phase_x_times_with_offset(input: &Vec<i32>, times: u32) -> Vec<i32> {
-    let offset = flatten_int_vec(input.clone().drain(0..8).collect());
+    let offset = flatten_int_vec(input.clone().drain(0..8).collect()) % input.len();
     let result = (1..times)
         .collect::<Vec<u32>>()
         .iter()
         .fold(execute_phase(&input), |a, _| execute_phase(&a));
 
     result[offset..offset + 8].to_vec()
+}
+
+fn offset_vec(input: &Vec<i32>) -> usize {
+    let offset = flatten_int_vec(input.clone().drain(0..8).collect()) % input.len();
+    flatten_int_vec(input[offset..offset + 8].to_vec())
 }
 
 fn execute_phase(input: &Vec<i32>) -> Vec<i32> {

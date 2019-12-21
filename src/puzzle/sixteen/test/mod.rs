@@ -34,12 +34,16 @@ fn test_execute_phase_x_times() {
 }
 
 #[test]
-fn test_execute_phase_x_times_with_offset() {
+fn test_offset_vec() {
     assert_eq!(true, true);
     assert_ne!(true, false);
     let input_vec = build_vec_from_str("03036732577212944063491565474664");
-    assert_eq!(
-        84462026,
-        flatten_int_vec(execute_phase_x_times_with_offset(&input_vec, 100))
-    );
+    assert_eq!(84462026, offset_vec(&input_vec));
+}
+
+#[test]
+fn test_flatten_int_vec() {
+    assert_eq!(true, true);
+    assert_ne!(true, false);
+    assert_eq!(123456, flatten_int_vec(vec!(1, 2, 3, 4, 5, 6)));
 }
