@@ -1,8 +1,9 @@
 mod test;
 
 use rayon::prelude::*;
+use std::collections::HashSet;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 struct Point {
     x: usize,
     y: usize,
@@ -30,27 +31,32 @@ impl Point {
         }
     }
 
-    fn traversable_immediate_points(&self, points: &Vec<Point>) -> &Vec<Point> {
-        &points
+    fn traversable_immediate_points(&self, points: &Vec<Point>) -> Vec<Point> {
+        points
             .par_iter()
             .filter(|p| {
                 !p.wall && (p.x == (self.x + 1) || p.x == (self.x - 1)) && (p.y == self.y)
                     || (p.y == (self.y + 1) || p.y == (self.y - 1)) && (p.x == self.x)
             })
+            .map(|x| x.clone())
             .collect::<Vec<Point>>()
     }
 
-    fn traversable_points(&self, points: &Vec<Point>) -> Vec<Point> {
-        let tp = self.traversable_immediate_points(points);
-
-        tp.iter()
+    fn traversable_points(
+        &self,
+        points: &Vec<Point>,
+        mut known_points: &HashSet<Point>,
+    ) -> Vec<Point> {
+        self.traversable_immediate_points(&points)
+            .iter()
             .map(|x| {
-                x.traversable_points(points)
+                x.traversable_points(points, known_points)
                     .iter()
-                    .map(|x| *x)
-                    .filter(|x| x != self)
+                    .filter(|y| (*y != self && !known_points.contains(y)))
+                    .collect::<Vec<&Point>>()
             })
             .flatten()
+            .map(|x| x.clone())
             .collect::<Vec<Point>>()
     }
 
@@ -79,7 +85,8 @@ pub fn solve() {
     let points = generate_points(INPUT);
     for p in &points {
         if p.x == 79 && p.y == 65 {
-            let tp = p.traversable_points(&points);
+            let known_points: HashSet<Point> = HashSet::new();
+            let tp = p.traversable_points(&points, &known_points);
             println!("Traversable points from {:?} are: {:?}", p, tp);
         }
     }
