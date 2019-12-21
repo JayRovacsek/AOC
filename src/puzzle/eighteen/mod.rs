@@ -45,15 +45,17 @@ impl Point {
     fn traversable_points(
         &self,
         points: &Vec<Point>,
-        mut known_points: &HashSet<Point>,
+        mut known_points: HashSet<Point>,
     ) -> Vec<Point> {
         self.traversable_immediate_points(&points)
             .iter()
             .map(|x| {
-                x.traversable_points(points, known_points)
+                known_points.insert(x.clone());
+                x.traversable_points(points, known_points.clone())
                     .iter()
                     .filter(|y| (*y != self && !known_points.contains(y)))
-                    .collect::<Vec<&Point>>()
+                    .map(|y|y.clone())
+                    .collect::<Vec<Point>>()
             })
             .flatten()
             .map(|x| x.clone())
@@ -86,7 +88,7 @@ pub fn solve() {
     for p in &points {
         if p.x == 79 && p.y == 65 {
             let known_points: HashSet<Point> = HashSet::new();
-            let tp = p.traversable_points(&points, &known_points);
+            let tp = p.traversable_points(&points, known_points);
             println!("Traversable points from {:?} are: {:?}", p, tp);
         }
     }
