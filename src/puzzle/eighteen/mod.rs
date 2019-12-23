@@ -1,7 +1,8 @@
 mod test;
 
 use rayon::prelude::*;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
+use std::fs;
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 struct Point {
@@ -75,16 +76,20 @@ impl Point {
         }
     }
 
-    fn distance(&self, target: &Point, points: &HashSet<Point>, count: usize) -> usize {
-        let transverable_immediate_points = self.traversable_immediate_points(points);
-        if transverable_immediate_points.iter().any(|p| p == target) {
-            count + 1
-        } else {
-            transverable_immediate_points
+    fn distance(
+        &self,
+        target: &Point,
+        points: &HashSet<Point>,
+        visited: HashSet<Point>,
+        count: usize,
+    ) -> usize {
+        let traversable_immediate_points = self.traversable_immediate_points(points);
+        if !traversable_immediate_points.iter().any(|p| p == target) {
+            traversable_immediate_points
                 .iter()
                 .filter(|p| {
                     manhattan_distance((p.x as i32, p.y as i32), (target.x as i32, target.y as i32))
-                        <= transverable_immediate_points
+                        <= traversable_immediate_points
                             .iter()
                             .map(|x| {
                                 manhattan_distance(
@@ -95,12 +100,92 @@ impl Point {
                             .min()
                             .unwrap()
                             + 1
+                        && !visited.contains(*p)
                 })
-                .map(|p| p.distance(target, points, count + 1))
+                .map(|p| {
+                    let mut v = visited.clone();
+                    v.insert(p.clone());
+                    p.distance(target, points, v, count + 1)
+                })
                 .min()
                 .unwrap_or(0)
+        } else {
+            count + 1
         }
     }
+
+    fn distance_with_draw(
+        &self,
+        target: &Point,
+        points: &HashSet<Point>,
+        visited: HashSet<Point>,
+        count: usize,
+    ) -> usize {
+        let traversable_immediate_points = self.traversable_immediate_points(points);
+        if !traversable_immediate_points.iter().any(|p| p == target) {
+            let tp = traversable_immediate_points
+                .iter()
+                .filter(|p| {
+                    (manhattan_distance(
+                        (p.x as i32, p.y as i32),
+                        (target.x as i32, target.y as i32),
+                    ) <= traversable_immediate_points
+                        .iter()
+                        .map(|x| {
+                            manhattan_distance(
+                                (x.x as i32, x.y as i32),
+                                (target.x as i32, target.y as i32),
+                            )
+                        })
+                        .min()
+                        .unwrap()
+                        + 1)
+                        && !visited.contains(&p)
+                })
+                .cloned()
+                .collect::<HashSet<Point>>();
+
+            // let expanded_visited: HashSet<Point> = visited.union(&tp).cloned().collect();
+
+            tp.iter()
+                .map(|p| {
+                    p.distance_with_draw(
+                        target,
+                        points,
+                        visited.union(&tp).cloned().collect(),
+                        count + 1,
+                    )
+                })
+                .min()
+                .unwrap_or(0)
+        } else {
+            draw(target.key.unwrap(), points, &visited);
+            count + 1
+        }
+    }
+}
+
+fn draw(key: char, points: &HashSet<Point>, visited: &HashSet<Point>) {
+    let width = points.iter().max_by(|x, y| x.x.cmp(&y.x)).unwrap().x;
+    let height = points.iter().max_by(|x, y| x.y.cmp(&y.y)).unwrap().y;
+    let mut contents: String = String::new();
+    for x in 0..=width {
+        for y in 0..=height {
+            let c = points.iter().find(|z| z.x == x && z.y == y).unwrap();
+            contents += if visited.iter().any(|z| z.x == x && z.y == y) {
+                "%"
+            } else if c.wall {
+                "█"
+            } else {
+                " "
+            };
+            if y == height {
+                contents += "\n"
+            };
+        }
+    }
+    fs::write(format!("./results/path_of_{}_key.txt", key), contents)
+        .expect("Unable to write file");
 }
 
 fn manhattan_distance(x: (i32, i32), y: (i32, i32)) -> usize {
@@ -146,16 +231,14 @@ pub fn solve() {
         points.iter().filter(|x| x.wall).count()
     );
 
-    let available_keys: HashSet<&Point> = tp.iter().filter(|x| x.key.is_some()).collect();
-
-    for a in available_keys {
-        println!("Attempting to find a way to key: {:?}", a.key);
+    tp.par_iter().filter(|x| x.key.is_some()).for_each(|x| {
+        println!("Attempting to find a way to key: {:?}", x.key);
         println!(
             "Testing distance between start and key: {:?}\nFound distance to be: {:?}",
-            a.key,
-            p.distance(a, &points, 0)
+            x.key,
+            p.distance_with_draw(x, &points, HashSet::new(), 0)
         );
-    }
+    })
 }
 
 const INPUT: &str =
