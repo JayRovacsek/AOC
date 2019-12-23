@@ -1,7 +1,7 @@
 mod test;
 
 use rayon::prelude::*;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 struct Point {
@@ -10,6 +10,7 @@ struct Point {
     wall: bool,
     key: Option<char>,
     door: Option<char>,
+    start: bool,
 }
 
 impl Point {
@@ -28,44 +29,85 @@ impl Point {
             } else {
                 None
             },
+            start: input == '@',
         }
     }
 
-    fn traversable_immediate_points(&self, points: &Vec<Point>) -> Vec<Point> {
-        points
-            .par_iter()
-            .filter(|p| {
-                !p.wall && (p.x == (self.x + 1) || p.x == (self.x - 1)) && (p.y == self.y)
-                    || (p.y == (self.y + 1) || p.y == (self.y - 1)) && (p.x == self.x)
-            })
-            .map(|x| x.clone())
-            .collect::<Vec<Point>>()
+    fn traversable_immediate_points(&self, points: &HashSet<Point>) -> HashSet<Point> {
+        let a: Option<&Point> = points
+            .iter()
+            .find(|p| !p.wall && p.door.is_none() && p.x == (self.x + 1) && p.y == self.y);
+        let b: Option<&Point> = points
+            .iter()
+            .find(|p| !p.wall && p.door.is_none() && p.x == (self.x - 1) && p.y == self.y);
+        let c: Option<&Point> = points
+            .iter()
+            .find(|p| !p.wall && p.door.is_none() && p.x == self.x && p.y == (self.y + 1));
+        let d: Option<&Point> = points
+            .iter()
+            .find(|p| !p.wall && p.door.is_none() && p.x == self.x && p.y == (self.y - 1));
+
+        vec![a, b, c, d]
+            .into_iter()
+            .filter(|x| x.is_some())
+            .map(|x| x.unwrap())
+            .cloned()
+            .collect()
     }
 
     fn traversable_points(
         &self,
-        points: &Vec<Point>,
-        mut known_points: HashSet<Point>,
-    ) -> Vec<Point> {
-        self.traversable_immediate_points(&points)
-            .iter()
-            .map(|x| {
-                known_points.insert(x.clone());
-                x.traversable_points(points, known_points.clone())
-                    .iter()
-                    .filter(|y| (*y != self && !known_points.contains(y)))
-                    .map(|y|y.clone())
-                    .collect::<Vec<Point>>()
-            })
-            .flatten()
-            .map(|x| x.clone())
-            .collect::<Vec<Point>>()
+        points: &HashSet<Point>,
+        mut traversed_points: HashSet<Point>,
+    ) -> HashSet<Point> {
+        let inital_size = traversed_points.len();
+        let tp = self.traversable_immediate_points(points);
+        traversed_points.extend(tp.clone());
+
+        if inital_size == traversed_points.len() {
+            traversed_points
+        } else {
+            for t in &tp {
+                let more_tp = t.traversable_points(points, traversed_points.clone());
+                traversed_points.extend(more_tp);
+            }
+            traversed_points
+        }
     }
 
-    // fn closest_traversable_key_point<'a>(&self, points: &'a Vec<Point>) -> Point {}
+    fn distance(&self, target: &Point, points: &HashSet<Point>, count: usize) -> usize {
+        let transverable_immediate_points = self.traversable_immediate_points(points);
+        if transverable_immediate_points.iter().any(|p| p == target) {
+            count + 1
+        } else {
+            transverable_immediate_points
+                .iter()
+                .filter(|p| {
+                    manhattan_distance((p.x as i32, p.y as i32), (target.x as i32, target.y as i32))
+                        <= transverable_immediate_points
+                            .iter()
+                            .map(|x| {
+                                manhattan_distance(
+                                    (x.x as i32, x.y as i32),
+                                    (target.x as i32, target.y as i32),
+                                )
+                            })
+                            .min()
+                            .unwrap()
+                            + 1
+                })
+                .map(|p| p.distance(target, points, count + 1))
+                .min()
+                .unwrap_or(0)
+        }
+    }
 }
 
-fn generate_points(input: &str) -> Vec<Point> {
+fn manhattan_distance(x: (i32, i32), y: (i32, i32)) -> usize {
+    ((x.0 - y.0).abs() + (x.1 + y.1).abs()) as usize
+}
+
+fn generate_points(input: &str) -> HashSet<Point> {
     input
         .split('\n')
         .collect::<Vec<&str>>()
@@ -80,17 +122,39 @@ fn generate_points(input: &str) -> Vec<Point> {
                 .collect::<Vec<Point>>()
         })
         .flatten()
-        .collect::<Vec<Point>>()
+        .collect()
 }
+
+// 3201 non-walls, 3360 walls
 
 pub fn solve() {
     let points = generate_points(INPUT);
-    for p in &points {
-        if p.x == 79 && p.y == 65 {
-            let known_points: HashSet<Point> = HashSet::new();
-            let tp = p.traversable_points(&points, known_points);
-            println!("Traversable points from {:?} are: {:?}", p, tp);
-        }
+    let p = points.iter().find(|x| x.start).unwrap();
+    let tp = p.traversable_points(&points, HashSet::new());
+    println!(
+        "Number of traversable points from {:?} are: {}\nKeys reachable: {:?}",
+        p,
+        tp.len(),
+        tp.iter()
+            .filter(|x| x.key.is_some())
+            .collect::<HashSet<&Point>>()
+    );
+
+    println!(
+        "Found {} non walls, and {} walls",
+        points.iter().filter(|x| !x.wall).count(),
+        points.iter().filter(|x| x.wall).count()
+    );
+
+    let available_keys: HashSet<&Point> = tp.iter().filter(|x| x.key.is_some()).collect();
+
+    for a in available_keys {
+        println!("Attempting to find a way to key: {:?}", a.key);
+        println!(
+            "Testing distance between start and key: {:?}\nFound distance to be: {:?}",
+            a.key,
+            p.distance(a, &points, 0)
+        );
     }
 }
 
