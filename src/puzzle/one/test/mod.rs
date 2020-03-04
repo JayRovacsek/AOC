@@ -1,7 +1,7 @@
-use super::*;
+use super::{calculate_fuel, calculate_fuel_recursive};
 
 #[test]
-fn test_part_a() {
+fn test_calculate_fuel() {
     assert_eq!(true, true);
     assert_ne!(true, false);
     assert_eq!(2_u32, calculate_fuel(12_f32) as u32);
@@ -11,7 +11,7 @@ fn test_part_a() {
 }
 
 #[test]
-fn test_part_b() {
+fn test_calculate_fuel_recursive() {
     assert_eq!(true, true);
     assert_ne!(true, false);
     assert_eq!(2_u32, calculate_fuel_recursive(14_f32) as u32);

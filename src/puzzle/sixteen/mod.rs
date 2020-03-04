@@ -5,8 +5,8 @@ pub fn solve() {
     let answer_a = execute_phase_x_times(&input_vec, 100);
     println!("The answer for day 16, part a is: {:?}", &answer_a[0..8]);
 
-    let answer_a = execute_phase_x_times_with_offset(&input_vec, 10000);
-    println!("The answer for day 16, part b is: {:?}", &answer_a[0..8]);
+    // let answer_a = execute_phase_x_times_with_offset(&input_vec, 10000);
+    // println!("The answer for day 16, part b is: {:?}", &answer_a[0..8]);
 }
 
 fn build_vec_from_str(input: &str) -> Vec<i32> {
@@ -62,12 +62,13 @@ fn offset_vec(input: &Vec<i32>) -> usize {
     flatten_int_vec(input[offset..offset + 8].to_vec())
 }
 
-fn execute_phase(input: &Vec<i32>) -> Vec<i32> {
+fn execute_phase(input: &[i32]) -> Vec<i32> {
     (0..input.len())
         .collect::<Vec<usize>>()
         .iter()
         .enumerate()
         .map(|x| {
+            println!("Phases: {:?}", x.0);
             let phases = generate_pattern(x.0, input.len());
             let x = input
                 .iter()

@@ -21,7 +21,7 @@ struct Velocity {
 impl Body {
     fn from_str(input: &str) -> Body {
         let point: Vec<i64> = input
-            .split("=")
+            .split('=')
             .collect::<Vec<&str>>()
             .iter()
             .map(|x| x.split(',').collect::<Vec<&str>>())
@@ -124,7 +124,7 @@ fn run_steps(bodies: Vec<Body>, steps: usize) -> Vec<Body> {
 fn find_repeated_state(bodies: Vec<Body>, seen: HashSet<Vec<Body>>, c: usize) -> usize {
     let duplicate_found: bool = bodies
         .iter()
-        .map(|x| seen.iter().map(|y| *y == bodies).any(|y| y))
+        .map(|_| seen.iter().map(|y| *y == bodies).any(|y| y))
         .filter(|x| *x)
         .any(|x| x);
     if duplicate_found {

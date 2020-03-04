@@ -28,3 +28,10 @@ fn test_has_decrease() {
     assert_eq!(false, has_decrease(1234));
     assert_eq!(true, has_decrease(1232));
 }
+
+#[test]
+fn test_calculate_keyspace_part_a() {
+    let keys = (INPUT[0]..=INPUT[1]).collect::<Vec<usize>>();
+    assert_eq!(1605, calculate_keyspace_part_a(&keys));
+    assert_ne!(1606, calculate_keyspace_part_a(&keys));
+}

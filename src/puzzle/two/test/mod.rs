@@ -1,4 +1,4 @@
-use super::INPUT_VEC;
+use super::*;
 use crate::intcode::Interpreter;
 
 #[test]

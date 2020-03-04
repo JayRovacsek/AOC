@@ -7,10 +7,13 @@ pub fn solve() {
     println!("The answer for day 1, part b is: {}", answer_b);
 }
 
+/// Calculate fuel function, return input divided by 3, then minus 2
 fn calculate_fuel(input: f32) -> f32 {
     (input / 3_f32).floor() - 2_f32
 }
 
+/// Calculate fuel recursive function, return input divided by 3, then minus 2.
+/// If result > 0, calculate the fuel required for that fuel.
 fn calculate_fuel_recursive(input: f32) -> f32 {
     let result = (input / 3_f32).floor() - 2_f32;
     match result {

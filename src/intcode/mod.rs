@@ -31,21 +31,16 @@ impl Interpreter {
         use OpCode::*;
         let mut outputs: Vec<i64> = Vec::new();
         loop {
-            let x = Operation::parse(self.input_vec.clone(), self.head);
+            let x = Operation::parse(&self.input_vec, self.head);
             if x.opcode == End {
                 break;
             };
             let result = if self.phase_setting_consumed {
-                x.execute(
-                    self.input_vec.clone(),
-                    self.head,
-                    input_code,
-                    self.relative_base,
-                )
+                x.execute(&self.input_vec, self.head, input_code, self.relative_base)
             } else {
                 self.phase_setting_consumed = true;
                 x.execute(
-                    self.input_vec.clone(),
+                    &self.input_vec,
                     self.head,
                     self.phase_setting.unwrap_or(0),
                     self.relative_base,
@@ -67,18 +62,13 @@ impl Interpreter {
         self.input_vec[2] = v;
         let windows: Vec<usize> = (0..self.input_vec.len() / 4).collect();
         windows.iter().for_each(|x| {
-            let z = Operation::parse(self.input_vec.clone(), x * 4);
+            let z = Operation::parse(&self.input_vec, x * 4);
             let result = if self.phase_setting_consumed {
-                z.execute(
-                    self.input_vec.clone(),
-                    self.head,
-                    input_code,
-                    self.relative_base,
-                )
+                z.execute(&self.input_vec, self.head, input_code, self.relative_base)
             } else {
                 self.phase_setting_consumed = true;
                 z.execute(
-                    self.input_vec.clone(),
+                    &self.input_vec,
                     self.head,
                     self.phase_setting.unwrap_or(0),
                     self.relative_base,
@@ -97,13 +87,13 @@ impl Interpreter {
         use OpCode::*;
         let mut output: Option<i64> = None;
         loop {
-            let x = Operation::parse(self.input_vec.clone(), self.head);
+            let x = Operation::parse(&self.input_vec, self.head);
             if x.opcode == End {
                 break;
             };
             let result = if self.phase_setting_consumed {
                 x.execute(
-                    self.input_vec.clone(),
+                    &self.input_vec,
                     self.head,
                     input_code.unwrap(),
                     self.relative_base,
@@ -111,7 +101,7 @@ impl Interpreter {
             } else {
                 self.phase_setting_consumed = true;
                 x.execute(
-                    self.input_vec.clone(),
+                    &self.input_vec,
                     self.head,
                     self.phase_setting.unwrap_or(0),
                     self.relative_base,
@@ -136,7 +126,7 @@ struct Operation {
 }
 
 impl Operation {
-    fn parse(input_vec: Vec<i64>, head: usize) -> Operation {
+    fn parse(input_vec: &[i64], head: usize) -> Operation {
         use OpCode::*;
         let input = input_vec[head];
         let o = match input % 100 {
@@ -158,15 +148,15 @@ impl Operation {
             _ => End,
         };
         Operation {
-            opcode: o.clone(),
-            parameters: match o {
+            parameters: match &o {
                 End => vec![],
-                _ => Operation::parse_parameters(input_vec[head], o),
+                _ => Operation::parse_parameters(input_vec[head], &o),
             },
+            opcode: o,
         }
     }
 
-    fn parse_parameters(input: i64, opcode: OpCode) -> Vec<ParameterMode> {
+    fn parse_parameters(input: i64, opcode: &OpCode) -> Vec<ParameterMode> {
         use OpCode::*;
         use ParameterMode::*;
         match opcode {
@@ -230,54 +220,54 @@ impl Operation {
 
     fn execute(
         &self,
-        mut input_vec: Vec<i64>,
-        mut head: usize,
+        iv: &Vec<i64>,
+        h: usize,
         input_code: i64,
-        mut relative_base: i64,
+        rb: i64,
     ) -> (Vec<i64>, usize, Option<i64>, i64) {
         use OpCode::*;
         use ParameterMode::*;
         let mut output: Option<i64> = None;
+        let mut input_vec = iv.clone();
         let params: Vec<i64> = self
             .parameters
             .iter()
             .enumerate()
             .map(|x| match x.1 {
-                Immediate => (head + 1 + x.0) as i64,
+                Immediate => (h + 1 + x.0) as i64,
                 Position => {
-                    if head + 1 + x.0 > input_vec.len() {
-                        input_vec.resize((head + 1 + x.0) as usize, 0);
+                    if h + 1 + x.0 > iv.len() {
+                        input_vec.resize((h + 1 + x.0) as usize, 0);
                     }
-                    input_vec[head + 1 + x.0]
-                },
+                    input_vec[h + 1 + x.0]
+                }
                 Relative => {
-                    if head + 1 + relative_base as usize > input_vec.len() {
-                        input_vec.resize((head + 2 + relative_base as usize) as usize, 0);
+                    if (input_vec[(rb + input_vec[h + 1]) as usize]) as usize > iv.len() {
+                        input_vec.resize(
+                            (input_vec[(rb + input_vec[h + 1]) as usize] + 1) as usize,
+                            0,
+                        );
                     }
-                    (input_vec[head + 1 + relative_base as usize]) as i64
+                    (input_vec[(rb + input_vec[h + 1]) as usize])
                 }
             })
             .collect();
 
-        let expand_memory = params
-            .iter()
-            .map(|x| *x as usize > input_vec.len())
-            .filter(|x| *x)
-            .any(|x| x);
+        // let expand_memory = params
+        //     .iter()
+        //     .map(|x| *x as usize > iv.len())
+        //     .filter(|x| *x)
+        //     .any(|x| x);
 
-        // println!(
-        //     "Expand memory: {:?}\nParams: {:?}\nLength: {:?}",
-        //     expand_memory,
-        //     params,
-        //     input_vec.len()
-        // );
+        let mut relative_base = rb;
+        let mut head = h;
 
-        input_vec = if expand_memory {
-            input_vec.resize((*params.iter().max().unwrap_or(&0_i64) + 1) as usize, 0);
-            input_vec
-        } else {
-            input_vec
-        };
+        // input_vec = if expand_memory {
+        //     input_vec.resize((*params.iter().max().unwrap_or(&0_i64) + 1) as usize, 0);
+        //     input_vec
+        // } else {
+        //     input_vec
+        // };
 
         match self.opcode {
             Addition => {
@@ -327,8 +317,7 @@ impl Operation {
                 head += 4
             }
             Output => {
-                output = Some(input_vec[params[0] as usize]); // CHANGE BACK IF THIS IS WRONG
-                                                              // output = Some(params[0]);
+                output = Some(params[0]);
                 head += 2;
             }
             RelativeAdjust => {

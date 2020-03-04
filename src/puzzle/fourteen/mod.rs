@@ -1,6 +1,5 @@
 mod test;
 
-use rayon::prelude::*;
 use std::collections::HashMap;
 
 #[derive(Debug, Clone, Eq, PartialEq)]
@@ -41,7 +40,7 @@ impl Recipe {
             .for_each(|x| {
                 let parts = x.split(' ').collect::<Vec<&str>>();
                 requirements_hm.insert(
-                    parts.last().unwrap_or(&"FAILED").to_string(),
+                    (*parts.last().unwrap_or(&"FAILED")).to_string(),
                     parts
                         .first()
                         .unwrap_or(&"FAILED")
@@ -57,7 +56,7 @@ impl Recipe {
 
     fn calculate_ore(&self, recipies: &[Recipe]) -> usize {
         self.requirements
-            .par_iter()
+            .iter()
             .map(|x| {
                 if x.0 == "ORE" {
                     *x.1 as usize

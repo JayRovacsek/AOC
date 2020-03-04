@@ -3,11 +3,18 @@ mod test;
 use crate::intcode::Interpreter;
 
 pub fn solve() {
-    let mut interpreter = Interpreter::new(None, INPUT_VEC.to_vec(), 0);
+    let mut interpreter = Interpreter::new(
+        None,
+        vec![
+            109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99,
+        ],
+        0,
+    );
+    // let mut interpreter = Interpreter::new(None, INPUT_VEC.to_vec(), 0);
     let answer_a = interpreter.run(1);
     println!("The answer for day 9, part a is: {:?}", answer_a);
-    let answer_b = interpreter.run(1);
-    println!("The answer for day 9, part b is: {:?}", answer_b);
+    // let answer_b = interpreter.run(1);
+    // println!("The answer for day 9, part b is: {:?}", answer_b);
 }
 
 const INPUT_VEC: [i64; 973] = [

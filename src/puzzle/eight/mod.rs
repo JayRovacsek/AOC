@@ -52,7 +52,6 @@ fn flatten_layers(layers: Vec<Vec<u32>>) -> Vec<u32> {
 
 fn generate_image_output(input: Vec<u32>) -> Vec<String> {
     input
-        .to_owned()
         .chunks(25 as usize)
         .map(|x| {
             x.iter()
@@ -65,7 +64,6 @@ fn generate_image_output(input: Vec<u32>) -> Vec<String> {
 fn build_layers(input_vec: Vec<u32>, width: u32, height: u32) -> Vec<Vec<u32>> {
     let total_pixels = width * height;
     input_vec
-        .to_owned()
         .chunks(total_pixels as usize)
         .map(|x| x.to_owned().to_vec())
         .collect::<Vec<Vec<u32>>>()
