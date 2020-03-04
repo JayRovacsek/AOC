@@ -56,34 +56,34 @@ fn generate_wire_map(wire: &[Instruction]) -> HashSet<(i64, i64)> {
         .map(|z| match z.direction {
             Direction::Up => {
                 pos = (pos.0, pos.1 + z.distance as i64);
-                generate_range(pos.1 - z.distance as i64, pos.1)
+                generate_range(0, z.distance as i64)
                     .collect::<Vec<i64>>()
                     .iter()
-                    .map(|x| (pos.0, *x))
+                    .map(|x| (pos.0, pos.1 + x))
                     .collect::<Vec<(i64, i64)>>()
             }
             Direction::Down => {
                 pos = (pos.0, pos.1 - z.distance as i64);
-                generate_range(pos.1 + z.distance as i64, pos.1)
+                generate_range(0, z.distance as i64)
                     .collect::<Vec<i64>>()
                     .iter()
-                    .map(|x| (pos.0, *x))
+                    .map(|x| (pos.0, pos.1 + x))
                     .collect::<Vec<(i64, i64)>>()
             }
             Direction::Left => {
                 pos = (pos.0 - z.distance as i64, pos.1);
-                generate_range(pos.0 + z.distance as i64, pos.0)
+                generate_range(0, z.distance as i64)
                     .collect::<Vec<i64>>()
                     .iter()
-                    .map(|x| (*x, pos.1))
+                    .map(|x| (pos.0 + x, pos.1))
                     .collect::<Vec<(i64, i64)>>()
             }
             Direction::Right => {
                 pos = (pos.0 + z.distance as i64, pos.1);
-                generate_range(pos.0 + z.distance as i64, pos.0)
+                generate_range(0, z.distance as i64)
                     .collect::<Vec<i64>>()
                     .iter()
-                    .map(|x| (*x, pos.1))
+                    .map(|x| (pos.0 + x, pos.1))
                     .collect::<Vec<(i64, i64)>>()
             }
         })
