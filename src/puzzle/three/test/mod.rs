@@ -30,8 +30,72 @@ fn test_part_a() {
     .map(|x| Instruction::from_str(x))
     .collect();
 
-    assert_eq!(159, run_wires(&test_wire_a, &test_wire_b)[1]);
-    assert_eq!(135, run_wires(&test_wire_c, &test_wire_d)[1]);
+    assert_eq!(
+        159,
+        find_closest_manhattan_distance_size(&test_wire_a, &test_wire_b)
+    );
+    assert_eq!(
+        135,
+        find_closest_manhattan_distance_size(&test_wire_c, &test_wire_d)
+    );
+}
+
+#[test]
+fn test_generate_wire_map() {
+    assert_eq!(true, true);
+    assert_ne!(true, false);
+
+    let test_wire_a: Vec<Instruction> = vec!["U1"]
+        .par_iter()
+        .map(|x| Instruction::from_str(x))
+        .collect();
+    let test_wire_a_map = generate_wire_map(&test_wire_a);
+
+    let test_wire_b: Vec<Instruction> = vec!["D1"]
+        .par_iter()
+        .map(|x| Instruction::from_str(x))
+        .collect();
+    let test_wire_b_map = generate_wire_map(&test_wire_b);
+
+    let test_wire_c: Vec<Instruction> = vec!["L1"]
+        .par_iter()
+        .map(|x| Instruction::from_str(x))
+        .collect();
+    let test_wire_c_map = generate_wire_map(&test_wire_c);
+
+    let test_wire_d: Vec<Instruction> = vec!["R1"]
+        .par_iter()
+        .map(|x| Instruction::from_str(x))
+        .collect();
+    let test_wire_d_map = generate_wire_map(&test_wire_d);
+
+    assert_eq!(
+        vec!((0, 0), (0, 1))
+            .into_iter()
+            .collect::<HashSet<(i64, i64)>>(),
+        test_wire_a_map
+    );
+
+    assert_eq!(
+        vec!((0, 0), (0, -1))
+            .into_iter()
+            .collect::<HashSet<(i64, i64)>>(),
+        test_wire_b_map
+    );
+
+    assert_eq!(
+        vec!((0, 0), (-1, 0))
+            .into_iter()
+            .collect::<HashSet<(i64, i64)>>(),
+        test_wire_c_map
+    );
+
+    assert_eq!(
+        vec!((0, 0), (1, 0))
+            .into_iter()
+            .collect::<HashSet<(i64, i64)>>(),
+        test_wire_d_map
+    );
 }
 
 #[test]

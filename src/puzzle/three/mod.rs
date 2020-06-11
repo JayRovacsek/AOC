@@ -44,10 +44,25 @@ pub fn solve() {
         .iter()
         .map(|x| Instruction::from_str(x))
         .collect();
-    let answer_a = run_wires(&wire_a, &wire_b)[0];
+    let answer_a = find_closest_manhattan_distance_size(&wire_a, &wire_b);
     println!("The answer for day 3, part a is: {:?}", answer_a);
     let answer_b = calculate_intersection_lowest_distance(wire_a, wire_b);
     println!("The answer for day 3, part b is: {:?}", answer_b);
+}
+
+fn find_closest_manhattan_distance_size(wire_a: &[Instruction], wire_b: &[Instruction]) -> usize {
+    let wire_a_map = generate_wire_map(wire_a);
+    let wire_b_map = generate_wire_map(wire_b);
+    let intersections: HashSet<&(i64, i64)> = wire_a_map
+        .iter()
+        .filter(|x| wire_b_map.contains(x))
+        .collect();
+
+    intersections
+        .par_iter()
+        .map(|x| manhattan_distance(**x, (0, 0)))
+        .min()
+        .unwrap_or(0)
 }
 
 fn generate_wire_map(wire: &[Instruction]) -> HashSet<(i64, i64)> {
@@ -59,7 +74,7 @@ fn generate_wire_map(wire: &[Instruction]) -> HashSet<(i64, i64)> {
                 generate_range(0, z.distance as i64)
                     .collect::<Vec<i64>>()
                     .iter()
-                    .map(|x| (pos.0, pos.1 + x))
+                    .map(|x| (pos.0, pos.1 - x))
                     .collect::<Vec<(i64, i64)>>()
             }
             Direction::Down => {
@@ -67,7 +82,7 @@ fn generate_wire_map(wire: &[Instruction]) -> HashSet<(i64, i64)> {
                 generate_range(0, z.distance as i64)
                     .collect::<Vec<i64>>()
                     .iter()
-                    .map(|x| (pos.0, pos.1 + x))
+                    .map(|x| (pos.0, pos.1 - x))
                     .collect::<Vec<(i64, i64)>>()
             }
             Direction::Left => {
@@ -75,7 +90,7 @@ fn generate_wire_map(wire: &[Instruction]) -> HashSet<(i64, i64)> {
                 generate_range(0, z.distance as i64)
                     .collect::<Vec<i64>>()
                     .iter()
-                    .map(|x| (pos.0 + x, pos.1))
+                    .map(|x| (pos.0 - x, pos.1))
                     .collect::<Vec<(i64, i64)>>()
             }
             Direction::Right => {
@@ -83,30 +98,12 @@ fn generate_wire_map(wire: &[Instruction]) -> HashSet<(i64, i64)> {
                 generate_range(0, z.distance as i64)
                     .collect::<Vec<i64>>()
                     .iter()
-                    .map(|x| (pos.0 + x, pos.1))
+                    .map(|x| (pos.0 - x, pos.1))
                     .collect::<Vec<(i64, i64)>>()
             }
         })
         .flatten()
         .collect()
-}
-
-fn run_wires(wire_a: &[Instruction], wire_b: &[Instruction]) -> Vec<usize> {
-    let wire_a_path = generate_wire_map(wire_a);
-    let wire_b_path = generate_wire_map(wire_b);
-
-    let intersections: HashSet<&(i64, i64)> = wire_a_path
-        .iter()
-        .filter(|x| wire_b_path.contains(x))
-        .collect();
-
-    let mut distances = intersections
-        .par_iter()
-        .map(|x| manhattan_distance(**x, (0, 0)))
-        .collect::<Vec<usize>>();
-
-    distances.sort();
-    distances
 }
 
 fn calculate_intersection_lowest_distance(
@@ -145,15 +142,16 @@ where
     T: Into<i64> + Clone,
 {
     let mut current_point = (0_i64, 0_i64);
-    let mut c = 0;
     let mut done = false;
     let target_point = (
         &target_point.0.clone().into(),
         &target_point.1.clone().into(),
     );
-    wire.iter().for_each(|i| match i.direction {
+
+    let distance: i64 = wire.iter().fold(0, |s, i| match i.direction {
         Direction::Up => {
-            for _ in 0..i.distance {
+            let mut c: i64 = 0;
+            for _ in 1..=i.distance {
                 if !done {
                     current_point.1 += 1;
                     c += 1;
@@ -162,8 +160,10 @@ where
                     done = true;
                 }
             }
+            s + c
         }
         Direction::Down => {
+            let mut c: i64 = 0;
             for _ in 0..i.distance {
                 if !done {
                     current_point.1 -= 1;
@@ -173,8 +173,10 @@ where
                     done = true;
                 }
             }
+            s + c
         }
         Direction::Left => {
+            let mut c: i64 = 0;
             for _ in 0..i.distance {
                 if !done {
                     current_point.0 -= 1;
@@ -184,8 +186,10 @@ where
                     done = true;
                 }
             }
+            s + c
         }
         Direction::Right => {
+            let mut c: i64 = 0;
             for _ in 0..i.distance {
                 if !done {
                     current_point.0 += 1;
@@ -195,10 +199,11 @@ where
                     done = true;
                 }
             }
+            s + c
         }
     });
 
-    c
+    distance
 }
 
 fn generate_range<T>(x: T, y: T) -> std::ops::RangeInclusive<T>
