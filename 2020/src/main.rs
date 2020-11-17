@@ -1,22 +1,11 @@
 mod input;
-mod puzzle;
+pub mod puzzle;
 
 extern crate humantime;
 extern crate rand;
 extern crate rayon;
 
 use std::time::Instant;
-use wasm_bindgen::prelude::*;
-
-#[wasm_bindgen]
-extern "C" {
-    fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, wasm-rust-example!");
-}
 
 fn main() {
     loop {
