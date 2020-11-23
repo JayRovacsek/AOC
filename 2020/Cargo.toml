@@ -3,22 +3,35 @@ name = "aoc-2020"
 version = "0.1.4"
 authors = ["elevennn"]
 edition = "2018"
+description = "A crate/lib to host code for the AoC 2020"
+repository = "https://github.com/JayRovacsek/AOC.git"
+license = "GPL-3.0"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+crate-type = ["cdylib", "rlib"]
+path = "src/main.rs"
 
 [dependencies]
 rand = "0.7.2"
 humantime = "1.1"
 rayon = "1.1"
+wasm-bindgen = { version = "0.2.58", features = ["serde-serialize"] }
+console_error_panic_hook = { version = "0.1.6", optional = true }
+wee_alloc = { version = "0.4.5", optional = true }
+js-sys = "0.3.35"
 
-# The `console_error_panic_hook` crate provides better debugging of panics by
-# logging them with `console.error`. This is great for development, but requires
-# all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
-# code size when deploying.
-console_error_panic_hook = { version = "0.1.1", optional = true }
+[features]
+default = ["console_error_panic_hook"]
 
 [dev-dependencies]
 criterion = "0.3"
+wasm-bindgen-test = "0.3.8"
+
+[dependencies.web-sys]
+version = "0.3.35"
+features = [
+  "console",
+]
 
 [[bench]]
 name = "benchmarks"
