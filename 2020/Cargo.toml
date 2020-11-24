@@ -36,3 +36,6 @@ features = [
 [[bench]]
 name = "benchmarks"
 harness = false
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false

@@ -16,15 +16,8 @@ use wasm_bindgen::prelude::*;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
-extern {
-    fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn solve(day: &str, input: &str) {
-    unsafe {
-        alert("Hello, wasm-template-rust!");
-    };
+pub fn solve(puzzle_text: &str, day: &str) -> String {
+    format!("Day: {}, Puzzle text: {}", day, puzzle_text)
 }
 
 fn main() {
