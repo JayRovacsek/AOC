@@ -9,10 +9,10 @@ pub fn solve<'a>(input: &'a str) {
     )
 }
 
-pub fn solve_part_one<'a>(input: &'a str) -> &'a str {
-    input
+pub fn solve_part_one<'a>(input: &'a str) -> String {
+    String::from(input)
 }
 
-pub fn solve_part_two<'a>(input: &'a str) -> &'a str {
-    input
+pub fn solve_part_two<'a>(input: &'a str) -> String {
+    String::from(input)
 }

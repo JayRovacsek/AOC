@@ -5,8 +5,8 @@ extern crate humantime;
 extern crate rand;
 extern crate rayon;
 
+use crate::input::read_contents;
 use std::time::Instant;
-
 use wasm_bindgen::prelude::*;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
@@ -31,7 +31,7 @@ fn match_puzzle(option: u8) {
     let stub_input = "This is a stub";
     let start = Instant::now();
     match option {
-        1 => puzzle::one::solve(stub_input),
+        1 => puzzle::one::solve(&read_contents("./input/day1.txt")),
         2 => puzzle::two::solve(stub_input),
         3 => puzzle::three::solve(stub_input),
         4 => puzzle::four::solve(stub_input),

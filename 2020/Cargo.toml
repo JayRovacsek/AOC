@@ -15,7 +15,7 @@ path = "src/main.rs"
 rand = "0.7.2"
 humantime = "2.0.1"
 rayon = "1.1"
-wasm-bindgen = { version = "0.3", features = ["serde-serialize"] }
+wasm-bindgen = { version = "0.2.69", features = ["serde-serialize"] }
 console_error_panic_hook = { version = "0.1.6", optional = true }
 wee_alloc = { version = "0.4.5", optional = true }
 js-sys = "0.3.35"
