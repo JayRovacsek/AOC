@@ -1,4 +1,4 @@
-mod input;
+pub mod input;
 pub mod puzzle;
 
 extern crate humantime;

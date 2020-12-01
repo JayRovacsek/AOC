@@ -1,5 +1,5 @@
 [package]
-name = "aoc-2020"
+name = "aoc_2020"
 version = "0.1.4"
 authors = ["elevennn"]
 edition = "2018"
