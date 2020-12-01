@@ -28,10 +28,10 @@ fn main() {
 }
 
 fn match_puzzle(option: u8) {
-    let stub_input = "This is a stub";
+    let stub_input = String::from("This is a stub");
     let start = Instant::now();
     match option {
-        1 => puzzle::one::solve(&read_contents("./input/day1.txt")),
+        1 => puzzle::one::solve(read_contents("./input/day1.txt")),
         2 => puzzle::two::solve(stub_input),
         3 => puzzle::three::solve(stub_input),
         4 => puzzle::four::solve(stub_input),

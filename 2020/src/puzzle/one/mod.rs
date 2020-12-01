@@ -1,16 +1,16 @@
 mod test;
 use std::collections::HashSet;
 
-pub fn solve<'a>(input: &'a str) {
-    let answer_part_one = solve_part_one(&input);
-    let answer_part_two = solve_part_two(&input);
+pub fn solve(input: String) {
+    let answer_part_one = solve_part_one(input.clone());
+    let answer_part_two = solve_part_two(input);
     println!(
         "Part 1 answer:{:#?}\nPart 2 answer:{:#?}",
         answer_part_one, answer_part_two
     )
 }
 
-pub fn solve_part_one<'a>(input: &'a str) -> String {
+pub fn solve_part_one(input: String) -> String {
     let input_vec = input
         .split("\n")
         .filter_map(|x| x.parse::<i32>().ok())
@@ -24,7 +24,7 @@ pub fn solve_part_one<'a>(input: &'a str) -> String {
     }
 }
 
-pub fn solve_part_two<'a>(input: &'a str) -> String {
+pub fn solve_part_two(input: String) -> String {
     let input_vec: Vec<i32> = input
         .split("\n")
         .into_iter()
@@ -51,7 +51,7 @@ fn find_sum_values(input: &Vec<i32>, target: i32) -> Option<(i32, i32)> {
 
     match input.iter().find(|x| {
         if *x + lowest <= target {
-            let diff = 2020 - **x;
+            let diff = target - **x;
             hs.contains(&diff)
         } else {
             false

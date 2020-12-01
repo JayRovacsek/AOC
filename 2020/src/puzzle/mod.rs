@@ -25,6 +25,6 @@ pub mod twentytwo;
 pub mod two;
 
 pub trait Puzzle {
-    fn solve_part_one<'a>(input: &'a str) -> String;
-    fn solve_part_two<'a>(input: &'a str) -> String;
+    fn solve_part_one(input: String) -> String;
+    fn solve_part_two(input: String) -> String;
 }
