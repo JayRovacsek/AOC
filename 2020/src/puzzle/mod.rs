@@ -23,3 +23,8 @@ pub mod twentytwo;
 pub mod twentythree;
 pub mod twentyfour;
 pub mod twentyfive;
+
+pub trait Puzzle {
+    fn solve_part_one<'a>(input: &'a str) -> &'a str;
+    fn solve_part_two<'a>(input: &'a str) -> &'a str;
+}
