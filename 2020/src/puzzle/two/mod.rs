@@ -29,13 +29,14 @@ impl Rule {
     }
 
     fn is_valid_sled_password(&self) -> bool {
-        let captures = Regex::new(&format!("[{}]{{1}}", &self.value))
-            .unwrap()
-            .captures_iter(&self.password)
-            .collect::<Vec<_>>()
-            .len();
-
-        captures >= self.min_occurrences && captures <= self.max_occurrences
+        let target = &self.value.chars().nth(0).unwrap();
+        let len = self.password
+        .chars()
+        .filter(|x| x == target)
+        .collect::<Vec<_>>()
+        .len();
+        
+        len >= self.min_occurrences && len <= self.max_occurrences
     }
 
     fn is_valid_toboggan_password(&self) -> bool {
