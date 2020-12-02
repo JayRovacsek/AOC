@@ -4,7 +4,10 @@ use crate::input::read_contents;
 
 #[test]
 fn test_solve_part_one() {
-    assert_eq!("32064", solve_part_one(read_contents("./input/day1.txt")));
+    assert_eq!(
+        "32064",
+        solve_part_one(read_contents("./input/day_one.txt"))
+    );
 }
 
 #[test]
