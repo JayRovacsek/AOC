@@ -1,5 +1,5 @@
 
-running 53 tests
+running 56 tests
 test input::test_get_rand_u8 ... ignored
 test input::test_panic_get_rand_u8 ... ignored
 test puzzle::eight::test::test_solve_part_one ... ignored
@@ -51,13 +51,16 @@ test puzzle::twentythree::test::test_solve_part_one ... ignored
 test puzzle::twentythree::test::test_solve_part_two ... ignored
 test puzzle::twentytwo::test::test_solve_part_one ... ignored
 test puzzle::twentytwo::test::test_solve_part_two ... ignored
+test puzzle::two::test::test_rule_defaults ... ignored
+test puzzle::two::test::test_rule_functions ... ignored
+test puzzle::two::test::test_rule_new ... ignored
 test puzzle::two::test::test_solve_part_one ... ignored
 test puzzle::two::test::test_solve_part_two ... ignored
 
-test result: ok. 0 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out
+test result: ok. 0 passed; 0 failed; 56 ignored; 0 measured; 0 filtered out
 
 
-running 53 tests
+running 56 tests
 test input::test_get_rand_u8 ... ignored
 test input::test_panic_get_rand_u8 ... ignored
 test puzzle::eight::test::test_solve_part_one ... ignored
@@ -109,41 +112,55 @@ test puzzle::twentythree::test::test_solve_part_one ... ignored
 test puzzle::twentythree::test::test_solve_part_two ... ignored
 test puzzle::twentytwo::test::test_solve_part_one ... ignored
 test puzzle::twentytwo::test::test_solve_part_two ... ignored
+test puzzle::two::test::test_rule_defaults ... ignored
+test puzzle::two::test::test_rule_functions ... ignored
+test puzzle::two::test::test_rule_new ... ignored
 test puzzle::two::test::test_solve_part_one ... ignored
 test puzzle::two::test::test_solve_part_two ... ignored
 
-test result: ok. 0 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out
+test result: ok. 0 passed; 0 failed; 56 ignored; 0 measured; 0 filtered out
 
 Gnuplot not found, using plotters backend
 Benchmarking day 1, part 1
 Benchmarking day 1, part 1: Warming up for 3.0000 s
-Benchmarking day 1, part 1: Collecting 100 samples in estimated 5.0757 s (247k iterations)
+Benchmarking day 1, part 1: Collecting 100 samples in estimated 5.0797 s (303k iterations)
 Benchmarking day 1, part 1: Analyzing
-day 1, part 1           time:   [19.639 us 20.474 us 21.319 us]
-                        change: [-0.3206% +4.4696% +9.2811%] (p = 0.06 > 0.05)
-                        No change in performance detected.
+day 1, part 1           time:   [15.766 us 16.194 us 16.662 us]
+                        change: [-11.468% -8.4759% -5.4578%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 5 outliers among 100 measurements (5.00%)
+  4 (4.00%) high mild
+  1 (1.00%) high severe
 
 Benchmarking day 1, part 2
 Benchmarking day 1, part 2: Warming up for 3.0000 s
-Benchmarking day 1, part 2: Collecting 100 samples in estimated 5.3884 s (45k iterations)
+Benchmarking day 1, part 2: Collecting 100 samples in estimated 5.4130 s (61k iterations)
 Benchmarking day 1, part 2: Analyzing
-day 1, part 2           time:   [106.87 us 109.82 us 113.11 us]
-                        change: [+0.1381% +5.0474% +9.6153%] (p = 0.03 < 0.05)
-                        Change within noise threshold.
+day 1, part 2           time:   [91.505 us 94.662 us 98.240 us]
+                        change: [-13.819% -10.679% -7.3421%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 6 outliers among 100 measurements (6.00%)
+  3 (3.00%) high mild
+  3 (3.00%) high severe
 
 Benchmarking day 2, part 1
 Benchmarking day 2, part 1: Warming up for 3.0000 s
-Benchmarking day 2, part 1: Collecting 100 samples in estimated 5.0641 s (300 iterations)
+Benchmarking day 2, part 1: Collecting 100 samples in estimated 7.0355 s (10k iterations)
 Benchmarking day 2, part 1: Analyzing
-day 2, part 1           time:   [14.701 ms 15.134 ms 15.584 ms]
-                        change: [-11.645% -7.3933% -3.0011%] (p = 0.00 < 0.05)
+day 2, part 1           time:   [654.35 us 666.73 us 681.69 us]
+                        change: [-17.286% -13.822% -10.294%] (p = 0.00 < 0.05)
                         Performance has improved.
+Found 8 outliers among 100 measurements (8.00%)
+  3 (3.00%) high mild
+  5 (5.00%) high severe
 
 Benchmarking day 2, part 2
 Benchmarking day 2, part 2: Warming up for 3.0000 s
-Benchmarking day 2, part 2: Collecting 100 samples in estimated 7.9168 s (10k iterations)
+Benchmarking day 2, part 2: Collecting 100 samples in estimated 6.1832 s (10k iterations)
 Benchmarking day 2, part 2: Analyzing
-day 2, part 2           time:   [773.79 us 797.19 us 822.47 us]
-                        change: [-2.3974% +1.2611% +5.3195%] (p = 0.53 > 0.05)
-                        No change in performance detected.
+day 2, part 2           time:   [579.84 us 587.30 us 596.58 us]
+                        change: [-13.512% -10.093% -6.5155%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
 
