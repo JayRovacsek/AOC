@@ -1,6 +1,6 @@
 mod test;
 
-use regex::{Captures, Regex};
+use regex::Regex;
 
 struct Rule {
     min_occurrences: usize,
