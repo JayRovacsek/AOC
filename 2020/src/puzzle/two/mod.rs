@@ -2,6 +2,7 @@ mod test;
 
 use regex::Regex;
 
+#[derive(Debug,PartialEq,Eq)]
 struct Rule {
     min_occurrences: usize,
     max_occurrences: usize,
@@ -27,7 +28,7 @@ impl Rule {
         }
     }
 
-    fn is_valid_toboggan_password(&self) -> bool {
+    fn is_valid_sled_password(&self) -> bool {
         let captures = Regex::new(&format!("[{}]{{1}}", &self.value))
             .unwrap()
             .captures_iter(&self.password)
@@ -37,7 +38,7 @@ impl Rule {
         captures >= self.min_occurrences && captures <= self.max_occurrences
     }
 
-    fn is_valid_sled_password(&self) -> bool {
+    fn is_valid_toboggan_password(&self) -> bool {
         let target = self.value.chars().nth(0).unwrap();
         self.password
             .char_indices()
@@ -70,7 +71,7 @@ pub fn solve_part_one(input: String) -> String {
         "{}",
         rules
             .iter()
-            .filter(|x| x.is_valid_toboggan_password())
+            .filter(|x| x.is_valid_sled_password())
             .collect::<Vec<&Rule>>()
             .len()
     )
@@ -86,7 +87,7 @@ pub fn solve_part_two(input: String) -> String {
         "{}",
         rules
             .iter()
-            .filter(|x| x.is_valid_sled_password())
+            .filter(|x| x.is_valid_toboggan_password())
             .collect::<Vec<&Rule>>()
             .len()
     )

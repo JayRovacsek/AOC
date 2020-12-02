@@ -1,0 +1,149 @@
+
+running 53 tests
+test input::test_get_rand_u8 ... ignored
+test input::test_panic_get_rand_u8 ... ignored
+test puzzle::eight::test::test_solve_part_one ... ignored
+test puzzle::eight::test::test_solve_part_two ... ignored
+test puzzle::eighteen::test::test_solve_part_one ... ignored
+test puzzle::eighteen::test::test_solve_part_two ... ignored
+test puzzle::eleven::test::test_solve_part_one ... ignored
+test puzzle::eleven::test::test_solve_part_two ... ignored
+test puzzle::fifteen::test::test_solve_part_one ... ignored
+test puzzle::fifteen::test::test_solve_part_two ... ignored
+test puzzle::five::test::test_solve_part_one ... ignored
+test puzzle::five::test::test_solve_part_two ... ignored
+test puzzle::four::test::test_solve_part_one ... ignored
+test puzzle::four::test::test_solve_part_two ... ignored
+test puzzle::fourteen::test::test_solve_part_one ... ignored
+test puzzle::fourteen::test::test_solve_part_two ... ignored
+test puzzle::nine::test::test_solve_part_one ... ignored
+test puzzle::nine::test::test_solve_part_two ... ignored
+test puzzle::nineteen::test::test_solve_part_one ... ignored
+test puzzle::nineteen::test::test_solve_part_two ... ignored
+test puzzle::one::test::test_find_sum_values ... ignored
+test puzzle::one::test::test_solve_part_one ... ignored
+test puzzle::one::test::test_solve_part_two ... ignored
+test puzzle::seven::test::test_solve_part_one ... ignored
+test puzzle::seven::test::test_solve_part_two ... ignored
+test puzzle::seventeen::test::test_solve_part_one ... ignored
+test puzzle::seventeen::test::test_solve_part_two ... ignored
+test puzzle::six::test::test_solve_part_one ... ignored
+test puzzle::six::test::test_solve_part_two ... ignored
+test puzzle::sixteen::test::test_solve_part_one ... ignored
+test puzzle::sixteen::test::test_solve_part_two ... ignored
+test puzzle::ten::test::test_solve_part_one ... ignored
+test puzzle::ten::test::test_solve_part_two ... ignored
+test puzzle::thirteen::test::test_solve_part_one ... ignored
+test puzzle::thirteen::test::test_solve_part_two ... ignored
+test puzzle::three::test::test_solve_part_one ... ignored
+test puzzle::three::test::test_solve_part_two ... ignored
+test puzzle::twelve::test::test_solve_part_one ... ignored
+test puzzle::twelve::test::test_solve_part_two ... ignored
+test puzzle::twenty::test::test_solve_part_one ... ignored
+test puzzle::twenty::test::test_solve_part_two ... ignored
+test puzzle::twentyfive::test::test_solve_part_one ... ignored
+test puzzle::twentyfive::test::test_solve_part_two ... ignored
+test puzzle::twentyfour::test::test_solve_part_one ... ignored
+test puzzle::twentyfour::test::test_solve_part_two ... ignored
+test puzzle::twentyone::test::test_solve_part_one ... ignored
+test puzzle::twentyone::test::test_solve_part_two ... ignored
+test puzzle::twentythree::test::test_solve_part_one ... ignored
+test puzzle::twentythree::test::test_solve_part_two ... ignored
+test puzzle::twentytwo::test::test_solve_part_one ... ignored
+test puzzle::twentytwo::test::test_solve_part_two ... ignored
+test puzzle::two::test::test_solve_part_one ... ignored
+test puzzle::two::test::test_solve_part_two ... ignored
+
+test result: ok. 0 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out
+
+
+running 53 tests
+test input::test_get_rand_u8 ... ignored
+test input::test_panic_get_rand_u8 ... ignored
+test puzzle::eight::test::test_solve_part_one ... ignored
+test puzzle::eight::test::test_solve_part_two ... ignored
+test puzzle::eighteen::test::test_solve_part_one ... ignored
+test puzzle::eighteen::test::test_solve_part_two ... ignored
+test puzzle::eleven::test::test_solve_part_one ... ignored
+test puzzle::eleven::test::test_solve_part_two ... ignored
+test puzzle::fifteen::test::test_solve_part_one ... ignored
+test puzzle::fifteen::test::test_solve_part_two ... ignored
+test puzzle::five::test::test_solve_part_one ... ignored
+test puzzle::five::test::test_solve_part_two ... ignored
+test puzzle::four::test::test_solve_part_one ... ignored
+test puzzle::four::test::test_solve_part_two ... ignored
+test puzzle::fourteen::test::test_solve_part_one ... ignored
+test puzzle::fourteen::test::test_solve_part_two ... ignored
+test puzzle::nine::test::test_solve_part_one ... ignored
+test puzzle::nine::test::test_solve_part_two ... ignored
+test puzzle::nineteen::test::test_solve_part_one ... ignored
+test puzzle::nineteen::test::test_solve_part_two ... ignored
+test puzzle::one::test::test_find_sum_values ... ignored
+test puzzle::one::test::test_solve_part_one ... ignored
+test puzzle::one::test::test_solve_part_two ... ignored
+test puzzle::seven::test::test_solve_part_one ... ignored
+test puzzle::seven::test::test_solve_part_two ... ignored
+test puzzle::seventeen::test::test_solve_part_one ... ignored
+test puzzle::seventeen::test::test_solve_part_two ... ignored
+test puzzle::six::test::test_solve_part_one ... ignored
+test puzzle::six::test::test_solve_part_two ... ignored
+test puzzle::sixteen::test::test_solve_part_one ... ignored
+test puzzle::sixteen::test::test_solve_part_two ... ignored
+test puzzle::ten::test::test_solve_part_one ... ignored
+test puzzle::ten::test::test_solve_part_two ... ignored
+test puzzle::thirteen::test::test_solve_part_one ... ignored
+test puzzle::thirteen::test::test_solve_part_two ... ignored
+test puzzle::three::test::test_solve_part_one ... ignored
+test puzzle::three::test::test_solve_part_two ... ignored
+test puzzle::twelve::test::test_solve_part_one ... ignored
+test puzzle::twelve::test::test_solve_part_two ... ignored
+test puzzle::twenty::test::test_solve_part_one ... ignored
+test puzzle::twenty::test::test_solve_part_two ... ignored
+test puzzle::twentyfive::test::test_solve_part_one ... ignored
+test puzzle::twentyfive::test::test_solve_part_two ... ignored
+test puzzle::twentyfour::test::test_solve_part_one ... ignored
+test puzzle::twentyfour::test::test_solve_part_two ... ignored
+test puzzle::twentyone::test::test_solve_part_one ... ignored
+test puzzle::twentyone::test::test_solve_part_two ... ignored
+test puzzle::twentythree::test::test_solve_part_one ... ignored
+test puzzle::twentythree::test::test_solve_part_two ... ignored
+test puzzle::twentytwo::test::test_solve_part_one ... ignored
+test puzzle::twentytwo::test::test_solve_part_two ... ignored
+test puzzle::two::test::test_solve_part_one ... ignored
+test puzzle::two::test::test_solve_part_two ... ignored
+
+test result: ok. 0 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out
+
+Gnuplot not found, using plotters backend
+Benchmarking day 1, part 1
+Benchmarking day 1, part 1: Warming up for 3.0000 s
+Benchmarking day 1, part 1: Collecting 100 samples in estimated 5.0757 s (247k iterations)
+Benchmarking day 1, part 1: Analyzing
+day 1, part 1           time:   [19.639 us 20.474 us 21.319 us]
+                        change: [-0.3206% +4.4696% +9.2811%] (p = 0.06 > 0.05)
+                        No change in performance detected.
+
+Benchmarking day 1, part 2
+Benchmarking day 1, part 2: Warming up for 3.0000 s
+Benchmarking day 1, part 2: Collecting 100 samples in estimated 5.3884 s (45k iterations)
+Benchmarking day 1, part 2: Analyzing
+day 1, part 2           time:   [106.87 us 109.82 us 113.11 us]
+                        change: [+0.1381% +5.0474% +9.6153%] (p = 0.03 < 0.05)
+                        Change within noise threshold.
+
+Benchmarking day 2, part 1
+Benchmarking day 2, part 1: Warming up for 3.0000 s
+Benchmarking day 2, part 1: Collecting 100 samples in estimated 5.0641 s (300 iterations)
+Benchmarking day 2, part 1: Analyzing
+day 2, part 1           time:   [14.701 ms 15.134 ms 15.584 ms]
+                        change: [-11.645% -7.3933% -3.0011%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+Benchmarking day 2, part 2
+Benchmarking day 2, part 2: Warming up for 3.0000 s
+Benchmarking day 2, part 2: Collecting 100 samples in estimated 7.9168 s (10k iterations)
+Benchmarking day 2, part 2: Analyzing
+day 2, part 2           time:   [773.79 us 797.19 us 822.47 us]
+                        change: [-2.3974% +1.2611% +5.3195%] (p = 0.53 > 0.05)
+                        No change in performance detected.
+

@@ -17,7 +17,44 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
 pub fn solve(puzzle_text: &str, day: &str) -> String {
-    format!("Day: {}, Puzzle text: {}", day, puzzle_text)
+    let stub_input = String::from("This is a stub");
+    let start = Instant::now();
+    match day.parse::<u8>().unwrap_or(1_u8) {
+        1 => puzzle::one::solve(String::from(puzzle_text)),
+        2 => puzzle::two::solve(String::from(puzzle_text)),
+        3 => puzzle::three::solve(String::from(puzzle_text)),
+        4 => puzzle::four::solve(String::from(puzzle_text)),
+        5 => puzzle::five::solve(String::from(puzzle_text)),
+        6 => puzzle::six::solve(String::from(puzzle_text)),
+        7 => puzzle::seven::solve(String::from(puzzle_text)),
+        8 => puzzle::eight::solve(String::from(puzzle_text)),
+        9 => puzzle::nine::solve(String::from(puzzle_text)),
+        10 => puzzle::ten::solve(String::from(puzzle_text)),
+        11 => puzzle::eleven::solve(String::from(puzzle_text)),
+        12 => puzzle::twelve::solve(String::from(puzzle_text)),
+        13 => puzzle::thirteen::solve(String::from(puzzle_text)),
+        14 => puzzle::fourteen::solve(String::from(puzzle_text)),
+        15 => puzzle::fifteen::solve(String::from(puzzle_text)),
+        16 => puzzle::sixteen::solve(String::from(puzzle_text)),
+        17 => puzzle::seventeen::solve(String::from(puzzle_text)),
+        18 => puzzle::eighteen::solve(String::from(puzzle_text)),
+        19 => puzzle::nineteen::solve(String::from(puzzle_text)),
+        20 => puzzle::twenty::solve(String::from(puzzle_text)),
+        21 => puzzle::twentyone::solve(String::from(puzzle_text)),
+        22 => puzzle::twentytwo::solve(String::from(puzzle_text)),
+        23 => puzzle::twentythree::solve(String::from(puzzle_text)),
+        24 => puzzle::twentyfour::solve(String::from(puzzle_text)),
+        25 => puzzle::twentyfive::solve(String::from(puzzle_text)),
+        _ => {
+            let u: u8 = input::get_rand_u8(25);
+            println!("Failed to parse a suitable number from input, let's enjoy some chaos and choose a random one...");
+            println!("Looks like we chose {}!", u);
+            match_puzzle(u)
+        }
+    };
+    let elapsed = start.elapsed();
+    println!("Time elapsed: {}", humantime::format_duration(elapsed));
+    String::from("")
 }
 
 fn main() {
