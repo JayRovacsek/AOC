@@ -1,3 +1,3 @@
 #!/bin/sh
 
-cp -rv ./target/criterion ./bench_results/criterion
+cp -rv ./target/criterion ./bench_results
