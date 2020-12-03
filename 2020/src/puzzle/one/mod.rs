@@ -1,16 +1,25 @@
 mod test;
 use std::collections::HashSet;
 
-pub fn solve(input: String) {
-    let answer_part_one = solve_part_one(input.clone());
-    let answer_part_two = solve_part_two(input);
+pub fn solve(input: &str) {
+    let answer_part_one = solve_part_one(&input);
+    let answer_part_two = solve_part_two(&input);
     println!(
         "Part 1 answer:{:#?}\nPart 2 answer:{:#?}",
         answer_part_one, answer_part_two
     )
 }
 
-pub fn solve_part_one(input: String) -> String {
+pub fn solve_both(input: &str) -> String {
+    let answer_part_one = solve_part_one(input);
+    let answer_part_two = solve_part_two(input);
+    format!(
+        "Part 1 answer:{:#?}\nPart 2 answer:{:#?}",
+        answer_part_one, answer_part_two
+    )
+}
+
+pub fn solve_part_one(input: &str) -> String {
     let input_vec = input
         .split("\n")
         .filter_map(|x| x.parse::<i32>().ok())
@@ -24,7 +33,7 @@ pub fn solve_part_one(input: String) -> String {
     }
 }
 
-pub fn solve_part_two(input: String) -> String {
+pub fn solve_part_two(input: &str) -> String {
     let input_vec: Vec<i32> = input
         .split("\n")
         .into_iter()

@@ -6,7 +6,7 @@ use crate::input::read_contents;
 fn test_solve_part_one() {
     assert_eq!(
         "32064",
-        solve_part_one(read_contents("./input/day_one.txt"))
+        solve_part_one(&read_contents("./input/day_one.txt"))
     );
 }
 

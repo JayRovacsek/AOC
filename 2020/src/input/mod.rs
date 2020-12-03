@@ -3,8 +3,7 @@ use std::fs;
 
 // Read a file to &str
 pub fn read_contents<'a>(path: &str) -> String {
-    fs::read_to_string(path)
-    .expect("Something went wrong reading the file")
+    fs::read_to_string(path).expect("Something went wrong reading the file")
 }
 
 // Function to get user string input, as we're taking untrusted input

@@ -6,7 +6,7 @@ use crate::input::read_contents;
 fn test_solve_part_one() {
     assert_eq!(
         String::from("396"),
-        solve_part_one(read_contents("./input/day_two.txt"))
+        solve_part_one(&read_contents("./input/day_two.txt"))
     );
 }
 
@@ -14,7 +14,7 @@ fn test_solve_part_one() {
 fn test_solve_part_two() {
     assert_eq!(
         String::from("428"),
-        solve_part_two(read_contents("./input/day_two.txt"))
+        solve_part_two(&read_contents("./input/day_two.txt"))
     );
 }
 
@@ -24,10 +24,7 @@ fn test_rule_defaults() {
     let r2 = Rule::new("also_bad rule doesn't_panic");
 
     // Two bad rules should result in indentical default rules
-    assert_eq!(
-        r1,
-        r2
-    );
+    assert_eq!(r1, r2);
 }
 
 #[test]
