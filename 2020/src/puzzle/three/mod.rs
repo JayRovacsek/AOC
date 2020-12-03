@@ -1,5 +1,7 @@
 mod test;
 
+use std::collections::HashSet;
+
 pub fn solve(input: String) {
     let answer_part_one = solve_part_one(input.clone());
     let answer_part_two = solve_part_two(input);
@@ -26,7 +28,7 @@ pub fn solve_part_two(input: String) -> String {
 }
 
 fn toboggan_hill(input: String, x_step: usize, y_step: usize) -> usize {
-    let map = input
+    let map: HashSet<(usize, usize, bool)> = input
         .split("\n")
         .enumerate()
         .map(|x| {
@@ -36,10 +38,10 @@ fn toboggan_hill(input: String, x_step: usize, y_step: usize) -> usize {
                 .collect::<Vec<(usize, usize, bool)>>()
         })
         .flatten()
-        .collect::<Vec<(usize, usize, bool)>>();
+        .collect();
 
-    let end = map.last().unwrap_or(&(0, 0, false)).1;
-    let width = map.last().unwrap_or(&(0, 0, false)).0;
+    let end = map.iter().max_by_key(|x| x.1).unwrap_or(&(0, 0, false)).1;
+    let width = map.iter().max_by_key(|x| x.0).unwrap_or(&(0, 0, false)).0;
 
     let path: Vec<(usize, usize)> = (1..=(end / y_step))
         .fold((vec![(0, 0)], 0), |acc, y_pos| {
