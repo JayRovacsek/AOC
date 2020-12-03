@@ -33,9 +33,9 @@ fn test_toboggan_hill() {
 #...##....#
 .#..#...#.#",
     );
-    assert_eq!(2, toboggan_hill(input.clone(), 1, 1));
-    assert_eq!(7, toboggan_hill(input.clone(), 3, 1));
-    assert_eq!(3, toboggan_hill(input.clone(), 5, 1));
-    assert_eq!(4, toboggan_hill(input.clone(), 7, 1));
-    assert_eq!(2, toboggan_hill(input, 1, 2));
+    assert_eq!(2, toboggan_hill(&input, 1, 1));
+    assert_eq!(7, toboggan_hill(&input, 3, 1));
+    assert_eq!(3, toboggan_hill(&input, 5, 1));
+    assert_eq!(4, toboggan_hill(&input, 7, 1));
+    assert_eq!(2, toboggan_hill(&input, 1, 2));
 }

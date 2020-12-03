@@ -12,22 +12,22 @@ pub fn solve(input: String) {
 }
 
 pub fn solve_part_one(input: String) -> String {
-    format!("{}", toboggan_hill(input, 3, 1))
+    format!("{}", toboggan_hill(&input, 3, 1))
 }
 
 pub fn solve_part_two(input: String) -> String {
-    let first_slope = toboggan_hill(input.clone(), 1, 1);
-    let second_slope = toboggan_hill(input.clone(), 3, 1);
-    let third_slope = toboggan_hill(input.clone(), 5, 1);
-    let forth_slope = toboggan_hill(input.clone(), 7, 1);
-    let fifth_slope = toboggan_hill(input, 1, 2);
+    let first_slope = toboggan_hill(&input, 1, 1);
+    let second_slope = toboggan_hill(&input, 3, 1);
+    let third_slope = toboggan_hill(&input, 5, 1);
+    let forth_slope = toboggan_hill(&input, 7, 1);
+    let fifth_slope = toboggan_hill(&input, 1, 2);
     format!(
         "{}",
         first_slope * second_slope * third_slope * forth_slope * fifth_slope
     )
 }
 
-fn toboggan_hill(input: String, x_step: usize, y_step: usize) -> usize {
+fn toboggan_hill(input: &str, x_step: usize, y_step: usize) -> usize {
     let map: HashSet<(usize, usize, bool)> = input
         .split("\n")
         .enumerate()
