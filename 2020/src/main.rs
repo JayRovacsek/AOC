@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 pub mod input;
 pub mod puzzle;
 
@@ -17,7 +19,6 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
 pub fn solve(puzzle_text: &str, day: &str) -> String {
-    let stub_input = String::from("This is a stub");
     let start = Instant::now();
     match day.parse::<u8>().unwrap_or(1_u8) {
         1 => puzzle::one::solve(String::from(puzzle_text)),
@@ -70,7 +71,7 @@ fn match_puzzle(option: u8) {
     match option {
         1 => puzzle::one::solve(read_contents("./input/day_one.txt")),
         2 => puzzle::two::solve(read_contents("./input/day_two.txt")),
-        3 => puzzle::three::solve(stub_input),
+        3 => puzzle::three::solve(read_contents("./input/day_three.txt")),
         4 => puzzle::four::solve(stub_input),
         5 => puzzle::five::solve(stub_input),
         6 => puzzle::six::solve(stub_input),

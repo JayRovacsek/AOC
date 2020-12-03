@@ -10,9 +10,49 @@ pub fn solve(input: String) {
 }
 
 pub fn solve_part_one(input: String) -> String {
-    String::from(input)
+    format!("{}", toboggan_hill(input, 3, 1))
 }
 
 pub fn solve_part_two(input: String) -> String {
-    String::from(input)
+    let first_slope = toboggan_hill(input.clone(), 1, 1);
+    let second_slope = toboggan_hill(input.clone(), 3, 1);
+    let third_slope = toboggan_hill(input.clone(), 5, 1);
+    let forth_slope = toboggan_hill(input.clone(), 7, 1);
+    let fifth_slope = toboggan_hill(input, 1, 2);
+    format!(
+        "{}",
+        first_slope * second_slope * third_slope * forth_slope * fifth_slope
+    )
+}
+
+fn toboggan_hill(input: String, x_step: usize, y_step: usize) -> usize {
+    let map = input
+        .split("\n")
+        .enumerate()
+        .map(|x| {
+            x.1.chars()
+                .enumerate()
+                .map(|y| (y.0, x.0, y.1 == '#'))
+                .collect::<Vec<(usize, usize, bool)>>()
+        })
+        .flatten()
+        .collect::<Vec<(usize, usize, bool)>>();
+
+    let end = map.last().unwrap_or(&(0, 0, false)).1;
+    let width = map.last().unwrap_or(&(0, 0, false)).0;
+
+    let path: Vec<(usize, usize)> = (1..=(end / y_step))
+        .fold((vec![(0, 0)], 0), |acc, y_pos| {
+            let x_pos = (acc.1 + x_step) % (width + 1);
+            let mut v = acc.0;
+            v.push((x_pos, y_pos * y_step));
+            (v, x_pos)
+        })
+        .0;
+
+    path.iter()
+        .fold(0, |acc, x| match map.contains(&(x.0, x.1, true)) {
+            true => acc + 1,
+            _ => acc,
+        })
 }

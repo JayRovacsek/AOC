@@ -1,8 +1,6 @@
 mod test;
 
-use regex::Regex;
-
-#[derive(Debug,PartialEq,Eq)]
+#[derive(Debug, PartialEq, Eq)]
 struct Rule {
     min_occurrences: usize,
     max_occurrences: usize,
@@ -30,12 +28,13 @@ impl Rule {
 
     fn is_valid_sled_password(&self) -> bool {
         let target = &self.value.chars().nth(0).unwrap();
-        let len = self.password
-        .chars()
-        .filter(|x| x == target)
-        .collect::<Vec<_>>()
-        .len();
-        
+        let len = self
+            .password
+            .chars()
+            .filter(|x| x == target)
+            .collect::<Vec<_>>()
+            .len();
+
         len >= self.min_occurrences && len <= self.max_occurrences
     }
 
