@@ -66,7 +66,7 @@ fn match_puzzle(option: u8) {
         1 => puzzle::one::solve(&read_contents("./input/day_one.txt")),
         2 => puzzle::two::solve(&read_contents("./input/day_two.txt")),
         3 => puzzle::three::solve(&read_contents("./input/day_three.txt")),
-        4 => puzzle::four::solve(stub_input),
+        4 => puzzle::four::solve(&read_contents("./input/day_four.txt")),
         5 => puzzle::five::solve(stub_input),
         6 => puzzle::six::solve(stub_input),
         7 => puzzle::seven::solve(stub_input),
