@@ -8,6 +8,16 @@ struct Passport {
     properties: HashMap<String, String>,
 }
 
+lazy_static! {
+    static ref BYR_RE: Regex = Regex::new(r"^(19[2-9][\d])$|^(200[0-2])$").unwrap();
+    static ref IYR_RE: Regex = Regex::new(r"^(201[\d])$|^(2020)$").unwrap();
+    static ref EYR_RE: Regex = Regex::new(r"^(202[\d])$|^(2030)$").unwrap();
+    static ref HGT_RE: Regex = Regex::new(r"^(1[5-8][\d]cm)$|^(19[0-3]cm)$|^(59in)$|^(6[0-9]in)$|^(7[0-6]in)$").unwrap();
+    static ref HCL_RE: Regex = Regex::new(r"^#[0-9a-fA-F]{6}$").unwrap();
+    static ref ECL_RE: Regex = Regex::new(r"^(amb|blu|brn|gry|grn|hzl|oth)$").unwrap();
+    static ref PID_RE: Regex = Regex::new(r"^(\d){9}$").unwrap();
+}
+
 impl Passport {
     fn new(input: &str) -> Self {
         Passport {
@@ -30,22 +40,13 @@ impl Passport {
 
     fn is_valid_part_two(&self) -> bool {
         if self.is_valid_part_one() {
-            let byr_re = Regex::new(r"^(19[2-9][\d])$|^(200[0-2])$").unwrap();
-            let iyr_re = Regex::new(r"^(201[\d])$|^(2020)$").unwrap();
-            let eyr_re = Regex::new(r"^(202[\d])$|^(2030)$").unwrap();
-            let hgt_re =
-                Regex::new(r"^(1[5-8][\d]cm)$|^(19[0-3]cm)$|^(59in)$|^(6[0-9]in)$|^(7[0-6]in)$")
-                    .unwrap();
-            let hcl_re = Regex::new(r"^#[0-9a-fA-F]{6}$").unwrap();
-            let ecl_re = Regex::new(r"^(amb|blu|brn|gry|grn|hzl|oth)$").unwrap();
-            let pid_re = Regex::new(r"^(\d){9}$").unwrap();
-            byr_re.is_match(self.properties.get("byr").unwrap())
-                && iyr_re.is_match(self.properties.get("iyr").unwrap())
-                && eyr_re.is_match(self.properties.get("eyr").unwrap())
-                && hgt_re.is_match(self.properties.get("hgt").unwrap())
-                && hcl_re.is_match(self.properties.get("hcl").unwrap())
-                && ecl_re.is_match(self.properties.get("ecl").unwrap())
-                && pid_re.is_match(self.properties.get("pid").unwrap())
+            BYR_RE.is_match(self.properties.get("byr").unwrap())
+                && IYR_RE.is_match(self.properties.get("iyr").unwrap())
+                && EYR_RE.is_match(self.properties.get("eyr").unwrap())
+                && HGT_RE.is_match(self.properties.get("hgt").unwrap())
+                && HCL_RE.is_match(self.properties.get("hcl").unwrap())
+                && ECL_RE.is_match(self.properties.get("ecl").unwrap())
+                && PID_RE.is_match(self.properties.get("pid").unwrap())
         } else {
             false
         }

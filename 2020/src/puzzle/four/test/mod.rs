@@ -44,14 +44,6 @@ fn test_passport_is_valid_part_one() {
 
 #[test]
 fn test_passport_is_valid_part_two() {
-    let byr_re = Regex::new(r"^(19[2-9][\d])$|^(200[0-2])$").unwrap();
-    let iyr_re = Regex::new(r"^(201[\d])$|^(2020)$").unwrap();
-    let eyr_re = Regex::new(r"^(202[\d])$|^(2030)$").unwrap();
-    let hgt_re =
-        Regex::new(r"^(1[5-8][\d]cm)$|^(19[0-3]cm)$|^(59in)$|^(6[0-9]in)$|^(7[0-6]in)$").unwrap();
-    let hcl_re = Regex::new(r"^#[0-9a-fA-F]{6}$").unwrap();
-    let ecl_re = Regex::new(r"^(amb|blu|brn|gry|grn|hzl|oth)$").unwrap();
-    let pid_re = Regex::new(r"^\d{9}$").unwrap();
 
     let byr_valid = "2002";
     let byr_invalid = "2003";
@@ -67,19 +59,19 @@ fn test_passport_is_valid_part_two() {
     let pid_valid = "000000001";
     let pid_invalid = "0123456789";
 
-    assert_eq!(true, byr_re.is_match(byr_valid));
-    assert_eq!(false, byr_re.is_match(byr_invalid));
-    assert_eq!(true, hgt_re.is_match(hgt_valid));
-    assert_eq!(true, hgt_re.is_match(hgt_valid_two));
-    assert_eq!(false, hgt_re.is_match(hgt_invalid));
-    assert_eq!(false, hgt_re.is_match(hgt_invalid_two));
-    assert_eq!(true, hcl_re.is_match(hcl_valid));
-    assert_eq!(false, hcl_re.is_match(hcl_invalid));
-    assert_eq!(false, hcl_re.is_match(hcl_invalid_two));
-    assert_eq!(true, ecl_re.is_match(ecl_valid));
-    assert_eq!(false, ecl_re.is_match(ecl_invalid));
-    assert_eq!(true, pid_re.is_match(pid_valid));
-    assert_eq!(false, pid_re.is_match(pid_invalid));
+    assert_eq!(true, BYR_RE.is_match(byr_valid));
+    assert_eq!(false, BYR_RE.is_match(byr_invalid));
+    assert_eq!(true, HGT_RE.is_match(hgt_valid));
+    assert_eq!(true, HGT_RE.is_match(hgt_valid_two));
+    assert_eq!(false, HGT_RE.is_match(hgt_invalid));
+    assert_eq!(false, HGT_RE.is_match(hgt_invalid_two));
+    assert_eq!(true, HCL_RE.is_match(hcl_valid));
+    assert_eq!(false, HCL_RE.is_match(hcl_invalid));
+    assert_eq!(false, HCL_RE.is_match(hcl_invalid_two));
+    assert_eq!(true, ECL_RE.is_match(ecl_valid));
+    assert_eq!(false, ECL_RE.is_match(ecl_invalid));
+    assert_eq!(true, PID_RE.is_match(pid_valid));
+    assert_eq!(false, PID_RE.is_match(pid_invalid));
 
     let invalid_passport_one = Passport::new(
         "eyr:1972 cid:100

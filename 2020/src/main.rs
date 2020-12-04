@@ -11,6 +11,9 @@ use crate::input::read_contents;
 use std::time::Instant;
 use wasm_bindgen::prelude::*;
 
+#[macro_use]
+extern crate lazy_static;
+
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
 #[cfg(feature = "wee_alloc")]

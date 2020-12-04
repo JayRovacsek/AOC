@@ -20,6 +20,7 @@ console_error_panic_hook = { version = "0.1.6", optional = true }
 wee_alloc = { version = "0.4.5", optional = true }
 js-sys = "0.3.35"
 regex = "1.0"
+lazy_static = "1.4.0"
 
 [features]
 default = ["console_error_panic_hook"]
