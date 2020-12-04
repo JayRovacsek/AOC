@@ -40,4 +40,4 @@ jobs:
           node-version: '14'
       
       - name: Run build script for wasm
-        run: ./$GITHUB_WORKSPACE/2020/scripts/update_gh_pages.sh
+        run: ./2020/scripts/update_gh_pages.sh
