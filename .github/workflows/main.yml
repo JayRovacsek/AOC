@@ -34,10 +34,12 @@ jobs:
         with:
           version: 'latest'
       
-      - name: Install node 14
+      - name: Install node 15
         uses: actions/setup-node@v2-beta
         with:
-          node-version: '14'
+          node-version: '15'
       
       - name: Run build script for wasm
         run: ./2020/scripts/update_gh_pages.sh
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
