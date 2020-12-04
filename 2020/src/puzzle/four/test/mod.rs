@@ -44,12 +44,12 @@ fn test_passport_is_valid_part_one() {
 
 #[test]
 fn test_passport_is_valid_part_two() {
-    let byr_re = Regex::new(r"^(19[2-9][0-9])|(200[0-2])$").unwrap();
-    let iyr_re = Regex::new(r"^(20[1][0-9])|(2020)$").unwrap();
-    let eyr_re = Regex::new(r"^(20[2][0-9])|(2030)$").unwrap();
+    let byr_re = Regex::new(r"^(19[2-9][\d])$|^(200[0-2])$").unwrap();
+    let iyr_re = Regex::new(r"^(201[\d])$|^(2020)$").unwrap();
+    let eyr_re = Regex::new(r"^(202[\d])$|^(2030)$").unwrap();
     let hgt_re =
-        Regex::new(r"(^1[5-8][\d]cm$)|(^19[0-2]cm$)|(^59in$)|(^6[0-9]in$)|(^7[0-6]in$)").unwrap();
-    let hcl_re = Regex::new(r"^#[0-9a-f]{6}$").unwrap();
+        Regex::new(r"^(1[5-8][\d]cm)$|^(19[0-3]cm)$|^(59in)$|^(6[0-9]in)$|^(7[0-6]in)$").unwrap();
+    let hcl_re = Regex::new(r"^#[0-9a-fA-F]{6}$").unwrap();
     let ecl_re = Regex::new(r"^(amb|blu|brn|gry|grn|hzl|oth)$").unwrap();
     let pid_re = Regex::new(r"^\d{9}$").unwrap();
 
