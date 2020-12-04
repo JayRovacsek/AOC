@@ -1,7 +1,9 @@
 #!/bin/sh
 
-cd 2020 
+cd "$GITHUB_WORKSPACE/2020"
 wasm-pack build
+cargo bench
+cp -rv ./target/criterion ./www
 cd www
 npm install
 cd ../../
