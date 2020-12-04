@@ -1,58 +1,53 @@
 mod test;
 
-#[derive(Debug, Clone, Eq, PartialEq)]
+use regex::Regex;
+use std::collections::HashMap;
+
+#[derive(Debug, Clone, PartialEq)]
 struct Passport {
-    iyr: Option<u32>,
-    cid: Option<u32>,
-    pid: Option<u32>,
-    eyr: Option<u32>,
-    hcl: Option<String>,
-    ecl: Option<String>,
-    byr: Option<u32>,
-    hgt: Option<u32>,
+    properties: HashMap<String, String>,
 }
 
 impl Passport {
     fn new(input: &str) -> Self {
-        let parts: Vec<&str> = input.split_whitespace().collect();
         Passport {
-            iyr: parts
-                .iter()
-                .find(|x| x.contains("iyr"))
-                .map(|x| x.split(":").last().unwrap().parse::<u32>().unwrap()),
-            cid: parts
-                .iter()
-                .find(|x| x.contains("cid"))
-                .map(|x| x.split(":").last().unwrap().parse::<u32>().unwrap()),
-            pid: parts
-                .iter()
-                .find(|x| x.contains("pid"))
-                .map(|x| x.split(":").last().unwrap().parse::<u32>().unwrap()),
-            eyr: parts
-                .iter()
-                .find(|x| x.contains("eyr"))
-                .map(|x| x.split(":").last().unwrap().parse::<u32>().unwrap()),
-            hcl: parts
-                .iter()
-                .find(|x| x.contains("hcl"))
-                .map(|x| String::from(x.split(":").last().unwrap())),
-            byr: parts
-                .iter()
-                .find(|x| x.contains("byr"))
-                .map(|x| x.split(":").last().unwrap().parse::<u32>().unwrap()),
-            ecl: parts
-                .iter()
-                .find(|x| x.contains("ecl"))
-                .map(|x| String::from(x.split(":").last().unwrap())),
-            hgt: parts.iter().find(|x| x.contains("hgt")).map(|x| {
-                x.split(":")
-                    .last()
-                    .unwrap()
-                    .replace("cm", "")
-                    .replace("in", "")
-                    .parse::<u32>()
-                    .unwrap()
-            }),
+            properties: input
+                .split_whitespace()
+                .map(|x| {
+                    (
+                        x.split(":").nth(0).unwrap().to_string(),
+                        x.split(":").nth(1).unwrap().to_string(),
+                    )
+                })
+                .collect::<HashMap<String, String>>(),
+        }
+    }
+
+    fn is_valid_part_one(&self) -> bool {
+        self.properties.len() == 8
+            || (self.properties.len() == 7 && !self.properties.keys().any(|x| *x == "cid"))
+    }
+
+    fn is_valid_part_two(&self) -> bool {
+        if self.is_valid_part_one() {
+            let byr_re = Regex::new(r"^(19[2-9][\d])|(200[0-2])$").unwrap();
+            let iyr_re = Regex::new(r"^(201[\d])|(2020)$").unwrap();
+            let eyr_re = Regex::new(r"^(202[\d])|(2030)$").unwrap();
+            let hgt_re =
+                Regex::new(r"^(1[5-8][\d]cm)|(19[0-2]cm)|(59in)|(6[0-9]in)|(7[0-6]in)$")
+                    .unwrap();
+            let hcl_re = Regex::new(r"^#[0-9a-f]{6}$").unwrap();
+            let ecl_re = Regex::new(r"^(amb|blu|brn|gry|grn|hzl|oth)$").unwrap();
+            let pid_re = Regex::new(r"^(\d){9}$").unwrap();
+            byr_re.is_match(self.properties.get("byr").unwrap())
+                && iyr_re.is_match(self.properties.get("iyr").unwrap())
+                && eyr_re.is_match(self.properties.get("eyr").unwrap())
+                && hgt_re.is_match(self.properties.get("hgt").unwrap())
+                && hcl_re.is_match(self.properties.get("hcl").unwrap())
+                && ecl_re.is_match(self.properties.get("ecl").unwrap())
+                && pid_re.is_match(self.properties.get("pid").unwrap())
+        } else {
+            false
         }
     }
 }
@@ -77,12 +72,16 @@ pub fn solve_both(input: &str) -> String {
 
 pub fn solve_part_one(input: &str) -> String {
     let passports: Vec<Passport> = input.split("\n\n").map(|x| Passport::new(x)).collect();
-    println!("{:#?}", passports);
-    println!("HI");
-    println!("HI");
-    String::from(input)
+    format!(
+        "{:?}",
+        passports.iter().filter(|x| x.is_valid_part_one()).count()
+    )
 }
 
 pub fn solve_part_two(input: &str) -> String {
-    String::from(input)
+    let passports: Vec<Passport> = input.split("\n\n").map(|x| Passport::new(x)).collect();
+    format!(
+        "{:?}",
+        passports.iter().filter(|x| x.is_valid_part_two()).count()
+    )
 }
