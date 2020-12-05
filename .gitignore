@@ -572,3 +572,5 @@ ASALocalRun/
 # Local History for Visual Studio
 .localhistory/
 *.DS_Store
+
+!/2020/www/pkg
