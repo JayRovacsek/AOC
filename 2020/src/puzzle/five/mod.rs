@@ -1,40 +1,39 @@
 mod test;
 
+use std::collections::HashSet;
+
+lazy_static! {
+    static ref BIN: Vec<i32> = vec!(64, 32, 16, 8, 4, 2, 1, 4, 2, 1);
+}
+
 struct Ticket {
     position: (i32, i32),
     id: i32,
-    input: String,
 }
 
 impl Ticket {
     fn new(input: &str) -> Self {
-        let pos = input
-            .chars()
-            .enumerate()
-            .fold((0, 127, 0, 7, 0, 0), |acc, x| match x {
-                n if n.0 < 6 && n.1 == 'F' => {
-                    (acc.0, ((acc.1 + acc.0) >> 1), acc.2, acc.3, acc.4, acc.5)
+        let position = input.chars().enumerate().fold((0, 0), |acc, x| match x.0 {
+            0..=6 => {
+                if (x.1 == 'B') {
+                    (acc.0 + BIN[x.0], acc.1)
+                } else {
+                    acc
                 }
-                n if n.0 < 6 && n.1 == 'B' => {
-                    ((acc.0 + acc.1 + 1) / 2, acc.1, acc.2, acc.3, acc.4, acc.5)
+            }
+            n if n > 6 => {
+                if (x.1 == 'R') {
+                    (acc.0, acc.1 + BIN[x.0])
+                } else {
+                    acc
                 }
-                n if n.0 == 6 && n.1 == 'F' => (acc.0, acc.1, acc.2, acc.3, acc.0, acc.5),
-                n if n.0 == 6 && n.1 == 'B' => (acc.0, acc.1, acc.2, acc.3, acc.1, acc.5),
-                n if n.0 > 6 && n.0 < 9 && n.1 == 'L' => {
-                    (acc.0, acc.1, acc.2, ((acc.3 + acc.2) >> 1), acc.4, acc.5)
-                }
-                n if n.0 > 6 && n.0 < 9 && n.1 == 'R' => {
-                    (acc.0, acc.1, (acc.3 + 1) / 2, acc.3, acc.4, acc.5)
-                }
-                n if n.0 == 9 && n.1 == 'L' => (acc.0, acc.1, acc.2, acc.3, acc.4, acc.2),
-                n if n.0 == 9 && n.1 == 'R' => (acc.0, acc.1, acc.2, acc.3, acc.4, acc.3),
-                _ => acc,
-            });
+            }
+            _ => unreachable!("Something went badly wrong!"),
+        });
 
         Ticket {
-            position: (pos.4, pos.5),
-            id: pos.4 * 8 + pos.5,
-            input: String::from(input),
+            position: (position.0, position.1),
+            id: position.0 * 8 + position.1,
         }
     }
 }
@@ -67,25 +66,13 @@ pub fn solve_part_one(input: &str) -> String {
 }
 
 pub fn solve_part_two(input: &str) -> String {
-    let tickets = input
+    let ids = input
         .split_whitespace()
-        .map(|x| Ticket::new(x))
-        .collect::<Vec<Ticket>>();
+        .map(|x| Ticket::new(x).id)
+        .collect::<HashSet<i32>>();
 
-    let spots = (0..=127)
-        .map(|x| (0..=7).map(|y| (x, y)).collect::<Vec<(i32, i32)>>())
-        .flatten()
-        .collect::<Vec<(i32, i32)>>();
+    let max = ids.iter().max().unwrap_or(&0);
+    let min = ids.iter().min().unwrap_or(&0);
 
-    let empty_spots = spots.iter().filter(|x| {
-        tickets
-            .iter()
-            .find(|y| y.position.0 == x.0 && y.position.1 == x.1)
-            .is_some()
-    }).collect::<Vec<&(i32,i32)>>();
-
-    println!("{:?}", empty_spots);
-
-    // format!("{}", tickets.iter().filter(|x| x.position).unwrap().id)
-    format!("")
+    format!("{}", (*min..=*max).find(|x| !ids.contains(x)).unwrap_or(0))
 }

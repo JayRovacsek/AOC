@@ -1,0 +1,228 @@
+
+running 65 tests
+test input::test_get_rand_u8 ... ignored
+test input::test_panic_get_rand_u8 ... ignored
+test puzzle::eight::test::test_solve_part_one ... ignored
+test puzzle::eight::test::test_solve_part_two ... ignored
+test puzzle::eighteen::test::test_solve_part_one ... ignored
+test puzzle::eighteen::test::test_solve_part_two ... ignored
+test puzzle::eleven::test::test_solve_part_one ... ignored
+test puzzle::eleven::test::test_solve_part_two ... ignored
+test puzzle::fifteen::test::test_solve_part_one ... ignored
+test puzzle::fifteen::test::test_solve_part_two ... ignored
+test puzzle::five::test::test_solve_part_one ... ignored
+test puzzle::five::test::test_solve_part_two ... ignored
+test puzzle::five::test::test_ticket_column ... ignored
+test puzzle::five::test::test_ticket_column_max ... ignored
+test puzzle::five::test::test_ticket_id ... ignored
+test puzzle::five::test::test_ticket_row ... ignored
+test puzzle::five::test::test_ticket_row_max ... ignored
+test puzzle::five::test::test_tickets_missing ... ignored
+test puzzle::four::test::test_passport_is_valid_part_one ... ignored
+test puzzle::four::test::test_passport_is_valid_part_two ... ignored
+test puzzle::four::test::test_solve_part_one ... ignored
+test puzzle::four::test::test_solve_part_two ... ignored
+test puzzle::fourteen::test::test_solve_part_one ... ignored
+test puzzle::fourteen::test::test_solve_part_two ... ignored
+test puzzle::nine::test::test_solve_part_one ... ignored
+test puzzle::nine::test::test_solve_part_two ... ignored
+test puzzle::nineteen::test::test_solve_part_one ... ignored
+test puzzle::nineteen::test::test_solve_part_two ... ignored
+test puzzle::one::test::test_find_sum_values ... ignored
+test puzzle::one::test::test_solve_part_one ... ignored
+test puzzle::one::test::test_solve_part_two ... ignored
+test puzzle::seven::test::test_solve_part_one ... ignored
+test puzzle::seven::test::test_solve_part_two ... ignored
+test puzzle::seventeen::test::test_solve_part_one ... ignored
+test puzzle::seventeen::test::test_solve_part_two ... ignored
+test puzzle::six::test::test_solve_part_one ... ignored
+test puzzle::six::test::test_solve_part_two ... ignored
+test puzzle::sixteen::test::test_solve_part_one ... ignored
+test puzzle::sixteen::test::test_solve_part_two ... ignored
+test puzzle::ten::test::test_solve_part_one ... ignored
+test puzzle::ten::test::test_solve_part_two ... ignored
+test puzzle::thirteen::test::test_solve_part_one ... ignored
+test puzzle::thirteen::test::test_solve_part_two ... ignored
+test puzzle::three::test::test_solve_part_one ... ignored
+test puzzle::three::test::test_solve_part_two ... ignored
+test puzzle::three::test::test_toboggan_hill ... ignored
+test puzzle::twelve::test::test_solve_part_one ... ignored
+test puzzle::twelve::test::test_solve_part_two ... ignored
+test puzzle::twenty::test::test_solve_part_one ... ignored
+test puzzle::twenty::test::test_solve_part_two ... ignored
+test puzzle::twentyfive::test::test_solve_part_one ... ignored
+test puzzle::twentyfive::test::test_solve_part_two ... ignored
+test puzzle::twentyfour::test::test_solve_part_one ... ignored
+test puzzle::twentyfour::test::test_solve_part_two ... ignored
+test puzzle::twentyone::test::test_solve_part_one ... ignored
+test puzzle::twentyone::test::test_solve_part_two ... ignored
+test puzzle::twentythree::test::test_solve_part_one ... ignored
+test puzzle::twentythree::test::test_solve_part_two ... ignored
+test puzzle::twentytwo::test::test_solve_part_one ... ignored
+test puzzle::twentytwo::test::test_solve_part_two ... ignored
+test puzzle::two::test::test_rule_defaults ... ignored
+test puzzle::two::test::test_rule_functions ... ignored
+test puzzle::two::test::test_rule_new ... ignored
+test puzzle::two::test::test_solve_part_one ... ignored
+test puzzle::two::test::test_solve_part_two ... ignored
+
+test result: ok. 0 passed; 0 failed; 65 ignored; 0 measured; 0 filtered out
+
+
+running 65 tests
+test input::test_get_rand_u8 ... ignored
+test input::test_panic_get_rand_u8 ... ignored
+test puzzle::eight::test::test_solve_part_one ... ignored
+test puzzle::eight::test::test_solve_part_two ... ignored
+test puzzle::eighteen::test::test_solve_part_one ... ignored
+test puzzle::eighteen::test::test_solve_part_two ... ignored
+test puzzle::eleven::test::test_solve_part_one ... ignored
+test puzzle::eleven::test::test_solve_part_two ... ignored
+test puzzle::fifteen::test::test_solve_part_one ... ignored
+test puzzle::fifteen::test::test_solve_part_two ... ignored
+test puzzle::five::test::test_solve_part_one ... ignored
+test puzzle::five::test::test_solve_part_two ... ignored
+test puzzle::five::test::test_ticket_column ... ignored
+test puzzle::five::test::test_ticket_column_max ... ignored
+test puzzle::five::test::test_ticket_id ... ignored
+test puzzle::five::test::test_ticket_row ... ignored
+test puzzle::five::test::test_ticket_row_max ... ignored
+test puzzle::five::test::test_tickets_missing ... ignored
+test puzzle::four::test::test_passport_is_valid_part_one ... ignored
+test puzzle::four::test::test_passport_is_valid_part_two ... ignored
+test puzzle::four::test::test_solve_part_one ... ignored
+test puzzle::four::test::test_solve_part_two ... ignored
+test puzzle::fourteen::test::test_solve_part_one ... ignored
+test puzzle::fourteen::test::test_solve_part_two ... ignored
+test puzzle::nine::test::test_solve_part_one ... ignored
+test puzzle::nine::test::test_solve_part_two ... ignored
+test puzzle::nineteen::test::test_solve_part_one ... ignored
+test puzzle::nineteen::test::test_solve_part_two ... ignored
+test puzzle::one::test::test_find_sum_values ... ignored
+test puzzle::one::test::test_solve_part_one ... ignored
+test puzzle::one::test::test_solve_part_two ... ignored
+test puzzle::seven::test::test_solve_part_one ... ignored
+test puzzle::seven::test::test_solve_part_two ... ignored
+test puzzle::seventeen::test::test_solve_part_one ... ignored
+test puzzle::seventeen::test::test_solve_part_two ... ignored
+test puzzle::six::test::test_solve_part_one ... ignored
+test puzzle::six::test::test_solve_part_two ... ignored
+test puzzle::sixteen::test::test_solve_part_one ... ignored
+test puzzle::sixteen::test::test_solve_part_two ... ignored
+test puzzle::ten::test::test_solve_part_one ... ignored
+test puzzle::ten::test::test_solve_part_two ... ignored
+test puzzle::thirteen::test::test_solve_part_one ... ignored
+test puzzle::thirteen::test::test_solve_part_two ... ignored
+test puzzle::three::test::test_solve_part_one ... ignored
+test puzzle::three::test::test_solve_part_two ... ignored
+test puzzle::three::test::test_toboggan_hill ... ignored
+test puzzle::twelve::test::test_solve_part_one ... ignored
+test puzzle::twelve::test::test_solve_part_two ... ignored
+test puzzle::twenty::test::test_solve_part_one ... ignored
+test puzzle::twenty::test::test_solve_part_two ... ignored
+test puzzle::twentyfive::test::test_solve_part_one ... ignored
+test puzzle::twentyfive::test::test_solve_part_two ... ignored
+test puzzle::twentyfour::test::test_solve_part_one ... ignored
+test puzzle::twentyfour::test::test_solve_part_two ... ignored
+test puzzle::twentyone::test::test_solve_part_one ... ignored
+test puzzle::twentyone::test::test_solve_part_two ... ignored
+test puzzle::twentythree::test::test_solve_part_one ... ignored
+test puzzle::twentythree::test::test_solve_part_two ... ignored
+test puzzle::twentytwo::test::test_solve_part_one ... ignored
+test puzzle::twentytwo::test::test_solve_part_two ... ignored
+test puzzle::two::test::test_rule_defaults ... ignored
+test puzzle::two::test::test_rule_functions ... ignored
+test puzzle::two::test::test_rule_new ... ignored
+test puzzle::two::test::test_solve_part_one ... ignored
+test puzzle::two::test::test_solve_part_two ... ignored
+
+test result: ok. 0 passed; 0 failed; 65 ignored; 0 measured; 0 filtered out
+
+Gnuplot not found, using plotters backend
+Benchmarking day 1, part 1
+Benchmarking day 1, part 1: Warming up for 3.0000 s
+Benchmarking day 1, part 1: Collecting 100 samples in estimated 5.0629 s (237k iterations)
+Benchmarking day 1, part 1: Analyzing
+day 1, part 1           time:   [19.509 us 20.264 us 21.077 us]
+                        change: [-9.3310% -4.6307% +0.0039%] (p = 0.06 > 0.05)
+                        No change in performance detected.
+
+Benchmarking day 1, part 2
+Benchmarking day 1, part 2: Warming up for 3.0000 s
+Benchmarking day 1, part 2: Collecting 100 samples in estimated 5.4317 s (45k iterations)
+Benchmarking day 1, part 2: Analyzing
+day 1, part 2           time:   [110.40 us 115.15 us 120.01 us]
+                        change: [-7.5742% -3.9170% -0.0840%] (p = 0.05 > 0.05)
+                        No change in performance detected.
+Found 10 outliers among 100 measurements (10.00%)
+  10 (10.00%) high mild
+
+Benchmarking day 2, part 1
+Benchmarking day 2, part 1: Warming up for 3.0000 s
+Benchmarking day 2, part 1: Collecting 100 samples in estimated 7.7642 s (10k iterations)
+Benchmarking day 2, part 1: Analyzing
+day 2, part 1           time:   [797.19 us 832.58 us 868.31 us]
+                        change: [-2.4639% +1.7965% +6.1949%] (p = 0.42 > 0.05)
+                        No change in performance detected.
+
+Benchmarking day 2, part 2
+Benchmarking day 2, part 2: Warming up for 3.0000 s
+Benchmarking day 2, part 2: Collecting 100 samples in estimated 8.0056 s (10k iterations)
+Benchmarking day 2, part 2: Analyzing
+day 2, part 2           time:   [678.36 us 698.46 us 720.85 us]
+                        change: [-16.694% -12.793% -8.5546%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+Benchmarking day 3, part 1
+Benchmarking day 3, part 1: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.0s, enable flat sampling, or reduce sample count to 60.
+Benchmarking day 3, part 1: Collecting 100 samples in estimated 6.0040 s (5050 iterations)
+Benchmarking day 3, part 1: Analyzing
+day 3, part 1           time:   [1.1941 ms 1.2471 ms 1.3051 ms]
+                        change: [-2.4529% +2.0125% +7.1579%] (p = 0.40 > 0.05)
+                        No change in performance detected.
+
+Benchmarking day 3, part 2
+Benchmarking day 3, part 2: Warming up for 3.0000 s
+Benchmarking day 3, part 2: Collecting 100 samples in estimated 5.2464 s (800 iterations)
+Benchmarking day 3, part 2: Analyzing
+day 3, part 2           time:   [6.3151 ms 6.5449 ms 6.7777 ms]
+                        change: [-4.5111% +0.2680% +5.7651%] (p = 0.92 > 0.05)
+                        No change in performance detected.
+
+Benchmarking day 4, part 1
+Benchmarking day 4, part 1: Warming up for 3.0000 s
+Benchmarking day 4, part 1: Collecting 100 samples in estimated 7.5443 s (10k iterations)
+Benchmarking day 4, part 1: Analyzing
+day 4, part 1           time:   [704.55 us 733.42 us 766.20 us]
+                        change: [-3.2908% +0.9206% +5.1865%] (p = 0.68 > 0.05)
+                        No change in performance detected.
+Found 9 outliers among 100 measurements (9.00%)
+  9 (9.00%) high mild
+
+Benchmarking day 4, part 2
+Benchmarking day 4, part 2: Warming up for 3.0000 s
+Benchmarking day 4, part 2: Collecting 100 samples in estimated 8.3133 s (10k iterations)
+Benchmarking day 4, part 2: Analyzing
+day 4, part 2           time:   [793.31 us 830.44 us 870.04 us]
+                        change: [-6.2664% -0.8219% +4.5485%] (p = 0.77 > 0.05)
+                        No change in performance detected.
+
+Benchmarking day 5, part 1
+Benchmarking day 5, part 1: Warming up for 3.0000 s
+Benchmarking day 5, part 1: Collecting 100 samples in estimated 5.1872 s (56k iterations)
+Benchmarking day 5, part 1: Analyzing
+day 5, part 1           time:   [87.891 us 90.436 us 93.196 us]
+
+Benchmarking day 5, part 2
+Benchmarking day 5, part 2: Warming up for 3.0000 s
+Benchmarking day 5, part 2: Collecting 100 samples in estimated 5.5241 s (40k iterations)
+Benchmarking day 5, part 2: Analyzing
+day 5, part 2           time:   [125.64 us 127.93 us 130.78 us]
+Found 16 outliers among 100 measurements (16.00%)
+  6 (6.00%) high mild
+  10 (10.00%) high severe
+

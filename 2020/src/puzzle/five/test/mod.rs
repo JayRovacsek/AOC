@@ -1,14 +1,33 @@
 #![allow(unused)]
 use super::*;
+use crate::input::read_contents;
 
 #[test]
 fn test_solve_part_one() {
-    assert_eq!("This is a stub", solve_part_one("This is a stub"));
+    assert_eq!(
+        "901",
+        solve_part_one(&read_contents("./input/day_five.txt"))
+    );
 }
 
 #[test]
 fn test_solve_part_two() {
-    assert_eq!("This is a stub", solve_part_two("This is a stub"));
+    assert_eq!("661", solve_part_two(&read_contents("./input/day_five.txt")));
+}
+
+#[test]
+fn test_tickets_missing() {
+    let input = &read_contents("./input/day_five.txt");
+    let tickets = input
+        .split_whitespace()
+        .map(|x| Ticket::new(x))
+        .collect::<Vec<Ticket>>();
+    assert_eq!(
+        false,
+        tickets
+            .iter()
+            .any(|x| x.position.0 == 0 || x.position.0 == 127)
+    );
 }
 
 #[test]
@@ -54,4 +73,22 @@ fn test_ticket_column() {
     assert_eq!(7, ticket_one.position.1);
     assert_eq!(7, ticket_two.position.1);
     assert_eq!(4, ticket_three.position.1);
+}
+
+#[test]
+fn test_ticket_column_max() {
+    let input = "BFFFBBFRRR";
+
+    let ticket = Ticket::new(input);
+
+    assert_eq!(7, ticket.position.1);
+}
+
+#[test]
+fn test_ticket_row_max() {
+    let input = "BBBBBBBRRR";
+
+    let ticket = Ticket::new(input);
+
+    assert_eq!(127, ticket.position.0);
 }
