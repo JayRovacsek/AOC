@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cd 2020
-wasm-pack build
+wasm-pack build --target=web
 cargo bench
 cp -rv ./target/criterion ./www
 cd www
