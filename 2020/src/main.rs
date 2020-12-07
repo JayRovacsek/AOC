@@ -13,6 +13,7 @@ use wasm_bindgen::prelude::*;
 
 #[macro_use]
 extern crate lazy_static;
+extern crate itertools;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -72,7 +73,7 @@ fn match_puzzle(option: u8) {
         4 => puzzle::four::solve(&read_contents("./input/day_four.txt")),
         5 => puzzle::five::solve(&read_contents("./input/day_five.txt")),
         6 => puzzle::six::solve(&read_contents("./input/day_six.txt")),
-        7 => puzzle::seven::solve(stub_input),
+        7 => puzzle::seven::solve(&read_contents("./input/day_seven.txt")),
         8 => puzzle::eight::solve(stub_input),
         9 => puzzle::nine::solve(stub_input),
         10 => puzzle::ten::solve(stub_input),
