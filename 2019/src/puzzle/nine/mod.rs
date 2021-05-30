@@ -1,6 +1,6 @@
 mod test;
 
-use crate::intcode::Interpreter;
+use crate::intcode::interpreter::Interpreter;
 
 pub fn solve() {
     let mut interpreter = Interpreter::new(

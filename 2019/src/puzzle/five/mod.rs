@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 mod test;
 
-use crate::intcode::*;
+use crate::intcode::interpreter::Interpreter;
 
 pub fn solve() {
     let mut interpreter_a = Interpreter::new(None, INPUT_VEC.to_vec(), 0);

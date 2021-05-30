@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 mod test;
 
-use crate::intcode::Interpreter;
+use crate::intcode::interpreter::Interpreter;
 
 #[derive(Debug)]
 enum Operation {

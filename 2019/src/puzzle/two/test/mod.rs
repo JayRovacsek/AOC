@@ -1,5 +1,5 @@
 use super::*;
-use crate::intcode::Interpreter;
+use crate::intcode::interpreter::Interpreter;
 
 #[test]
 fn test_part_a() {
