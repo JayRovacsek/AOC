@@ -2,10 +2,10 @@ import { Day } from '../interfaces'
 
 export const template: Day = {
   day: 0,
-  partOne: async (): Promise<string> => {
-    return 'stub'
+  partOne: async (input: string): Promise<string> => {
+    return input
   },
-  partTwo: async (): Promise<string> => {
-    return 'stub'
+  partTwo: async (input: string): Promise<string> => {
+    return input
   }
 }
