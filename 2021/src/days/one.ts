@@ -1,4 +1,4 @@
-import { Day } from '../interfaces'
+import { Day } from '../interfaces/day'
 import { sumWindows, countWindowIncreases } from '../utils'
 export const dayOne: Day = {
   day: 1,

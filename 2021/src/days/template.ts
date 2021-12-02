@@ -1,4 +1,4 @@
-import { Day } from '../interfaces'
+import { Day } from '../interfaces/day'
 
 export const template: Day = {
   day: 0,

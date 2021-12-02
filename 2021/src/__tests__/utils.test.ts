@@ -26,7 +26,6 @@ describe('Utils', () => {
     ]
 
     const results = sumWindows(dayOneTestSet, 3)
-    console.log(results)
 
     expect(results).toMatchObject(expectedOutput)
   })
