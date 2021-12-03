@@ -45,7 +45,7 @@ export const parseDiagnostic = (input: string[]): Diagnostic => {
   )
   const gammaRate = Array(rateLength)
     .fill(0)
-    .map((_, i) => mostCommonBit(input.map(x => parseInt(x[i] ?? '0') as Bit), 1))
+    .map((_, i) => mostCommonBit(input.map(x => parseInt(x[i] ?? '0') as Bit)))
     .join('')
 
   const epsilonRate = gammaRate.split('').map(x => x === '0' ? '1' : '0').join('')
