@@ -11,7 +11,7 @@ export type Diagnostic = {
     lifeSupportRating: number
 }
 
-export const parseMatchingCode = (code: string, codes: string[], index: number = 0, priorityBit: Bit): string => {
+export const parseMatchingCode = (code: string, codes: string[], priorityBit: Bit, index: number = 0): string => {
   if (codes.length === 1) return codes[0] ?? ''
   if (codes.length - 1 === index) throw Error('Something went wrong parsing the matching code')
 
@@ -29,12 +29,12 @@ export const parseMatchingCode = (code: string, codes: string[], index: number =
           }
       , { zero: 0, one: 0 })
 
-    if (priorityBit !== undefined && bitCount.one === bitCount.zero) {
-      return parseMatchingCode(code, codes.filter(c => c[index] === priorityBit.toString()), index + 1, priorityBit)
+    if (bitCount.one === bitCount.zero) {
+      return parseMatchingCode(code, codes.filter(c => c[index] === priorityBit.toString()), priorityBit, index + 1)
     }
   }
 
-  return parseMatchingCode(code, codes.filter(c => c[index] === code[index]), index + 1, priorityBit)
+  return parseMatchingCode(code, codes.filter(c => c[index] === code[index]), priorityBit, index + 1)
 }
 
 export const parseDiagnostic = (input: string[]): Diagnostic => {
@@ -50,8 +50,8 @@ export const parseDiagnostic = (input: string[]): Diagnostic => {
 
   const epsilonRate = gammaRate.split('').map(x => x === '0' ? '1' : '0').join('')
 
-  const oxygenRating = parseMatchingCode(gammaRate, input, undefined, 1)
-  const co2ScrubberRating = parseMatchingCode(epsilonRate, input, undefined, 0)
+  const oxygenRating = parseMatchingCode(gammaRate, input, 1)
+  const co2ScrubberRating = parseMatchingCode(epsilonRate, input, 0)
 
   const powerConsumption = parseInt(gammaRate, 2) * parseInt(epsilonRate, 2)
   const lifeSupportRating = parseInt(oxygenRating, 2) * parseInt(co2ScrubberRating, 2)
