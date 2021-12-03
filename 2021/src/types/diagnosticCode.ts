@@ -60,8 +60,8 @@ export const parseDiagnostic = (input: string[]): Diagnostic => {
     raw: input,
     gammaRate,
     epsilonRate,
-    oxygenRating: oxygenRating,
-    co2ScrubberRating: co2ScrubberRating,
+    oxygenRating,
+    co2ScrubberRating,
     powerConsumption,
     lifeSupportRating
   }
