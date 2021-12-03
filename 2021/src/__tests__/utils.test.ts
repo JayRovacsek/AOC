@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { getInput, sumWindows, countWindowIncreases } from '../utils'
+import { getInput, sumWindows, countWindowIncreases, mostCommonBit } from '../utils'
 
 const dayOneTestSet = [
   199,
@@ -33,5 +33,12 @@ describe('Utils', () => {
   it('should identify increases correctly', async () => {
     const results = countWindowIncreases(dayOneTestSet)
     expect(results).toEqual(7)
+  })
+
+  it('should identify most common bits correctly', async () => {
+    const zero = mostCommonBit([1, 0, 0])
+    const one = mostCommonBit([1, 1, 0])
+    expect(zero).toEqual(0)
+    expect(one).toEqual(1)
   })
 })

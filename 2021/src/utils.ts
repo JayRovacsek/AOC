@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Bit } from './types/bit'
 
 export const getInput = async (day: number): Promise<string> => {
   if (process.env.SESSION_COOKIE === 'undefined') throw new Error('Missing session cookie from env variables.')
@@ -45,4 +46,12 @@ export const sumWindows = (values: number[], windowSize: number): number[] => {
 
   // @ts-ignore
   return results
+}
+
+export const mostCommonBit = (input: Bit[], priorityBit?: Bit): Bit => {
+  const zeroCount = input.filter(x => x === 0).length
+  const oneCount = input.filter(x => x === 1).length
+  if (priorityBit && zeroCount === oneCount) return priorityBit
+  if (zeroCount > oneCount) return 0
+  return 1
 }

@@ -1,5 +1,5 @@
 import { selectPuzzle } from './aoc'
-import { dayRange } from './types'
+import { dayRange } from './types/dayRange'
 import { argv } from 'process'
 import { getInput } from './utils'
 import dotenv from 'dotenv'
