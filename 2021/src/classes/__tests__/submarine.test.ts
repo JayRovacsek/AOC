@@ -10,7 +10,7 @@ up 3
 down 8
 forward 2`
 
-describe('Utils', () => {
+describe('Submarine', () => {
   it('should execute V1 instructions correctly', async () => {
     const submarine = new Submarine()
     const instructions = testInstructions.split('\n').map(x => parseInstruction(x))

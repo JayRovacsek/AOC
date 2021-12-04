@@ -7,6 +7,24 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Debug Tests",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "sourceMaps": true,
+            "smartStep": true,
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/jest",
+            "internalConsoleOptions": "openOnSessionStart",
+            "args": ["test"],
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "program": "${workspaceFolder}/src/local.ts",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Debug Day 1",
             "skipFiles": [
                 "<node_internals>/**"
