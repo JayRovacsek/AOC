@@ -11,11 +11,12 @@ export type Diagnostic = {
     lifeSupportRating: number
 }
 
-export const parseMatchingCode = (code: string, codes: string[], priorityBit: Bit, index: number = 0): string => {
+export const parseMatchingCode = (bitPredicate: 'mcb' | 'lcb', codes: string[], priorityBit: Bit, index: number = 0): string => {
   if (codes.length === 1) return codes[0] ?? ''
-  if (code.length === index) {
-    throw Error('Something went wrong parsing the matching code')
-  }
+
+  const bit = bitPredicate === 'mcb'
+    ? mostCommonBit(codes.map(c => parseInt(c[index] ?? '0') as Bit))
+    : mostCommonBit(codes.map(c => parseInt(c[index] ?? '0') as Bit)) === 0 ? 1 : 0
 
   if (codes.length % 2 === 0) {
     const bitCount = codes
@@ -32,11 +33,11 @@ export const parseMatchingCode = (code: string, codes: string[], priorityBit: Bi
       , { zero: 0, one: 0 })
 
     if (bitCount.one === bitCount.zero) {
-      return parseMatchingCode(code, codes.filter(c => c[index] === priorityBit.toString()), priorityBit, index + 1)
+      return parseMatchingCode(bitPredicate, codes.filter(c => c[index] === priorityBit.toString()), priorityBit, index + 1)
     }
   }
 
-  return parseMatchingCode(code, codes.filter(c => c[index] === code[index]), priorityBit, index + 1)
+  return parseMatchingCode(bitPredicate, codes.filter(c => c[index] === bit.toString()), priorityBit, index + 1)
 }
 
 export const parseDiagnostic = (input: string[]): Diagnostic => {
@@ -52,15 +53,8 @@ export const parseDiagnostic = (input: string[]): Diagnostic => {
 
   const epsilonRate = gammaRate.split('').map(x => x === '0' ? '1' : '0').join('')
 
-  const oxygenInput = Array(rateLength)
-    .fill(0)
-    .map((_, i) => mostCommonBit(input.map(x => parseInt(x[i] ?? '0') as Bit), 1))
-    .join('')
-
-  const co2Input = oxygenInput.split('').map(x => x === '0' ? '1' : '0').join('')
-
-  const oxygenRating = parseMatchingCode(oxygenInput, input, 1)
-  const co2ScrubberRating = parseMatchingCode(co2Input, input, 0)
+  const oxygenRating = parseMatchingCode('mcb', input, 1)
+  const co2ScrubberRating = parseMatchingCode('lcb', input, 0)
 
   const powerConsumption = parseInt(gammaRate, 2) * parseInt(epsilonRate, 2)
   const lifeSupportRating = parseInt(oxygenRating, 2) * parseInt(co2ScrubberRating, 2)

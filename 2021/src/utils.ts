@@ -48,9 +48,10 @@ export const sumWindows = (values: number[], windowSize: number): number[] => {
   return results
 }
 
-export const mostCommonBit = (input: Bit[]): Bit => {
+export const mostCommonBit = (input: Bit[], priorityBit?: Bit): Bit => {
   const zeroCount = input.filter(x => x === 0).length
   const oneCount = input.filter(x => x === 1).length
+  if (priorityBit !== undefined && zeroCount === oneCount) return priorityBit
   if (zeroCount > oneCount) return 0
   return 1
 }
