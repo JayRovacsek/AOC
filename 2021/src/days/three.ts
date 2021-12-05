@@ -1,7 +1,7 @@
 import { Day } from '../interfaces/day'
 import { parseDiagnostic } from '../types/diagnosticCode'
 
-export const dayThree: Day = {
+export const three: Day = {
   day: 3,
   partOne: async (input: string): Promise<string> => {
     const { powerConsumption } = parseDiagnostic(input.split('\n'))

@@ -1,6 +1,6 @@
 import { Day } from '../interfaces/day'
 import { sumWindows, countWindowIncreases } from '../utils'
-export const dayOne: Day = {
+export const one: Day = {
   day: 1,
 
   partOne: async (input: string): Promise<string> => {

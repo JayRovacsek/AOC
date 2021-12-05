@@ -2,7 +2,7 @@ import { Day } from '../interfaces/day'
 import { parseInstruction } from '../types/instruction'
 import { Submarine } from '../classes/submarine'
 
-export const dayTwo: Day = {
+export const two: Day = {
   day: 2,
 
   partOne: async (input: string): Promise<string> => {

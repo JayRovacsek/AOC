@@ -1,7 +1,7 @@
 import { parseBingoCalls, Bingo } from '../classes/bingo'
 import { Day } from '../interfaces/day'
 
-export const dayFour: Day = {
+export const four: Day = {
   day: 4,
   partOne: async (input: string): Promise<string> => {
     const calls = parseBingoCalls(input.split('\n')[0] ?? '0')

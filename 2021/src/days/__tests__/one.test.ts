@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-import { dayOne } from '../one'
+import { one } from '../one'
 
 const testInput = [
   199,
@@ -17,7 +17,7 @@ const testInput = [
 
 describe('Utils', () => {
   it('should solve part one', async () => {
-    const results = await dayOne.partOne(testInput)
+    const results = await one.partOne(testInput)
     expect(results).toEqual('7')
   })
 

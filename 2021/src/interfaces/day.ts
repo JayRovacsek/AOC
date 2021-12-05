@@ -1,14 +1,16 @@
 import { dayRange } from '../types/dayRange'
-import { dayOne } from '../days/one'
-import { dayTwo } from '../days/two'
-import { dayThree } from '../days/three'
-import { dayFour } from '../days/four'
+import { one } from '../days/one'
+import { two } from '../days/two'
+import { three } from '../days/three'
+import { four } from '../days/four'
+import { five } from '../days/five'
 
 export const days = [
-  dayOne,
-  dayTwo,
-  dayThree,
-  dayFour
+  one,
+  two,
+  three,
+  four,
+  five
 ]
 
 export interface Day {
