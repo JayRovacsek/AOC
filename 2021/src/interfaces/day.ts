@@ -4,13 +4,15 @@ import { two } from '../days/two'
 import { three } from '../days/three'
 import { four } from '../days/four'
 import { five } from '../days/five'
+import { six } from '../days/six'
 
 export const days = [
   one,
   two,
   three,
   four,
-  five
+  five,
+  six
 ]
 
 export interface Day {
