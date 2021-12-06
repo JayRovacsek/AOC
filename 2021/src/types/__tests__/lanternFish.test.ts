@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-import { LanternFish, parseFish, simulateDays } from '../lanternFish'
+import { parseFish, simulateDays } from '../lanternFish'
 
 const testInput = '3,4,3,1,2'
 
@@ -13,7 +13,8 @@ describe('Lanternfish', () => {
 
   it('should emulate fish breeding correctly', async () => {
     const fish = testInput.split(',').filter(x => /[0-8]/.test(x)).map(x => parseFish(x))
-    const futureFish: LanternFish[] = simulateDays(80, fish)
-    expect(futureFish.length).toEqual(5934)
+    const futureFish = simulateDays(80, fish)
+    const population = futureFish.reduce((accumulator, set) => accumulator + set.population, 0)
+    expect(population).toEqual(5934)
   })
 })

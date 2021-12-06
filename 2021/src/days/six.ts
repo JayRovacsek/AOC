@@ -5,12 +5,14 @@ export const six: Day = {
   day: 6,
   partOne: async (input: string): Promise<string> => {
     const fish = input.split(',').filter(x => /[0-8]/.test(x)).map(x => parseFish(x))
-    const numberOfFish = simulateDays(80, fish)
+    const populationSet = simulateDays(80, fish)
+    const numberOfFish = populationSet.reduce((accumulator, set) => set.population + accumulator, 0)
     return `${numberOfFish}`
   },
   partTwo: async (input: string): Promise<string> => {
     const fish = input.split(',').filter(x => /[0-8]/.test(x)).map(x => parseFish(x))
-    const numberOfFish = simulateDays(256, fish)
+    const populationSet = simulateDays(256, fish)
+    const numberOfFish = populationSet.reduce((accumulator, set) => set.population + accumulator, 0)
     return `${numberOfFish}`
   }
 }
