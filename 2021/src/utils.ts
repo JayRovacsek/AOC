@@ -55,3 +55,7 @@ export const mostCommonBit = (input: Bit[], priorityBit?: Bit): Bit => {
   if (zeroCount > oneCount) return 0
   return 1
 }
+
+export const triangleNumber = (input: number): number => {
+  return ((input * (input + 1)) / 2)
+}
