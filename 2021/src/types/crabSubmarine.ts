@@ -2,7 +2,7 @@ export type CrabSubmarine = {
     position: number
 }
 
-export const parseCrabSumbraine = (input: string): CrabSubmarine => {
+export const parseCrabSubmarine = (input: string): CrabSubmarine => {
   return {
     position: parseInt(input)
   }
