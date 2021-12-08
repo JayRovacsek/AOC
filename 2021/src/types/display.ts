@@ -19,12 +19,14 @@ export const parseDisplayV1 = (input: Segment[]): Display | null => {
       segments: input
     }
   }
+
   if (input.length === 4) {
     return {
       value: 4,
       segments: input
     }
   }
+
   if (input.length === 7) {
     return {
       value: 8,
@@ -83,10 +85,14 @@ export const parseDisplayV2 = (data: {input: string[], output: string[]}): Displ
     .filter(x => x.length === 5)
     .find(x => x !== three && x !== five) ?? ''
 
-  const numbers = [zero, one, two, three, four, five, six, seven, eight, nine].map((x, i) => ({ value: i, raw: x }))
+  const numbers = [zero, one, two, three, four, five, six, seven, eight, nine]
+    .map((x, i) => ({ value: i, raw: x }))
 
   return {
-    value: parseInt(data.output.map(x => numbers.find(n => n.raw === x)?.value ?? '').join('')),
+    value: parseInt(data.output
+      .map(x => numbers
+        .find(n => n.raw === x)?.value ?? '')
+      .join('')),
     segments: data.output as Segment[]
   }
 }
