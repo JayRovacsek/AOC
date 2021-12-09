@@ -59,3 +59,18 @@ export const mostCommonBit = (input: Bit[], priorityBit?: Bit): Bit => {
 export const triangleNumber = (input: number): number => {
   return ((input * (input + 1)) / 2)
 }
+
+export const stride = <Type>(input: Type[][], targetRow: number, targetColumn: number, strideSize: number): Type[][] => {
+  const rowLimit = Math.max(...input.map(x => x.length))
+  const columnLimit = input[0]?.length ?? 1
+  if (input.every(row => row.length !== rowLimit)) throw new Error('An uneven set was utilised')
+
+  const minimumRow = targetRow - strideSize > 0 ? targetRow - strideSize : 0
+  const maximumRow = targetRow + strideSize < rowLimit ? targetRow + strideSize : rowLimit
+  const minimumColumn = targetColumn - strideSize > 0 ? targetColumn - strideSize : 0
+  const maximumColumn = targetColumn + strideSize < columnLimit ? targetColumn + strideSize : columnLimit
+
+  return input
+    . filter((_, i) => i <= maximumRow && i >= minimumRow)
+    .map((row) => row.filter((_, j) => j <= maximumColumn && j >= minimumColumn))
+}

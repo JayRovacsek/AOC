@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { getInput, sumWindows, countWindowIncreases, mostCommonBit } from '../utils'
+import { getInput, sumWindows, countWindowIncreases, mostCommonBit, stride } from '../utils'
 
 const dayOneTestSet = [
   199,
@@ -40,5 +40,23 @@ describe('Utils', () => {
     const one = mostCommonBit([1, 1, 0])
     expect(zero).toEqual(0)
     expect(one).toEqual(1)
+  })
+
+  it('should create a stride correctly', async () => {
+    const testSet = [
+      [0, 1, 2, 3, 4, 5],
+      [0, 1, 2, 3, 4, 5],
+      [0, 1, 2, 3, 4, 5],
+      [0, 1, 2, 3, 4, 5], // 3 here
+      [0, 1, 2, 3, 4, 5]
+    ]
+
+    const subsetA = stride(testSet, 3, 3, 1)
+    const subsetB = stride(testSet, 0, 1, 1)
+    const subsetC = stride(testSet, 1, 0, 1)
+
+    expect(subsetA).toMatchObject([[2, 3, 4], [2, 3, 4], [2, 3, 4]])
+    expect(subsetB).toMatchObject([[0, 1, 2], [0, 1, 2]])
+    expect(subsetC).toMatchObject([[0, 1], [0, 1], [0, 1]])
   })
 })

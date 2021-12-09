@@ -7,6 +7,7 @@ import { five } from '../days/five'
 import { six } from '../days/six'
 import { seven } from '../days/seven'
 import { eight } from '../days/eight'
+import { nine } from '../days/nine'
 
 export const days = [
   one,
@@ -16,7 +17,8 @@ export const days = [
   five,
   six,
   seven,
-  eight
+  eight,
+  nine
 ]
 
 export interface Day {
