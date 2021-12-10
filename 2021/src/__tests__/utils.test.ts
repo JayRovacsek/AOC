@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { getInput, sumWindows, countWindowIncreases, mostCommonBit, stride } from '../utils'
+import { getInput, sumWindows, countWindowIncreases, mostCommonBit, stride, exclusiveStride, garbageStride } from '../utils'
 
 const dayOneTestSet = [
   199,
@@ -58,5 +58,41 @@ describe('Utils', () => {
     expect(subsetA).toMatchObject([[2, 3, 4], [2, 3, 4], [2, 3, 4]])
     expect(subsetB).toMatchObject([[0, 1, 2], [0, 1, 2]])
     expect(subsetC).toMatchObject([[0, 1], [0, 1], [0, 1]])
+  })
+
+  it('should create an exclusive stride correctly', async () => {
+    const testSet = [
+      [0, 1, 2, 3, 4, 5],
+      [0, 1, 2, 3, 4, 5],
+      [0, 1, 2, 3, 4, 5],
+      [0, 1, 2, 3, 4, 5], // 3 here
+      [0, 1, 2, 3, 4, 5]
+    ]
+
+    const subsetA = exclusiveStride(testSet, 3, 3, 1)
+    const subsetB = exclusiveStride(testSet, 0, 1, 1)
+    const subsetC = exclusiveStride(testSet, 1, 0, 1)
+
+    expect(subsetA).toMatchObject([[2, 3, 4], [2, 4], [2, 3, 4]])
+    expect(subsetB).toMatchObject([[0, 2], [0, 1, 2]])
+    expect(subsetC).toMatchObject([[0, 1], [1], [0, 1]])
+  })
+
+  it('should create an garbage stride correctly', async () => {
+    const testSet = [
+      [0, 1, 2, 3, 4, 5],
+      [0, 1, 2, 3, 4, 5],
+      [0, 1, 2, 3, 4, 5],
+      [0, 1, 2, 3, 4, 5], // 3 here
+      [0, 1, 2, 3, 4, 5]
+    ]
+
+    const subsetA = garbageStride(testSet, 3, 3, 1)
+    const subsetB = garbageStride(testSet, 0, 1, 1)
+    const subsetC = garbageStride(testSet, 1, 0, 1)
+
+    expect(subsetA).toMatchObject([[3], [2, 4], [3]])
+    expect(subsetB).toMatchObject([[0, 2], [1]])
+    expect(subsetC).toMatchObject([[0], [1], [0]])
   })
 })

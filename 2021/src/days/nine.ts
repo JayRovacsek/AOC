@@ -5,6 +5,7 @@ export const nine: Day = {
   day: 9,
   partOne: async (input: string): Promise<string> => {
     const lavaMap = parseLavaMap(input)
+    // not 452
     return `${lavaMap.riskSum}`
   },
   partTwo: async (input: string): Promise<string> => {

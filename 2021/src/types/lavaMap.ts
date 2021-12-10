@@ -1,4 +1,4 @@
-import { stride } from '../utils'
+import { garbageStride } from '../utils'
 
 export type LavaMap = {
     map: number[][],
@@ -16,9 +16,9 @@ export const parseLavaMap = (input: string): LavaMap => {
   const lowPoints = map.map((row, i) => row.map((_, j) => {
     // @ts-ignore
     const currentValue = map[i][j] ?? 0
-    const set = stride(map, i, j, 1)
+    const set = garbageStride(map, i, j, 1)
     const results = set.map((row) => {
-      if (row.every(x => currentValue <= x)) {
+      if (row.every(x => currentValue < x)) {
         return true
       }
       return false
