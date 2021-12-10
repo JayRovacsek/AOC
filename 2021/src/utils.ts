@@ -111,7 +111,7 @@ export const garbageStride = <Type>(input: Type[][], targetRow: number, targetCo
   const maximumColumn = targetColumn + strideSize < columnLimit ? targetColumn + strideSize : columnLimit
 
   return input.map((row, i) => row.filter((_, j) => {
-    if (i === targetRow && j == targetColumn) return false
+    if (i === targetRow && j === targetColumn) return false
     if (i === targetRow) return j >= minimumColumn && j <= maximumColumn
     if (j === targetColumn) return i >= minimumRow && i <= maximumRow
     return false
