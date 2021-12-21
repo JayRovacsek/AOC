@@ -37,7 +37,7 @@ const parseNode = (input: string): Node => {
   }
 }
 
-const parsePaths = (nodes: Node[], start?: Node, path?: Node[]): Node[][] => {
+const parsePaths = (nodes: Node[], start?: Node, path?: Node[], doubleSmallCaveVisit?: boolean): Node[][] => {
   /**
    * If a start isn't defined, find all nodes that have t1 element of start and
    * branch for each of the options flattening at the end
@@ -46,7 +46,7 @@ const parsePaths = (nodes: Node[], start?: Node, path?: Node[]): Node[][] => {
     const startNodes = nodes.filter(x => x.t1.isStart)
     return startNodes
       .map(x =>
-        parsePaths(nodes.filter(y => y.t1.isStart === false), x)
+        parsePaths(nodes.filter(y => y.t1.isStart === false), x, undefined, doubleSmallCaveVisit)
       )
       .flat()
   }
@@ -60,7 +60,7 @@ const parsePaths = (nodes: Node[], start?: Node, path?: Node[]): Node[][] => {
     const initialSteps = nodes.filter(x => x.t1.name === start.t2.name)
     return initialSteps
       .map(x =>
-        parsePaths(nodes, start, [start, x])
+        parsePaths(nodes, start, [start, x], doubleSmallCaveVisit)
       )
       .flat()
   }
@@ -84,17 +84,35 @@ const parsePaths = (nodes: Node[], start?: Node, path?: Node[]): Node[][] => {
   const branchingNodes = nodes.filter(x => x.t1.name === lastStop?.t2.name)
 
   const validUnfinishedNodes = branchingNodes.filter(x => {
-    if (x.t2.size === 'small') {
+    if (x.t2.size === 'small' && !doubleSmallCaveVisit) {
       return traversedSmallCaves.every(cave => cave !== x.t2.name)
     }
     return true
   })
 
+  const doubleVisitUtilised = doubleSmallCaveVisit
+    ? branchingNodes.some(x => {
+      if (x.t2.size === 'small') {
+        return traversedSmallCaves.some(cave => cave === x.t2.name)
+      }
+      return false
+    })
+    : true
+
   const finishedPaths = branchingNodes.filter(x => x.t2.isEnd).map(x => [...path, x])
+
+  if (doubleVisitUtilised) {
+    return [
+      ...finishedPaths, ...validUnfinishedNodes
+        .map(x => parsePaths(nodes, start, [...path, x], false))
+        .flat()
+    ]
+      .filter(x => x.length > 0)
+  }
 
   return [
     ...finishedPaths, ...validUnfinishedNodes
-      .map(x => parsePaths(nodes, start, [...path, x]))
+      .map(x => parsePaths(nodes, start, [...path, x], doubleSmallCaveVisit))
       .flat()
   ]
     .filter(x => x.length > 0)
@@ -105,8 +123,9 @@ export class Cave {
     nodes: Node[];
     paths: Node[][];
     pathstrings: string[];
+    doubleSmallCaveVisit: boolean;
 
-    constructor (input: string) {
+    constructor (input: string, doubleSmallCaveVisit?: boolean) {
       this.raw = input
       const nodes: Node[] = input.split('\n').map(x => parseNode(x))
       const reversedNodes: Node[] = nodes
@@ -118,16 +137,18 @@ export class Cave {
 
       this.nodes = [...nodes, ...reversedNodes]
 
-      const paths = parsePaths(this.nodes)
+      this.doubleSmallCaveVisit = doubleSmallCaveVisit !== undefined ? doubleSmallCaveVisit : false
+
+      const paths = parsePaths(this.nodes, undefined, undefined, this.doubleSmallCaveVisit)
 
       this.paths = paths
 
       const pathStrings = paths
         .map(x => `${x.map(y => y.t1.name).join(',')},end`
         )
+        .sort((a, b) => a > b ? 1 : -1)
 
       const dedupedPaths = Array.from(new Set(pathStrings))
-      this.pathstrings = dedupedPaths
       this.pathstrings = dedupedPaths
     }
 }

@@ -59,4 +59,15 @@ describe('Cave', () => {
     const thirdCave = new Cave(thirdTestInstructions)
     expect(thirdCave.pathstrings.length).toEqual(226)
   })
+
+  it('should parse paths with a double visit correctly', async () => {
+    const cave = new Cave(testInstructions, true)
+    expect(cave.pathstrings.length).toEqual(36)
+
+    const altCave = new Cave(alternateTestInstructions, true)
+    expect(altCave.pathstrings.length).toEqual(103)
+
+    const thirdCave = new Cave(thirdTestInstructions, true)
+    expect(thirdCave.pathstrings.length).toEqual(3509)
+  })
 })
