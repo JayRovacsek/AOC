@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-import { addSnailfishNumber, explodeSnailfishNumber, splitSnailfishNumber } from '../snailfishHomework'
+import { addSnailfishNumber, explodeSnailfishNumber, splitSnailfishNumber } from '../snailfishNumber'
 
 const one = 1
 const oneArray = [1, 1]
@@ -10,7 +10,7 @@ const onePlusTwo = [1, 2]
 const oneArrayPlusTwoArray = [[1, 1], [2, 2]]
 const onePlusTwoArray = [1, [2, 2]]
 
-describe('Utils', () => {
+describe('SnailfishNumber', () => {
   it('should add snailfish numbers correctly', async () => {
     const addedNumbers = addSnailfishNumber(one, two)
     expect(addedNumbers).toMatchObject(onePlusTwo)
