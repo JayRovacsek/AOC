@@ -14,36 +14,36 @@ use std::time::Instant;
 extern crate lazy_static;
 extern crate itertools;
 
-pub fn solve(puzzle_text: &str, day: &str) -> String {
+pub fn solve(puzzle_text: &str, day: &str) {
     match day.parse::<u8>().unwrap_or(1_u8) {
-        1 => puzzle::one::solve_both(puzzle_text),
-        2 => puzzle::two::solve_both(puzzle_text),
-        3 => puzzle::three::solve_both(puzzle_text),
-        4 => puzzle::four::solve_both(puzzle_text),
-        5 => puzzle::five::solve_both(puzzle_text),
-        6 => puzzle::six::solve_both(puzzle_text),
-        7 => puzzle::seven::solve_both(puzzle_text),
-        8 => puzzle::eight::solve_both(puzzle_text),
-        9 => puzzle::nine::solve_both(puzzle_text),
-        10 => puzzle::ten::solve_both(puzzle_text),
-        11 => puzzle::eleven::solve_both(puzzle_text),
-        12 => puzzle::twelve::solve_both(puzzle_text),
-        13 => puzzle::thirteen::solve_both(puzzle_text),
-        14 => puzzle::fourteen::solve_both(puzzle_text),
-        15 => puzzle::fifteen::solve_both(puzzle_text),
-        16 => puzzle::sixteen::solve_both(puzzle_text),
-        17 => puzzle::seventeen::solve_both(puzzle_text),
-        18 => puzzle::eighteen::solve_both(puzzle_text),
-        19 => puzzle::nineteen::solve_both(puzzle_text),
-        20 => puzzle::twenty::solve_both(puzzle_text),
-        21 => puzzle::twentyone::solve_both(puzzle_text),
-        22 => puzzle::twentytwo::solve_both(puzzle_text),
-        23 => puzzle::twentythree::solve_both(puzzle_text),
-        24 => puzzle::twentyfour::solve_both(puzzle_text),
-        25 => puzzle::twentyfive::solve_both(puzzle_text),
+        1 => puzzle::one::solve(puzzle_text),
+        2 => puzzle::two::solve(puzzle_text),
+        3 => puzzle::three::solve(puzzle_text),
+        4 => puzzle::four::solve(puzzle_text),
+        5 => puzzle::five::solve(puzzle_text),
+        6 => puzzle::six::solve(puzzle_text),
+        7 => puzzle::seven::solve(puzzle_text),
+        8 => puzzle::eight::solve(puzzle_text),
+        9 => puzzle::nine::solve(puzzle_text),
+        10 => puzzle::ten::solve(puzzle_text),
+        11 => puzzle::eleven::solve(puzzle_text),
+        12 => puzzle::twelve::solve(puzzle_text),
+        13 => puzzle::thirteen::solve(puzzle_text),
+        14 => puzzle::fourteen::solve(puzzle_text),
+        15 => puzzle::fifteen::solve(puzzle_text),
+        16 => puzzle::sixteen::solve(puzzle_text),
+        17 => puzzle::seventeen::solve(puzzle_text),
+        18 => puzzle::eighteen::solve(puzzle_text),
+        19 => puzzle::nineteen::solve(puzzle_text),
+        20 => puzzle::twenty::solve(puzzle_text),
+        21 => puzzle::twentyone::solve(puzzle_text),
+        22 => puzzle::twentytwo::solve(puzzle_text),
+        23 => puzzle::twentythree::solve(puzzle_text),
+        24 => puzzle::twentyfour::solve(puzzle_text),
+        25 => puzzle::twentyfive::solve(puzzle_text),
         _ => {
             let u: u8 = input::get_rand_u8(25);
-            puzzle::one::solve_both(puzzle_text)
+            puzzle::one::solve(puzzle_text)
         }
     }
 }
