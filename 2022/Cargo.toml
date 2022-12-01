@@ -8,15 +8,15 @@ repository = "https://github.com/JayRovacsek/AOC.git"
 license = "GPL-3.0"
 
 [dependencies]
-rand = "0.7.2"
+rand = "0.8.5"
 humantime = "2.0.1"
 rayon = "1.1"
 regex = "1.0"
 lazy_static = "1.4.0"
-itertools = "0.9.0"
+itertools = "0.10.5"
 
 [dev-dependencies]
-criterion = "0.3"
+criterion = "0.4"
 
 [lib]
 name = "aoc_2022_lib"
