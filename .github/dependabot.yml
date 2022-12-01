@@ -1,5 +1,4 @@
 version: 2
-enable-beta-ecosystems: true
 updates:
 - package-ecosystem: cargo
   directory: "/2019"
@@ -26,14 +25,6 @@ updates:
   directory: "/2022"
   schedule:
     interval: weekly
-  open-pull-requests-limit: 5
-  assignees:
-  - "jayrovacsek"
-
-- package-ecosystem: "beta-ecosystem"
-  directory: "/2022"
-  schedule:
-    interval: "weekly"
   open-pull-requests-limit: 5
   assignees:
   - "jayrovacsek"
