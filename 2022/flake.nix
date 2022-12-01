@@ -8,10 +8,6 @@
     };
     nixpkgs.follows = "cargo2nix/nixpkgs";
 
-    rust-overlay.url = "github:oxalica/rust-overlay";
-    rust-overlay.inputs.flake-utils.follows = "flake-utils";
-    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
-
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs = {
@@ -33,11 +29,16 @@
       let
 
         inherit (inputs.nixpkgs.lib.systems) examples;
+        # There is no reason for the below, beyond 'I can'
+        # Wanted to toy with this construct to understand if it could
+        # be a better option than the cross option (which in truth
+        # is damn awesome)
         cross-targets = {
           x86_64_darwin = examples.x86_64-darwin;
           aarch64_darwin = examples.aarch64-darwin;
           x86_64_windows = examples.mingwW64;
           x86_64_linux = examples.gnu64;
+          aarch64_linux = examples.aarch64-multiplatform;
         };
 
         cross-map = {
@@ -45,23 +46,21 @@
           aarch64_darwin = "aarch64-apple-darwin";
           x86_64_windows = "x86_64-pc-windows-gnu";
           x86_64_linux = "x86_64-unknown-linux-gnu";
+          aarch64_linux = "aarch64-unknown-linux-gnu";
         };
 
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ cargo2nix.overlays.default ];
-        };
+        overlays = [ cargo2nix.overlays.default ];
+
+        pkgs = import nixpkgs { inherit system overlays; };
 
         cross-pkgs = builtins.mapAttrs (name: value:
           import nixpkgs {
-            inherit system;
-            overlays = [ cargo2nix.overlays.default ];
-
+            inherit system overlays;
             crossSystem = value;
           }) cross-targets;
 
         packageFun = import ./Cargo.nix;
-        rustVersion = "1.61.0";
+        rustVersion = inputs.nixpkgs.legacyPackages.${system}.rustc.version;
 
         rustPkgs = pkgs.rustBuilder.makePackageSet {
           inherit packageFun rustVersion;
@@ -69,7 +68,7 @@
         };
 
         cross-rustPkgs = builtins.mapAttrs (name: value:
-          cross-pkgs."${name}".rustBuilder.makePackageSet {
+          cross-pkgs.${name}.rustBuilder.makePackageSet {
             inherit packageFun rustVersion;
             target = cross-map.${name};
           }) cross-targets;

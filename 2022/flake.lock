@@ -175,8 +175,7 @@
           "cargo2nix",
           "nixpkgs"
         ],
-        "pre-commit-hooks": "pre-commit-hooks",
-        "rust-overlay": "rust-overlay_2"
+        "pre-commit-hooks": "pre-commit-hooks"
       }
     },
     "rust-overlay": {
@@ -196,29 +195,6 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "rev": "8526d618af012a923ca116be9603e818b502a8db",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "rust-overlay_2": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1669775522,
-        "narHash": "sha256-6xxGArBqssX38DdHpDoPcPvB/e79uXyQBwpBcaO/BwY=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "3158e47f6b85a288d12948aeb9a048e0ed4434d6",
         "type": "github"
       },
       "original": {

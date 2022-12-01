@@ -48,7 +48,7 @@ pub fn solve(puzzle_text: &str, day: &str) {
     }
 }
 
-fn main() {
+pub fn entry() {
     loop {
         let option: u8 = input::get_option("Advent of code puzzle to complete? 1-25: ");
         match_puzzle(option);
