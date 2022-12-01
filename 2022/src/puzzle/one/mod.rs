@@ -1,5 +1,4 @@
 use itertools::Itertools;
-
 mod test;
 
 pub fn solve(input: &str) {
@@ -26,8 +25,7 @@ pub fn solve_part_one(input: &str) -> String {
 
 pub fn solve_part_two(input: &str) -> String {
     let elves = parse_elves(input);
-    let mut calories: Vec<i64> = elves.iter().map(|x| x.iter().sum()).collect();
-    calories.sort();
+    let calories: Vec<i64> = elves.iter().map(|x| x.iter().sum()).sorted().collect();
     let top_three: i64 = calories.iter().rev().take(3).sum();
     format!("{:?}", top_three)
 }

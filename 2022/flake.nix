@@ -93,7 +93,7 @@
           inherit (self.checks.${system}.pre-commit-check) shellHook;
         };
 
-        aoc-nix = { one = import ./meme/one { inherit pkgs; }; };
+        aoc-nix = { one = import ./nix/one { inherit pkgs; }; };
 
       in {
         inherit checks;
