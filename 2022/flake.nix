@@ -93,12 +93,14 @@
           inherit (self.checks.${system}.pre-commit-check) shellHook;
         };
 
+        aoc-nix = { one = import ./meme/one { inherit pkgs; }; };
+
       in {
         inherit checks;
         # inherit checks devShell;
         devShell = inputs.cargo2nix.outputs.devShells.${system}.default;
         packages = {
-          inherit aoc_2022 cross-compile;
+          inherit aoc_2022 aoc-nix cross-compile;
           default = aoc_2022;
         };
       });
