@@ -1,7 +1,39 @@
 version: 2
+enable-beta-ecosystems: true
 updates:
 - package-ecosystem: cargo
-  directory: "/"
+  directory: "/2019"
+  schedule:
+    interval: monthly
+  # Disable pull requests on this directory
+  open-pull-requests-limit: 0
+
+- package-ecosystem: cargo
+  directory: "/2020"
+  schedule:
+    interval: monthly
+  # Disable pull requests on this directory
+  open-pull-requests-limit: 0
+
+- package-ecosystem: npm
+  directory: "/2021"
+  schedule:
+    interval: monthly
+  # Disable pull requests on this directory
+  open-pull-requests-limit: 0
+
+- package-ecosystem: cargo
+  directory: "/2022"
   schedule:
     interval: weekly
-  open-pull-requests-limit: 10
+  open-pull-requests-limit: 5
+  assignees:
+  - "jayrovacsek"
+
+- package-ecosystem: "beta-ecosystem"
+  directory: "/2022"
+  schedule:
+    interval: "weekly"
+  open-pull-requests-limit: 5
+  assignees:
+  - "jayrovacsek"
