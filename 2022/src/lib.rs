@@ -59,7 +59,7 @@ fn match_puzzle(option: u8) {
     let stub_input = "This is a stub";
     let start = Instant::now();
     match option {
-        1 => puzzle::one::solve(stub_input),
+        1 => puzzle::one::solve(&read_contents("./inputs/day1.txt")),
         2 => puzzle::two::solve(stub_input),
         3 => puzzle::three::solve(stub_input),
         4 => puzzle::four::solve(stub_input),
