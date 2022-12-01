@@ -13,7 +13,7 @@ humantime = "2.0.1"
 rayon = "1.1"
 regex = "1.0"
 lazy_static = "1.4.0"
-itertools = "0.9.0"
+itertools = "0.10.5"
 
 [dev-dependencies]
 criterion = "0.3"
